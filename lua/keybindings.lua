@@ -44,7 +44,7 @@ map('v', '>', '>gv', opt)
 
 -- >>>>>>>>>>>>>>>>>>>>>>>>>>>>> 其他配置 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 -- 粘贴后不复制被粘贴的文本
-map("v", "p", '"_dp', opt)
+map("v", "p", '"_dhp', opt)
 -- 设置 jk 映射 <esc>
 map('i', 'jk', '<esc>', opt)
 
@@ -59,6 +59,8 @@ vim.g.maplocalleader = " "
 map("n", "<leader>fm", "gg=G<C-o>", opt)
 -- 文件查找
 map("n", "<leader>ff", ":Telescope find_files<CR>", opt)
+-- 全局词汇查找
+map("n", "<leader>ft", ":Telescope live_grep<CR>", opt)
 
 -- >>>>>>>>>>>>>>>>>>>>>> 显示设置 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 -- 取消搜索高亮
@@ -66,9 +68,14 @@ map("n", "<leader>nh", ":nohlsearch<CR>", opt)
 
 -- >>>>>>>>>>>>>>>>>>>>>>>> 窗体配置 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 -- 关闭当前 tab
-map("n", "<leader>cc", ":bdelete %<CR>", opt)
+map("n", "<leader>cc", ":bdelete! %<CR>", opt)
 -- 关闭其他 tab
 map("n", "<leader>co", ":BufferLineCloseLeft<CR>:BufferLineCloseRight<CR>", opt)
+
+-- >>>>>>>>>>>>>>>>>>>>>>> 代码折叠设置 <<<<<<<<<<<<<<<<<<<<<<<<<<
+-- treesitter 折叠
+map("n", "<leader>zc", ":foldclose<CR>", opt)
+map("n", "<leader>zo", ":foldopen<CR>", opt)
 
 
 -- ############################ 插件配置列表 ##################################
@@ -106,4 +113,38 @@ pluginKeys.nvimTreeList = {
   -- 进入上一级
   { key = { "[" }, action = "dir_up" },
 }
+
+-- Telescope 列表中 插入模式快捷键
+pluginKeys.telescopeList = {
+  i = {
+    -- 上下移动
+    ["<C-n>"] = "move_selection_next",
+    ["<C-N>"] = "move_selection_previous",
+    -- 历史记录
+    ["<Down>"] = "cycle_history_next",
+    ["<Up>"] = "cycle_history_prev",
+    -- 关闭窗口
+    -- ["<esc>"] = actions.close,
+    ["<C-c>"] = "close",
+    -- 预览窗口上下滚动
+    ["<C-u>"] = "preview_scrolling_up",
+    ["<C-d>"] = "preview_scrolling_down",
+  },
+}
+
+-- 代码注释插件
+-- see ./lua/plugin-config/comment.lua
+pluginKeys.comment = {
+  -- Normal 模式快捷键
+  toggler = {
+    line = "cl", -- 行注释
+    block = "cv", -- 块注释
+  },
+  -- Visual 模式
+  opleader = {
+    line = "cl",
+    block = "cv",
+  },
+}
+
 return pluginKeys

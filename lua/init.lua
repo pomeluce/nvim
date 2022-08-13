@@ -14,11 +14,14 @@ require('onedarkpro').setup {
 -- 启动主题
 require('onedarkpro').load()
 
+-- >>> 加载插件配置 <<<
 -- 加载 nvim-tree 配置
-require('plugin-config/nvim-tree')
-
+require("plugin-config.nvim-tree")
 -- 加载 bufferline 配置
-require('plugin-config/bufferline')
-
+require("plugin-config.bufferline")
 -- 加载 nvim-treesitter 高亮插件
-require('plugin-config/nvim-treesitter')
+require("plugin-config.nvim-treesitter")
+-- 加载 surround 插件配置
+require("plugin-config.surround")
+-- 加载 comment 注释快捷键
+require("plugin-config.comment")
