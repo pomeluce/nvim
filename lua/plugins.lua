@@ -14,4 +14,9 @@ return require('packer').startup(function()
   use {'akinsho/bufferline.nvim', requires = 'kyazdani42/nvim-web-devicons'}
   -- 配置高亮插件
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+  -- 配置 文件搜索插件
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.0',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
 end)

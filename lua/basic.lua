@@ -2,8 +2,8 @@
 vim.g.encoding = "UTF-8"
 vim.o.fileencoding = 'utf-8'
 -- jk移动时光标下上方保留8行
-vim.o.scrolloff = 15
-vim.o.sidescrolloff = 15
+vim.o.scrolloff = 30
+vim.o.sidescrolloff = 30
 -- 使用相对行号
 vim.wo.number = true
 vim.wo.relativenumber = true
@@ -31,7 +31,7 @@ vim.o.smartindent = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 -- 搜索不要高亮
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 -- 边输入边搜索
 vim.o.incsearch = true
 -- 使用增强状态栏后不再需要 vim 的模式提示
@@ -57,7 +57,7 @@ vim.o.swapfile = false
 -- smaller updatetime 
 vim.o.updatetime = 300
 -- 等待mappings
-vim.o.timeoutlen = 100
+vim.o.timeoutlen = 1500
 -- split window 从下边和右边出现
 vim.o.splitbelow = true
 vim.o.splitright = true
