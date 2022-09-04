@@ -36,6 +36,13 @@ map('n', '<A-1>', ':NvimTreeToggle<CR>', opt)
 -- tab 键切换
 map("n", "<C-~>", ":BufferLineCycleNext<CR>", opt)
 
+-- >>>>>>>>>>>>>>>>>>>>>>>>>>> 代码光标移动 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+-- 上下移动选中文本
+map("v", "<C-J>", ":move '>+1<CR>gv-gv", opt)
+map("v", "<C-K>", ":move '<-2<CR>gv-gv", opt)
+map("n", "<C-J>", ":m+<CR>", opt)
+map("n", "<C-K>", ":m-2<CR>", opt)
+
 -- >>>>>>>>>>>>>>>>>>>>>>>>>>> V 模式连续缩进 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 -- 反缩进连续
 map('v', '<', '<gv', opt)
@@ -47,6 +54,9 @@ map('v', '>', '>gv', opt)
 map("v", "p", '"_dhp', opt)
 -- 设置 jk 映射 <esc>
 map('i', 'jk', '<esc>', opt)
+-- magic search
+map("n", "/", "/\\v", { noremap = true, silent = false })
+map("v", "/", "/\\v", { noremap = true, silent = false })
 
 
 -- ####################### 快捷键(leader) ############################

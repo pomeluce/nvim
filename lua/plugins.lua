@@ -36,12 +36,20 @@ packer.startup({
     -- 设置 packer 自动管理
     use('wbthomason/packer.nvim')
     -- 配置 onedock 主题
-    -- use 'navarasu/onedark.nvim'
+    -- use('navarasu/onedark.nvim')
+    -- MonokaiPro 主题
+    use('tanvirtin/monokai.nvim')
+    -- use("cpea2506/one_monokai.nvim")
     -- 配置 onedarkpro 主题
-    use({"olimorris/onedarkpro.nvim", config = function()
-      require("onedarkpro").setup()
-    end
+    use({"olimorris/onedarkpro.nvim"})
+    -- github 主题
+    use({ 'projekt0n/github-nvim-theme' })
+    -- lualine 状态栏装饰插件
+    use({
+      "nvim-lualine/lualine.nvim",
+      requires = { "kyazdani42/nvim-web-devicons" },
     })
+    use("arkav/lualine-lsp-progress")
     -- 配置 nvimtree 插件
     use({'kyazdani42/nvim-tree.lua', requires = 'kyazdani42/nvim-web-devicons'})
     -- 配置 bufferline 插件
@@ -55,12 +63,20 @@ packer.startup({
       'nvim-telescope/telescope.nvim',
       requires = { {'nvim-lua/plenary.nvim'} }
     })
-    -- telescope extensions
+    -- telescope extensions 扩展
     use("LinArcX/telescope-env.nvim")
     use("nvim-telescope/telescope-ui-select.nvim")
+    -- dashboard-nvim 启动面板
+    use("glepnir/dashboard-nvim")
+    -- project 项目列表插件
+    use("ahmedkhalf/project.nvim")
+    -- indent-blankline 空白行缩进
+    use("lukas-reineke/indent-blankline.nvim")
     -- 配置 surround 环绕插件
     use("ur4ltz/surround.nvim")
     -- Comment 注释插件
     use("numToStr/Comment.nvim")
+    -- nvim-autopairs 括号补全
+    use("windwp/nvim-autopairs")
   end
 })

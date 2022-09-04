@@ -12,7 +12,7 @@ vim.wo.cursorline = true
 -- 显示左侧图标指示列
 vim.wo.signcolumn = "yes"
 -- 右侧参考线，超过表示代码太长了，考虑换行
-vim.wo.colorcolumn = "150"
+vim.wo.colorcolumn = "125"
 -- 缩进2个空格等于一个Tab
 vim.o.tabstop = 2
 vim.bo.tabstop = 2
@@ -34,10 +34,8 @@ vim.o.smartcase = true
 vim.o.hlsearch = true
 -- 边输入边搜索
 vim.o.incsearch = true
--- 使用增强状态栏后不再需要 vim 的模式提示
-vim.o.showmode = false
 -- 命令行高为2，提供足够的显示空间
-vim.o.cmdheight = 2
+vim.o.cmdheight = 1
 -- 当文件被外部程序修改时，自动加载
 vim.o.autoread = true
 vim.bo.autoread = true
@@ -45,7 +43,7 @@ vim.bo.autoread = true
 vim.o.wrap = false
 vim.wo.wrap = false
 -- 行结尾可以跳到下一行
-vim.o.whichwrap = 'b,s,<,>,[,],h,l'
+vim.o.whichwrap = '<,>,[,]'
 -- 允许隐藏被修改过的buffer
 vim.o.hidden = true
 -- 鼠标支持
@@ -64,7 +62,6 @@ vim.o.splitright = true
 -- 自动补全不自动选中
 vim.g.completeopt = "menu,menuone,noselect,noinsert"
 -- 样式
-vim.o.background = "dark"
 vim.o.termguicolors = true
 vim.opt.termguicolors = true
 -- 补全增强
@@ -74,4 +71,8 @@ vim.o.shortmess = vim.o.shortmess .. 'c'
 -- 设置补全最多显示 10 行
 vim.o.pumheight = 10
 -- 永远显示 tabline
-vim.o.showtabline = 2
+vim.o.showtabline = 20
+-- 使用增强状态栏插件后不再需要 vim 的模式提示
+vim.o.showmode = false
+-- 配置剪切板
+vim.opt.clipboard = "unnamedplus"
