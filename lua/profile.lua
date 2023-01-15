@@ -1,6 +1,6 @@
 local G = require('G')
 
--- 设置python3对应的目录，你可以手动 export PYTHON=$(which python3) 到你的终端配置中
+-- 设置 python3 对应的目录，你可以手动 export PYTHON=$(which python3) 到你的终端配置中
 G.cmd([[
     let g:python3_host_prog = $PYTHON
 ]])

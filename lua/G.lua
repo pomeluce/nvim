@@ -6,6 +6,21 @@ G.o = vim.o
 G.fn = vim.fn
 G.api = vim.api
 
+-- 声明 leader 键
+G.g.mapleader = " "
+G.g.maplocalleader = " "
+
+-- [[
+-- noremap 禁止递归
+-- silent 不回显内容
+-- expr 参数为表达式
+-- ]]
+G.opts = { noremap = true, silent = true, expr = true }
+G.opt = { noremap = true, silent = true }
+G.opt_expr = { noremap = true, expr = true }
+G.opt_nore = { noremap = true }
+G.opt_sil = { silent = true }
+
 function G.map(maps)
 	for _,map in pairs(maps) do
 		G.api.nvim_set_keymap(map[1], map[2], map[3], map[4])
