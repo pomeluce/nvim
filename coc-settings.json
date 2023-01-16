@@ -1,0 +1,31 @@
+{
+  "hover.floatConfig": { "border": true, "rounded": true, "focusable": true },
+  "suggest.floatConfig": { "border": true, "rounded": true },
+  "diagnostic.floatConfig": { "border": true, "rounded": true },
+  "signature.floatConfig": { "border": true, "rounded": true },
+  "git.floatConfig": { "border": true, "rounded": true },
+  "translator.engines": [
+    "youdao",
+    "google"
+  ],
+  "translator.enableHover": true,
+  "git.addedSign.hlGroup": "GitGutterAdd",
+  "git.changedSign.hlGroup": "GitGutterChange",
+  "git.removedSign.hlGroup": "GitGutterDelete",
+  "git.topRemovedSign.hlGroup": "GitGutterDelete",
+  "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
+  "snippets.userSnippetsDirectory": "~/.config/nvim/snippets",
+  "snippets.ultisnips.directories": ["~/.config/nvim/snippets/ultisnips"],
+  "prettier.trailingComma": "all",
+  "prettier.printWidth": 120,
+  "prettier.useTabs": false,
+  "prettier.tabWidth": 2,: ,
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.quoteProps": "as-needed",
+  "prettier.arrowParens": "avoid",
+  "prettier.htmlWhitespaceSensitivity": "strict",
+  "prettier.bracketSpacing": true,
+  "prettier.endOfLine": "lf",
+  "Lua.telemetry.enable": false
+}

@@ -58,6 +58,17 @@ G.map({
   { 'n', 's,', "winnr() <= winnr('$') - winnr() ? '<c-w>10<' : '<c-w>10>'", G.opt_expr },
   { 'n', 'sj', "winnr() <= winnr('$') - winnr() ? '<c-w>10+' : '<c-w>10-'", G.opt_expr },
   { 'n', 'sk', "winnr() <= winnr('$') - winnr() ? '<c-w>10-' : '<c-w>10+'", G.opt_expr },
+  -- buffer 切换
+  { 'n', 'ss', ':bn<cr>', G.opt },
+  -- 关闭当前 buffer
+  { 'n', '<leader>c', ':bw<cr>', G.opt },
+  -- 前后切换 buffer
+  { 'n', '<m-left>',    '<esc>:bp<cr>', G.opt },
+  { 'n', '<m-right>',   '<esc>:bn<cr>', G.opt },
+  { 'v', '<m-left>',    '<esc>:bp<cr>', G.opt },
+  { 'v', '<m-right>',   '<esc>:bn<cr>', G.opt },
+  { 'i', '<m-left>',    '<esc>:bp<cr>', G.opt },
+  { 'i', '<m-right>',   '<esc>:bn<cr>', G.opt },
   -- TODO: 代码跳转配置
   -- 跳转到上次编辑位置
   { 'n', 'ga', "'.", G.opt },

@@ -19,15 +19,16 @@ function M.config()
     endf
     ]])
   G.map({
-    { 'n', '<leader>a', ':Ag<cr>', G.opt },
+    -- 全局文本搜索(yay -S the_silver_searcher fd bat)
+    { 'n', '<leader>ft', ':Ag<cr>', G.opt },
     -- 文件列表查找
-    { 'n', '<leader>p', ':Files<cr>', G.opt },
-    -- 缓冲区中的行
-    { 'n', '<leader>l', ':BLines<cr>', G.opt },
+    { 'n', '<leader>ff', ':Files<cr>', G.opt },
+    -- 当前文本内容查找
+    { 'n', '<leader>fw', ':BLines<cr>', G.opt },
     -- git 文件查找
-    { 'n', '<leader>g', ':GFiles?<cr>', G.opt },
+    { 'n', '<leader>fg', ':GFiles?<cr>', G.opt },
     -- 查看历史文件
-    { 'n', '<leader>h', ':CHistory<cr>', G.opt },
+    { 'n', '<leader>fh', ':CHistory<cr>', G.opt },
   })
 end
 
