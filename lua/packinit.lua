@@ -51,21 +51,28 @@ require('packer').startup({
 
     -- tree-sitter
     require('pack/tree-sitter').config()
-    use { 'nvim-treesitter/nvim-treesitter', config = "require('pack/tree-sitter').setup()", run = ':TSUpdate', event = 'BufRead' }
+    use { 'nvim-treesitter/nvim-treesitter', config = "require('pack/tree-sitter').setup()", run = ':TSUpdate',
+      event = 'BufRead' }
     use { 'nvim-treesitter/playground', after = 'nvim-treesitter' }
 
     -- 文件管理器
     require('pack/nvim-tree').config()
-    use { 'nvim-tree/nvim-tree.lua', config = "require('pack/nvim-tree').setup()", cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle' } }
+    use { 'nvim-tree/nvim-tree.lua', config = "require('pack/nvim-tree').setup()",
+      cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle' } }
 
     -- markdown 预览插件 导航生成插件
     require('pack/markdown').config()
     use { 'mzlogin/vim-markdown-toc', ft = 'markdown' }
-    use { 'iamcco/markdown-preview.nvim', config = "require('pack/markdown').setup()", run = 'cd app && yarn install', cmd = 'MarkdownPreview', ft = 'markdown' }
+    use { 'iamcco/markdown-preview.nvim', config = "require('pack/markdown').setup()", run = 'cd app && yarn install',
+      cmd = 'MarkdownPreview', ft = 'markdown' }
 
     -- 状态栏 & 标题栏
     require('pack/nvim-lines').config()
     use { 'yaocccc/nvim-lines.lua', config = "require('pack/nvim-lines').setup()" }
+
+    -- 注释插件配置
+    require('pack/yaocccc').config()
+    use { 'yaocccc/vim-comment' }
   end,
   -- 窗口浮动显示
   config = {

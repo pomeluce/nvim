@@ -12,6 +12,9 @@ function M.config()
     -- html css 插件
     'coc-html',
     'coc-css',
+    -- vue3 插件
+    '@yaegassy/coc-volar',
+    '@yaegassy/coc-volar-tools',
     -- lua 插件
     'coc-sumneko-lua',
     -- vim lsp 插件
@@ -38,7 +41,11 @@ function M.config()
     'coc-git',
   }
   -- Fold 命令折叠缓存区
-  G.cmd("command! -nargs=? Fold :call     CocAction('fold', <f-args>)")
+  G.cmd("command! -nargs=? Fold :call CocAction('fold', <f-args>)")
+  -- Format 命令格式化缓冲区
+  G.cmd("command! -nargs=0 Format :call CocActionAsync('format')")
+  -- OR 命令优化导包
+  G.cmd("command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')")
   G.cmd("hi! link CocPum Pmenu")
   G.cmd("hi! link CocMenuSel PmenuSel")
   -- 快捷键配置
@@ -54,6 +61,8 @@ function M.config()
     { 'n', 'gi', '<Plug>(coc-implementation)', G.opt_sil },
     -- 跳转到引用
     { 'n', 'gr', '<Plug>(coc-references)', G.opt_sil },
+    -- 跳转到错误
+    { 'n', 'ge', '<Plug>(coc-diagnostic-next)', G.opt_sil },
     -- TODO: 映射函数和类文本对象
     -- 选中 func 内
     { 'x', 'if', '<Plug>(coc-funcobj-i)', G.opt_sil },
@@ -67,6 +76,7 @@ function M.config()
     -- 选中 calss 外
     { 'x', 'ac', '<Plug>(coc-classobj-a)', G.opt_sil },
     { 'o', 'ac', '<Plug>(coc-classobj-a)', G.opt_sil },
+    -- TODO: 补全设置
     -- 显示文档
     { 'n', 'K', ':call CocAction("doHover")<cr>', G.opt_sil },
     { 'i', '<c-f>', "coc#pum#visible() ? '<c-y>' : '<c-f>'", { silent = true, expr = true } },
@@ -78,11 +88,13 @@ function M.config()
     -- 使用 cr 接受补全项或进行格式化通知, <c-g>u 撤销
     { 'i', '<cr>', "coc#pum#visible() ? coc#pum#confirm() : \"\\<c-g>u\\<cr>\\<c-r>=coc#on_enter()\\<cr>\"", G.opts },
     { 'i', '<c-y>', "coc#pum#visible() ? coc#pum#confirm() : '<c-y>'", G.opts },
+    -- TODO: coc 重启配置
     -- 重启 coc
     { 'n', '<F3>', ":silent CocRestart<cr>", G.opt },
     -- 关闭/开启 coc
     { 'n', '<F4>', "get(g:, 'coc_enabled', 0) == 1 ? ':CocDisable<cr>' : ':CocEnable<cr>'", G.opts },
-    -- 编辑当前文件类型的 snippe
+    -- TODO: 其他配置
+    -- 编辑当前文件类型的 snippet
     { 'n', '<F9>', ":CocCommand snippets.editSnippets<cr>", G.opt },
     -- 查看诊断列表
     { 'n', '<c-e>', ":CocList --auto-preview diagnostics<cr>", G.opt_sil },
@@ -101,13 +113,15 @@ function M.config()
     { 'n', '\\g',
       ":call coc#config('git.addGBlameToVirtualText',  !get(g:coc_user_config, 'git.addGBlameToVirtualText', 0)) | call nvim_buf_clear_namespace(bufnr(), -1, line('.') - 1, line('.'))<cr>",
       G.opt_sil },
+    -- 代码折叠
+    { 'n', '<leader>zz', ':Fold<cr>', G.opt },
     -- TODO: 代码格式化
     -- 格式化选中行
     { 'x', '=', 'CocHasProvider("formatRange") ? "<Plug>(coc-format-selected)" : "="', G.opts },
     -- 格式化当前行
     { 'n', '=', 'CocHasProvider("formatRange") ? "<Plug>(coc-format-selected)" : "="', G.opts },
-    -- 格式化
-    { 'n', '<leader>fm', 'ggVG=<c-o>', G.opt },
+    -- 格式化缓冲区
+    { 'n', '<leader>fm', ':Format<cr>', G.opt },
   })
 end
 

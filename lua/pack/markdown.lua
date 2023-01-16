@@ -11,7 +11,7 @@ function M.config()
   -- 预览选项
   G.g.mkdp_preview_options = { hide_yaml_meta = 1, disable_filename = 1 }
   -- 主题
-  G.g.mkdp_theme = 'dark'
+  -- G.g.mkdp_theme = 'dark'
   -- 围栏标记
   G.g.vmt_fence_text = 'markdown-toc'
 end

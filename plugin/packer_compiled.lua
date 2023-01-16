@@ -140,6 +140,11 @@ _G.packer_plugins = {
     path = "/home/kevin/.local/share/nvim/site/pack/packer/opt/playground",
     url = "https://github.com/nvim-treesitter/playground"
   },
+  ["vim-comment"] = {
+    loaded = true,
+    path = "/home/kevin/.local/share/nvim/site/pack/packer/start/vim-comment",
+    url = "https://github.com/yaocccc/vim-comment"
+  },
   ["vim-expand-region"] = {
     config = { "require('pack/vim-expand-region').setup()" },
     loaded = false,
@@ -199,14 +204,14 @@ time([[Defining packer_plugins]], false)
 time([[Config for nvim-lines.lua]], true)
 require('pack/nvim-lines').setup()
 time([[Config for nvim-lines.lua]], false)
--- Config for: vim-floaterm
-time([[Config for vim-floaterm]], true)
-require('pack/vim-floaterm').setup()
-time([[Config for vim-floaterm]], false)
 -- Config for: coc.nvim
 time([[Config for coc.nvim]], true)
 require('pack/coc').setup()
 time([[Config for coc.nvim]], false)
+-- Config for: vim-floaterm
+time([[Config for vim-floaterm]], true)
+require('pack/vim-floaterm').setup()
+time([[Config for vim-floaterm]], false)
 -- Load plugins in order defined by `after`
 time([[Sequenced loading]], true)
 vim.cmd [[ packadd fzf ]]
@@ -257,9 +262,9 @@ vim.cmd [[au FileType markdown ++once lua require("packer.load")({'markdown-prev
 time([[Defining lazy-load filetype autocommands]], false)
   -- Event lazy-loads
 time([[Defining lazy-load event autocommands]], true)
-vim.cmd [[au CursorHold * ++once lua require("packer.load")({'vim-expand-region', 'vim-visual-multi', 'vim-interestingwords'}, { event = "CursorHold *" }, _G.packer_plugins)]]
-vim.cmd [[au VimEnter * ++once lua require("packer.load")({'vimcdoc'}, { event = "VimEnter *" }, _G.packer_plugins)]]
 vim.cmd [[au BufRead * ++once lua require("packer.load")({'nvim-treesitter'}, { event = "BufRead *" }, _G.packer_plugins)]]
+vim.cmd [[au VimEnter * ++once lua require("packer.load")({'vimcdoc'}, { event = "VimEnter *" }, _G.packer_plugins)]]
+vim.cmd [[au CursorHold * ++once lua require("packer.load")({'vim-visual-multi', 'vim-interestingwords', 'vim-expand-region'}, { event = "CursorHold *" }, _G.packer_plugins)]]
 time([[Defining lazy-load event autocommands]], false)
 vim.cmd("augroup END")
 vim.cmd [[augroup filetypedetect]]
