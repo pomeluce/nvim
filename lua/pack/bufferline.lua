@@ -1,0 +1,34 @@
+local G = require('G')
+local M = {}
+
+function M.config()
+  -- 开启鼠标悬停
+  G.cmd([[ set mousemoveevent ]])
+  -- bufferline 配置
+  -- G.opt.termguicolors = true
+  require('bufferline').setup({
+    options = {
+      -- 使用 coc 进行代码检查
+      diagnostics = 'coc',
+      -- 设置分隔符
+      separator_style = { '', '' },
+      -- 设置鼠标悬停显示关闭按钮
+      hover = {
+        enabled = true,
+        delay = 70,
+        reveal = { 'close' }
+      },
+      -- 设置当前文件下划线
+      indicator = {
+        -- icon = '', -- this should be omitted if indicator style is not 'icon'
+        style = 'none',
+      },
+    }
+  })
+end
+
+function M.setup()
+  -- do nothing
+end
+
+return M

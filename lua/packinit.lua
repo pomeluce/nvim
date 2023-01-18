@@ -67,12 +67,16 @@ require('packer').startup({
       cmd = 'MarkdownPreview', ft = 'markdown' }
 
     -- 状态栏 & 标题栏
-    require('pack/nvim-lines').config()
-    use { 'yaocccc/nvim-lines.lua', config = "require('pack/nvim-lines').setup()" }
+    require('pack/bufferline').config()
+    use { 'akinsho/bufferline.nvim', config = "require('pack/bufferline').setup()", tag = "v3.*",
+      requires = 'nvim-tree/nvim-web-devicons' }
+    require('pack/lualine').config()
+    use { 'nvim-lualine/lualine.nvim', config = "require('pack/lualine').setup()",
+      requires = { 'nvim-tree/nvim-web-devicons', opt = true } }
 
     -- 注释插件配置
-    require('pack/yaocccc').config()
-    use { 'yaocccc/vim-comment' }
+    require('pack/comment').config()
+    use { 'numToStr/Comment.nvim', config = "require('pack/comment').setup()" }
   end,
   -- 窗口浮动显示
   config = {

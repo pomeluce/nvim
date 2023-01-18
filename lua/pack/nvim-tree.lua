@@ -44,7 +44,7 @@ function M.config()
   G.g.nvim_tree_firsttime = 1
   G.map({ { 'n', 'T',
     'g:nvim_tree_firsttime != 1 ? ":NvimTreeToggle<cr>" : ":let g:nvim_tree_firsttime = 0<cr>:NvimTreeToggle $PWD<cr>"',
-    G.opts } })
+    { noremap = true, silent = true, expr = true } } })
   G.cmd("hi! NvimTreeCursorLine cterm=NONE ctermbg=238")
   G.cmd("hi! link NvimTreeFolderIcon NvimTreeFolderName")
   G.cmd("au FileType NvimTree nnoremap <buffer> <silent> C :lua require('pack.nvim-tree').magicCd()<cr>")
@@ -58,7 +58,7 @@ function M.setup()
       mappings = {
         list = {
           -- 进入目录
-          { key = "P", action = "cd" },
+          { key = "<CR>", action = "cd" },
           -- 返回上一级目录
           { key = "<BS>", action = "dir_up" },
           -- 关闭目录
@@ -77,6 +77,10 @@ function M.setup()
           { key = ">", action = "next_diag_item" },
           -- 上一个 dialog 文件
           { key = "<", action = "prev_diag_item" },
+          -- 上一个兄弟文件
+          { key = "N", action = "prev_sibling" },
+          -- 下一个兄弟文件
+          { key = "n", action = "next_sibling" },
           -- 帮助手册
           { key = "?", action = "toggle_help" },
           -- 创建文件

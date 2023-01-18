@@ -2,14 +2,14 @@ local G = require('G')
 local M = {}
 
 function M.config()
-	G.map({
-		{ 'v', 'v', '<Plug>(expand_region_expand)', G.opt_sil },
-    { 'v', 'V', '<Plug>(expand_region_shrink)', G.opt_sil },
-	})
+  G.map({
+    { 'v', 'v', '<Plug>(expand_region_expand)', { silent = true } },
+    { 'v', 'V', '<Plug>(expand_region_shrink)', { silent = true } },
+  })
 end
 
 function M.setup()
-	-- do nothing
+  -- do nothing
 end
 
 return M

@@ -12,7 +12,8 @@ end
 
 function SetFTToggleMap(key, name, cmd, pre_cmd)
   G.map({
-    { 'n', key, string.format(":call v:lua.FTToggle('%s', '%s', '%s')<cr>", name, cmd, pre_cmd), G.opt },
+    { 'n', key, string.format(":call v:lua.FTToggle('%s', '%s', '%s')<cr>", name, cmd, pre_cmd),
+      { noremap = true, silent = true } },
     { 't', key,
       "&ft == \"floaterm\" ? printf('<c-\\><c-n>:FloatermHide<cr>%s', floaterm#terminal#get_bufnr('" ..
           name .. "') == bufnr('%') ? '' : '" .. key .. "') : '" .. key .. "'", { silent = true, expr = true } },
@@ -53,8 +54,8 @@ function M.config()
   SetFTToggleMap('<c-t>', 'TERM', '', 'call SetVimDir()')
   -- 根据文件类型启动浮动终端执行当前文件
   G.map({
-    { 'n', '<F5>', ':call v:lua.RunFile()<cr>', G.opt },
-    { 'i', '<F5>', '<esc>:call v:lua.RunFile()<cr>', G.opt },
+    { 'n', '<F5>', ':call v:lua.RunFile()<cr>', { noremap = true, silent = true } },
+    { 'i', '<F5>', '<esc>:call v:lua.RunFile()<cr>', { noremap = true, silent = true } },
     { 't', '<F5>',
       "&ft == \"floaterm\" ? printf('<c-\\><c-n>:FloatermHide<cr>%s', floaterm#terminal#get_bufnr('RUN') == bufnr('%') ? '' : '<F5>') : '<F5>'",
       { silent = true, expr = true } }

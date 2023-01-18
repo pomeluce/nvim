@@ -6,7 +6,7 @@ G.cmd([[
 ]])
 
 -- 设置命令提示 唯一标识 共享剪贴板
--- [[ 
+-- [[
 -- set showcmd 命令提示
 -- set encoding 编码格式
 -- set wildmenu 命令 tab 提示
@@ -28,7 +28,7 @@ G.cmd([[
 -- [[
 -- set hlsearch 设置高亮
 -- set showmatch 插入括号时短暂跳转到配备括号
--- nh 取消高亮 
+-- nh 取消高亮
 -- set incsearch 输入搜索模式时同时高亮部分的匹配
 -- set inccommand 命令效果预览
 -- set ignorecase 搜索时忽略大小写

@@ -20,15 +20,15 @@ function M.config()
     ]])
   G.map({
     -- 全局文本搜索(yay -S the_silver_searcher fd bat)
-    { 'n', '<leader>ft', ':Ag<cr>', G.opt },
+    { 'n', '<leader>ft', ':Ag<cr>', { noremap = true, silent = true } },
     -- 文件列表查找
-    { 'n', '<leader>ff', ':Files<cr>', G.opt },
+    { 'n', '<leader>ff', ':Files<cr>', { noremap = true, silent = true } },
     -- 当前文本内容查找
-    { 'n', '<leader>fw', ':BLines<cr>', G.opt },
+    { 'n', '<leader>fw', ':BLines<cr>', { noremap = true, silent = true } },
     -- git 文件查找
-    { 'n', '<leader>fg', ':GFiles?<cr>', G.opt },
+    { 'n', '<leader>fg', ':GFiles?<cr>', { noremap = true, silent = true } },
     -- 查看历史文件
-    { 'n', '<leader>fh', ':CHistory<cr>', G.opt },
+    { 'n', '<leader>fh', ':CHistory<cr>', { noremap = true, silent = true } },
   })
 end
 
