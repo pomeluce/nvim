@@ -4,8 +4,11 @@ local M = {}
 function M.config()
   -- 开启鼠标悬停
   G.cmd([[ set mousemoveevent ]])
-  -- bufferline 配置
   -- G.opt.termguicolors = true
+end
+
+function M.setup()
+  -- bufferline 配置
   require('bufferline').setup({
     options = {
       -- 使用 coc 进行代码检查
@@ -25,10 +28,6 @@ function M.config()
       },
     }
   })
-end
-
-function M.setup()
-  -- do nothing
 end
 
 return M

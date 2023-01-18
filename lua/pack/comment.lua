@@ -1,9 +1,12 @@
 local G = require('G')
 local M = {}
 
-local ft = require('Comment.ft')
-
 function M.config()
+  -- do nothing
+end
+
+function M.setup()
+  local ft = require('Comment.ft')
   require('Comment').setup({
     -- N 模式注释快捷键
     toggler = {
@@ -21,11 +24,7 @@ function M.config()
     },
   })
   -- 单独设置注释
-  ft.set('java', {'// %s', '/* %s */'})
-end
-
-function M.setup()
-  -- do nothing
+  ft.set('java', { '// %s', '/* %s */' })
 end
 
 return M

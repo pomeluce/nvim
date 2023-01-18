@@ -36,9 +36,18 @@ require('packer').startup({
     require('pack/vim-visual-multi').config()
     use { 'mg979/vim-visual-multi', config = "require('pack/vim-visual-multi').setup()", event = 'CursorHold' }
 
+    -- 数据库可视化UI
+    require('pack/vim-dadbod').config()
+    use { 'tpope/vim-dadbod', cmd = { 'DBUI' } }
+    use { 'kristijanhusak/vim-dadbod-ui', config = "require('pack/vim-dadbod'),setup()", after = 'vim-dadbod' }
+
     -- coc-nvim
     require('pack/coc').config()
     use { 'neoclide/coc.nvim', config = "require('pack/coc').setup()", branch = 'release' }
+
+    -- github copilot
+    require('pack/copilot').config()
+    use { 'github/copilot.vim', config = "require('pack/copilot').setup()", event = 'InsertEnter' }
 
     -- 浮动终端
     require('pack/vim-floaterm').config()
@@ -74,9 +83,16 @@ require('packer').startup({
     use { 'nvim-lualine/lualine.nvim', config = "require('pack/lualine').setup()",
       requires = { 'nvim-tree/nvim-web-devicons', opt = true } }
 
-    -- 注释插件配置
+    -- 代码注释
     require('pack/comment').config()
     use { 'numToStr/Comment.nvim', config = "require('pack/comment').setup()" }
+
+    -- 空白行缩进
+    require('pack/indentline').config()
+    use { 'lukas-reineke/indent-blankline.nvim', config = "require('pack/indentline').setup()", after = 'nvim-treesitter' }
+
+    -- 字符环绕
+    use { 'tpope/vim-surround' }
   end,
   -- 窗口浮动显示
   config = {

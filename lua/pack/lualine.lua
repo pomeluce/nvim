@@ -2,6 +2,10 @@ local G = require('G')
 local M = {}
 
 function M.config()
+  -- do nothing
+end
+
+function M.setup()
   -- lualine 配置
   require('lualine').setup({
     options = {
@@ -76,10 +80,6 @@ function M.config()
       },
     },
   })
-end
-
-function M.setup()
-  -- do nothing
 end
 
 return M
