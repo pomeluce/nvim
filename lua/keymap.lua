@@ -1,11 +1,5 @@
 local G = require('G')
 
--- [[
--- au 定义自动命令
--- bufEnter 进入缓冲区后。可用来设定有关文件类型的选项。也在开始编辑缓冲区时执行，它发生在 BufReadPost自动命令之后
--- acwrite 缓冲区总是用 BufWriteCmd 自动命令写回
--- ]]
-G.cmd([[au BufEnter * if &buftype == '' && &readonly == 1 | set buftype=acwrite | set noreadonly | endif]])
 -- 文件保存
 G.cmd([[
 func MagicSave()

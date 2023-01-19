@@ -1,7 +1,7 @@
 local G = require('G')
 local M = {}
 
-function DBUI()
+function M.DBUI()
   --[[
     laststatus: 移除状态行
     showtabline: 移除标签行
@@ -15,7 +15,7 @@ end
 
 function M.config()
   -- 连接文件保存位置
-  G.g.db_ui_save_location = '~/Downloads'
+  G.g.db_ui_save_location = '~/.config/dotfiles/nvim/cache/db_config'
   -- 使用 nerd font
   G.g.db_ui_use_nerd_fonts = 1
   -- 强制回显通知
@@ -29,7 +29,7 @@ function M.config()
       ['Alter Table'] = 'ALTER TABLE `{schema}`.`{table}` ADD '
     }
   }
-  G.cmd('com! CALLDB call v:lua.DBUI()')
+  G.cmd('com! CALLDB lua require("pack/vim-dadbod").DBUI()')
 end
 
 function M.setup()

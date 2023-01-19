@@ -24,6 +24,10 @@ require('packer').startup({
     -- 中文help doc
     use { 'yianwillis/vimcdoc', event = 'VimEnter' }
 
+    -- 配置主题
+    require('pack/monokai').config()
+    use { 'cpea2506/one_monokai.nvim', config = "require('pack/monokai').setup()" }
+
     -- vv 快速选中内容插件
     require('pack/vim-expand-region').config()
     use { 'terryma/vim-expand-region', config = "require('pack/vim-expand-region').setup()", event = 'CursorHold' }
@@ -39,7 +43,7 @@ require('packer').startup({
     -- 数据库可视化UI
     require('pack/vim-dadbod').config()
     use { 'tpope/vim-dadbod', cmd = { 'DBUI' } }
-    use { 'kristijanhusak/vim-dadbod-ui', config = "require('pack/vim-dadbod'),setup()", after = 'vim-dadbod' }
+    use { 'kristijanhusak/vim-dadbod-ui', config = "require('pack/vim-dadbod').setup()", after = 'vim-dadbod' }
 
     -- coc-nvim
     require('pack/coc').config()
