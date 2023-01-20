@@ -1,21 +1,5 @@
 local G = require('G')
 
--- 文件保存
-G.cmd([[
-func MagicSave()
-    " If the directory is not exited, create it
-    if empty(glob(expand("%:p:h")))
-        call system("mkdir -p " . expand("%:p:h"))
-    endif
-    " If the file is not writable, use sudo to write it
-    if &buftype == 'acwrite'
-        w !sudo tee > /dev/null %
-    else
-        w
-    endif
-endf
-]])
-
 -- 快捷键配置
 G.map({
   -- TODO: 基础配置
@@ -24,7 +8,7 @@ G.map({
   { 'n', ';', ':', {} },
   { 'v', ';', ':', {} },
   { 'i', 'jk', '<esc>', { noremap = true, silent = true } },
-  { 'n', 'S', ':call MagicSave()<cr>', { noremap = true, silent = true } },
+  { 'n', 'S', ':MagicSave<cr>', { noremap = true, silent = true } },
   { 'n', 'Q', ':q!<cr>', { noremap = true, silent = true } },
   -- 粘贴之后不复制被粘贴的文本
   { 'v', 'p', '"_dhp', { noremap = true, silent = true } },
@@ -89,94 +73,17 @@ G.map({
   -- 取消搜索高亮
   { 'n', '<leader>nh', ':nohlsearch<cr>', { noremap = true, silent = true } },
   -- 重载配置文件
-  { 'n', '<F2>', ':luafile ~/.config/dotfiles/nvim/*.lua<cr>', { noremap = true, silent = true } },
+  { 'n', '<F2>', ':luafile %<cr>', { noremap = true, silent = true } },
   -- 行尾添加分号
   { 'n', '<leader>;', 'A;<esc>', { noremap = true, silent = true } },
-})
-
--- 重设tab长度
-G.cmd('command! -nargs=* SetTab call SwitchTab(<q-args>)')
-G.cmd([[
-    fun! SwitchTab(tab_len)
-        if !empty(a:tab_len)
-            let [&shiftwidth, &softtabstop, &tabstop] = [a:tab_len, a:tab_len, a:tab_len]
-        else
-            let l:tab_len = input('input shiftwidth: ')
-            if !empty(l:tab_len)
-                let [&shiftwidth, &softtabstop, &tabstop] = [l:tab_len, l:tab_len, l:tab_len]
-            endif
-        endif
-        redraw!
-        echo printf('shiftwidth: %d', &shiftwidth)
-    endf
-]])
-
--- 折叠
-G.map({
-  { 'n', '--', "foldclosed(line('.')) == -1 ? ':call MagicFold()<cr>' : 'za'",
+  -- 代码折叠
+  { 'n', '--', "foldclosed(line('.')) == -1 ? ':MagicFold<cr>' : 'za'",
     { noremap = true, silent = true, expr = true } },
   { 'v', '-', 'zf', { noremap = true } },
-})
-G.cmd([[
-    fun! MagicFold()
-        let l:line = trim(getline('.'))
-        if l:line == '' | return | endif
-        let [l:up, l:down] = [0, 0]
-        if l:line[0] == '}'
-            exe 'norm! ^%'
-            let l:up = line('.')
-            exe 'norm! %'
-        endif
-        if l:line[len(l:line) - 1] == '{'
-            exe 'norm! $%'
-            let l:down = line('.')
-            exe 'norm! %'
-        endif
-        try
-            if l:up != 0 && l:down != 0
-                exe 'norm! ' . l:up . 'GV' . l:down . 'Gzf'
-            elseif l:up != 0
-                exe 'norm! V' . l:up . 'Gzf'
-            elseif l:down != 0
-                exe 'norm! V' . l:down . 'Gzf'
-            else
-                exe 'norm! za'
-            endif
-        catch
-            redraw!
-        endtry
-    endf
-]])
-
--- space 行首行尾跳转
-G.map({
-  { 'n', '<space>', ':call MagicMove()<cr>', { noremap = true, silent = true } },
+  -- space 行首行尾跳转
+  { 'n', '<space>', ':MagicMove<cr>', { noremap = true, silent = true } },
   { 'n', '0', '%', { noremap = true } },
   { 'v', '0', '%', { noremap = true } },
+  -- 驼峰转换
+  { 'v', 'th', ':lua require("funcutil").toggleHump()<cr>', { noremap = true, silent = true } },
 })
-G.cmd([[
-    fun! MagicMove()
-        let [l:first, l:head] = [1, len(getline('.')) - len(substitute(getline('.'), '^\s*', '', 'G')) + 1]
-        let l:before = col('.')
-        exe l:before == l:first && l:first != l:head ? 'norm! ^' : 'norm! $'
-        let l:after = col('.')
-        if l:before == l:after
-            exe 'norm! 0'
-        endif
-    endf
-]])
-
--- 驼峰转换
-G.map({
-  { 'v', 'th', ':call ToggleHump()<CR>', { noremap = true, silent = true } },
-})
-G.cmd([[
-    fun! ToggleHump()
-        let [l, c1, c2] = [line('.'), col("'<"), col("'>")]
-        let line = getline(l)
-        let w = line[c1 - 1 : c2 - 2]
-        let w = w =~ '_' ? substitute(w, '\v_(.)', '\u\1', 'g') : substitute(substitute(w, '\v^(\u)', '\l\1', 'g'), '\v(\u)', '_\l\1', 'g')
-        call setbufline('%', l, printf('%s%s%s', c1 == 1 ? '' : line[:c1-2], w, c2 == 1 ? '' : line[c2-1:]))
-        call cursor(l, c1)
-    endf
-]])

@@ -49,6 +49,10 @@ require('packer').startup({
     require('pack/coc').config()
     use { 'neoclide/coc.nvim', config = "require('pack/coc').setup()", branch = 'release' }
 
+    -- lsp 配置
+    use { 'neovim/nvim-lspconfig' }
+    use { 'williamboman/mason.nvim' }
+
     -- github copilot
     require('pack/copilot').config()
     use { 'github/copilot.vim', config = "require('pack/copilot').setup()", event = 'InsertEnter' }
