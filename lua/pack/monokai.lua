@@ -10,9 +10,6 @@ function M.setup()
   G.cmd([[ colorscheme one_monokai ]])
   require('one_monokai').setup({
     transparent = true,
-    colors = {
-      gray = '#5c6370',
-    }
   })
 end
 

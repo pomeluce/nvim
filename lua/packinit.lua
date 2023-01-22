@@ -50,8 +50,9 @@ require('packer').startup({
     use { 'neoclide/coc.nvim', config = "require('pack/coc').setup()", branch = 'release' }
 
     -- lsp 配置
-    use { 'neovim/nvim-lspconfig' }
-    use { 'williamboman/mason.nvim' }
+    --[[ require('pack/lspconfig').config()
+    use { 'neovim/nvim-lspconfig', config = "require('pack/lspconfig').setup()" }
+    use { 'williamboman/mason.nvim' } ]]
 
     -- github copilot
     require('pack/copilot').config()
