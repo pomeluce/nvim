@@ -11,6 +11,8 @@ function M.setup()
   -- bufferline 配置
   require('bufferline').setup({
     options = {
+      -- 不显示关闭按钮
+      show_buffer_close_icons = false,
       -- 使用 coc 进行代码检查
       diagnostics = 'coc',
       -- 设置分隔符

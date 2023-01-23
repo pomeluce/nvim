@@ -67,6 +67,11 @@ require('packer').startup({
     use { 'junegunn/fzf' }
     use { 'junegunn/fzf.vim', config = "require('pack/fzf').setup()", run = 'cd ~/.fzf && ./install --all', after = "fzf" }
 
+    -- spectre
+    require('pack/spectre').config()
+    use { 'windwp/nvim-spectre', config = "require('pack/spectre').setup()", requires = 'nvim-lua/plenary.nvim',
+      event = 'BufRead' }
+
     -- tree-sitter
     require('pack/tree-sitter').config()
     use { 'nvim-treesitter/nvim-treesitter', config = "require('pack/tree-sitter').setup()", run = ':TSUpdate',
@@ -84,10 +89,12 @@ require('packer').startup({
     use { 'iamcco/markdown-preview.nvim', config = "require('pack/markdown').setup()", run = 'cd app && yarn install',
       cmd = 'MarkdownPreview', ft = 'markdown' }
 
-    -- 状态栏 & 标题栏
+    -- 标题栏
     require('pack/bufferline').config()
     use { 'akinsho/bufferline.nvim', config = "require('pack/bufferline').setup()", tag = "v3.*",
       requires = 'nvim-tree/nvim-web-devicons' }
+
+    -- 状态栏
     require('pack/lualine').config()
     use { 'nvim-lualine/lualine.nvim', config = "require('pack/lualine').setup()",
       requires = { 'nvim-tree/nvim-web-devicons', opt = true } }
