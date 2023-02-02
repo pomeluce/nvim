@@ -1,4 +1,3 @@
-local G = require('G')
 local M = {}
 
 function M.config()
@@ -6,8 +5,14 @@ function M.config()
 end
 
 function M.setup()
+  local status_ok, Comment = pcall(require, 'Comment')
+  if not status_ok then
+    vim.notify('Comment.nvim 没有加载或未安装')
+    return
+  end
   local ft = require('Comment.ft')
-  require('Comment').setup({
+
+  Comment.setup({
     -- N 模式注释快捷键
     toggler = {
       line = '<leader>/',

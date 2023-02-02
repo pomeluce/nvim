@@ -1,15 +1,13 @@
-local G = require('G')
-
-local autoGroup = G.api.nvim_create_augroup('autoGroup', { clear = true })
-local autocmd = G.api.nvim_create_autocmd
+local autoGroup = vim.api.nvim_create_augroup('autoGroup', { clear = true })
+local autocmd = vim.api.nvim_create_autocmd
 
 -- 修改 lua/packinit.lua 自动更新插件
 autocmd("BufWritePost", {
   group = autoGroup,
   callback = function()
-    if G.fn.expand("<afile>") == "packinit.lua" then
-      G.cmd('source packinit.lua')
-      G.cmd('PackerSync')
+    if vim.fn.expand("<afile>") == "plugins-setup.lua" then
+      vim.cmd('source plugins-setup.lua')
+      vim.cmd('PackerSync')
     end
   end,
 })
@@ -19,7 +17,7 @@ autocmd("BufEnter", {
   group = autoGroup,
   pattern = "*",
   callback = function()
-    G.opt.formatoptions = G.opt.formatoptions
+    vim.opt.formatoptions = vim.opt.formatoptions
         - "o" -- O 和 o, 不要延续注释
         + "r" -- 回车延续注释
   end,
@@ -30,8 +28,8 @@ autocmd("BufReadPost", {
   group = autoGroup,
   pattern = "*",
   callback = function()
-    if G.fn.line("'\"") > 1 and G.fn.line("'\"") <= G.fn.line("$") then
-      G.cmd("normal! g`\"")
+    if vim.fn.line("'\"") > 1 and vim.fn.line("'\"") <= vim.fn.line("$") then
+      vim.cmd("normal! g`\"")
     end
   end,
 })
@@ -40,8 +38,8 @@ autocmd("BufEnter", {
   group = autoGroup,
   pattern = "*",
   callback = function()
-    if G.fn.getbufvar(0, "&buftype") == '' and G.fn.getbufvar(0, "&readonly") == 1 then
-      G.cmd([[
+    if vim.fn.getbufvar(0, "&buftype") == '' and vim.fn.getbufvar(0, "&readonly") == 1 then
+      vim.cmd([[
         setlocal buftype=acwrite
         setlocal noreadonly
       ]])
@@ -54,13 +52,13 @@ autocmd("FileType", {
   group = autoGroup,
   pattern = "*",
   callback = function()
-    pcall(G.cmd, [[ silent! mkview ]])
+    pcall(vim.cmd, [[ silent! mkview ]])
   end
 })
 autocmd("BufLeave,BufWinEnter", {
   group = autoGroup,
   pattern = "*",
   callback = function()
-    pcall(G.cmd, [[ silent! loadview ]])
+    pcall(vim.cmd, [[ silent! loadview ]])
   end
 })

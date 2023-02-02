@@ -1,4 +1,3 @@
-local G = require('G')
 local M = {}
 
 -- 有时候进入到依赖文件内，此时想在依赖文件所在目录查看文件 nvim-tree 并没有一个很好的方法，所以写了这个func
@@ -8,7 +7,7 @@ function M.magicCd()
   local api = require("nvim-tree.api")
   local core = require("nvim-tree.core")
 
-  local file_path = G.fn.expand('#:p:h')
+  local file_path = vim.fn.expand('#:p:h')
   local tree_cwd = core.get_cwd()
 
   if inner_cwd == "" then
@@ -41,19 +40,27 @@ function M.magicCd()
 end
 
 function M.config()
-  G.g.nvim_tree_firsttime = 1
-  G.map({ { 'n', 'T',
-    'g:nvim_tree_firsttime != 1 ? ":NvimTreeToggle<cr>" : ":let g:nvim_tree_firsttime = 0<cr>:NvimTreeToggle $PWD<cr>"',
-    { noremap = true, silent = true, expr = true } } })
-  G.cmd("hi! NvimTreeCursorLine cterm=NONE ctermbg=238")
-  G.cmd("hi! link NvimTreeFolderIcon NvimTreeFolderName")
-  G.cmd("au FileType NvimTree nnoremap <buffer> <silent> C :lua require('pack.nvim-tree').magicCd()<cr>")
+  vim.g.nvim_tree_firsttime = 1
+  vim.cmd("hi! NvimTreeCursorLine cterm=NONE ctermbg=238")
+  vim.cmd("hi! link NvimTreeFolderIcon NvimTreeFolderName")
+  vim.cmd("au FileType NvimTree nnoremap <buffer> <silent> C :lua require('user.plugins.nvim-tree').magicCd()<cr>")
 end
 
 function M.setup()
-  local nvim_tree = require("nvim-tree")
+  local status_ok, nvim_tree = pcall(require, "nvim-tree")
+  if not status_ok then
+    vim.notify("nvim-tree 没有加载或者未安装")
+    return
+  end
+  ---@diagnostic disable-next-line: redundant-parameter
   nvim_tree.setup({
     sort_by = "case_sensitive",
+    -- 在多个窗口下打开 buffer 时, 默认使用最近窗口
+    actions = {
+      open_file = {
+        window_picker = { enable = false }
+      }
+    },
     view = {
       mappings = {
         list = {
@@ -93,8 +100,8 @@ function M.setup()
       float = {
         enable = true,
         open_win_config = function()
-          local columns = G.o.columns
-          local lines = G.o.lines
+          local columns = vim.o.columns
+          local lines = vim.o.lines
           local width = math.max(math.floor(columns * 0.5), 50)
           local height = math.max(math.floor(lines * 0.5), 20)
           local left = math.ceil((columns - width) * 0.5)

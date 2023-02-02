@@ -1,14 +1,18 @@
-local G = require('G')
 local M = {}
 
 function M.config()
-  G.opt.list = true
+  vim.opt.list = true
   -- 设置行尾换行符
   -- G.opt.listchars:append "eol:↴"
 end
 
 function M.setup()
-  require('indent_blankline').setup({
+  local status_ok, indent_blankline = pcall(require, "indent_blankline")
+  if not status_ok then
+    vim.notify("indent_blankline 没有加载或未安装")
+    return
+  end
+  indent_blankline.setup({
     -- 空行占位符
     space_char_blankline = " ",
     -- 用 treesitter 判断上下文
