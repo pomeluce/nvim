@@ -21,7 +21,7 @@ function M.config()
     },
   }
   vim.cmd("com! -bar -bang Ag call fzf#vim#ag(<q-args>, fzf#vim#with_preview({'options': '--delimiter=: --nth=4..'}), <bang>0)")
-  vim.cmd("com! FHistory lua require('pack/fzf').fHistory()")
+  vim.cmd("com! FHistory lua require('user.plugins.fzf').fHistory()")
 end
 
 function M.setup()

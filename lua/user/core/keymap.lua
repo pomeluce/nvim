@@ -114,8 +114,8 @@ keymap("n", "<leader>fm", ":Format<CR>", { noremap = true, silent = true })
 keymap("v", "<leader>fm", ":Format<CR>", { noremap = true, silent = true })
 keymap("i", "<Right>", 'copilot#Accept("<Right>")', { script = true, silent = true, expr = true })
 -- 根据文件类型启动浮动终端执行当前文件
-keymap("n", "<F5>", ':lua require("pack/vim-floaterm").runFile()<cr>', { noremap = true, silent = true })
-keymap("i", "<F5>", '<esc>:lua require("pack/vim-floaterm").runFile()<cr>', { noremap = true, silent = true })
+keymap("n", "<F5>", ':lua require("user.plugins.vim-floaterm").runFile()<cr>', { noremap = true, silent = true })
+keymap("i", "<F5>", '<esc>:lua require("user.plugins.vim-floaterm").runFile()<cr>', { noremap = true, silent = true })
 keymap(
   "t",
   "<F5>",

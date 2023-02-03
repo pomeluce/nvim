@@ -10,7 +10,7 @@ function M.toggleFT(name, cmd)
 end
 
 function M.setFTToggleMap(key, name, cmd)
-    keymap( 'n', key, string.format(":lua require('pack/vim-floaterm').toggleFT('%s', '%s')<cr>", name, cmd), { noremap = true, silent = true } )
+    keymap( 'n', key, string.format(":lua require('user.plugins.vim-floaterm').toggleFT('%s', '%s')<cr>", name, cmd), { noremap = true, silent = true } )
     keymap( 't', key,
     "&ft == \"floaterm\" ? printf('<c-\\><c-n>:FloatermHide<cr>%s', floaterm#terminal#get_bufnr('" ..
     name .. "') == bufnr('%') ? '' : '" .. key .. "') : '" .. key .. "'", { silent = true, expr = true } )
