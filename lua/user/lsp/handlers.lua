@@ -89,11 +89,6 @@ local function lsp_keymaps(bufnr)
   buf_map( bufnr, 'v', '<m-cr>', '<cmd>lua vim.lsp.buf.code_action()<CR>', { noremap = true, silent = true } )
   -- 格式化命令
   vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format { async = true }' ]])
-  -- 设置格式化快捷键
-  -- G.map({
-  --   { 'n', '<leader>fm', ':Format<CR>', { noremap = true, silent = true } },
-  --   { 'v', '<leader>fm', ':Format<CR>', { noremap = true, silent = true } },
-  -- })
 end
 
 M.on_attach = function(client, bufnr)
