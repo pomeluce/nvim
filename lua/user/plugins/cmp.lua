@@ -5,6 +5,8 @@ function M.config()
 end
 
 function M.setup()
+  local luasnip = require('luasnip')
+  local lspkind = require('lspkind')
   local status, cmp = pcall(require, "cmp")
   if not status then
     vim.notify("cmp 没有加载或未安装")
@@ -16,7 +18,7 @@ function M.setup()
     -- 设置代码片段引擎，用于根据代码片段补全
     snippet = {
       expand = function(args)
-        require('luasnip').lsp_expand(args.body)
+        luasnip.lsp_expand(args.body)
       end,
     },
     -- 显示边框
@@ -27,13 +29,13 @@ function M.setup()
     -- 键盘映射
     mapping = cmp.mapping.preset.insert({
       -- 选择下一个补全项
-      ['<tab>'] = cmp.mapping.select_next_item(),
+      ['<c-j>'] = cmp.mapping.select_next_item(),
       -- 选择上一个补全项
-      ['<s-tab>'] = cmp.mapping.select_prev_item(),
+      ['<c-k>'] = cmp.mapping.select_prev_item(),
       -- 出现补全菜单
-      ['<C-space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      ['<c-space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
       -- 选择补全项
-      ['<CR>'] = cmp.mapping.confirm({
+      ['<tab>'] = cmp.mapping.confirm({
         behavior = cmp.ConfirmBehavior.Replace,
         select = true,
       }),
@@ -44,6 +46,7 @@ function M.setup()
       { name = 'luasnip' },
       { name = 'buffer' },
       { name = 'path' },
+      { name = 'nvim_lua' },
     },
     -- 根据文件类型设置补全来源
     cmp.setup.filetype('gitcommit', {
@@ -69,7 +72,7 @@ function M.setup()
     }),
     -- 设置补全显示的格式
     formatting = {
-      format = require('lspkind').cmp_format({
+      format = lspkind.cmp_format({
         -- 显示的最大字符
         maxwidth = 50,
         -- 超过最大字符后显示的字符

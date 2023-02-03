@@ -27,28 +27,28 @@ require("packer").startup({
     -- 配置主题
     use({ "cpea2506/one_monokai.nvim", config = "require('user.plugins.colorscheme').setup()" })
 
-    -- cmp 补全
-    use({
-      "hrsh7th/nvim-cmp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-cmdline",
-      "saadparwaiz1/cmp_luasnip",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lua",
-      "onsails/lspkind.nvim",
-      config = "require('user.plugins.cmp').setup()",
-    })
-
-    -- 代码片段
-    use({ "L3MON4D3/LuaSnip", "rafamadriz/friendly-snippets" })
-
     -- lsp 配置
     use({
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "neovim/nvim-lspconfig",
       "jose-elias-alvarez/null-ls.nvim",
+    })
+
+    -- cmp 补全
+    use({
+      "hrsh7th/nvim-cmp",
+      config = "require('user.plugins.cmp').setup()",
+      requires = {
+        "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+        "hrsh7th/cmp-nvim-lua",
+        "hrsh7th/cmp-cmdline",
+        "onsails/lspkind.nvim",
+        -- 代码片段
+        { "L3MON4D3/LuaSnip", requires = { "saadparwaiz1/cmp_luasnip", "rafamadriz/friendly-snippets" } }
+      }
     })
 
     -- vv 快速选中内容插件
