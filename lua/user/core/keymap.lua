@@ -144,9 +144,14 @@ keymap(
 keymap("n", "H", ":TSHighlightCapturesUnderCursor<CR>", { noremap = true, silent = true })
 -- 刷新语法高亮
 keymap('n', 'R', ':write | edit | TSBufEnable highlight<CR>', { silent = true, noremap = true })
+-- 打开文件树
 keymap(
   "n",
   "T",
   'g:nvim_tree_firsttime != 1 ? ":NvimTreeToggle<cr>" : ":let g:nvim_tree_firsttime = 0<cr>:NvimTreeToggle $PWD<cr>"',
   { noremap = true, silent = true, expr = true }
 )
+-- dashboard 封面快捷键
+keymap('n', '<leader>sp', ':NvimTreeOpen /home/developcode/Web/<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>es', ':edit $MYVIMRC<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>ek', ':edit $HOME/.config/nvim/lua/user/core/keymap.lua<cr>', { noremap = true, silent = true })

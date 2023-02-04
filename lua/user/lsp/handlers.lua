@@ -72,21 +72,21 @@ local function lsp_keymaps(bufnr)
   buf_map( bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', { noremap = true, silent = true } )
   -- TODO: goto 跳转
   -- 跳转到定义
-  buf_map( bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { noremap = true, silent = true } )
+  buf_map( bufnr, 'n', 'gd', '<cmd>Lspsaga goto_definition<cr>', { noremap = true, silent = true } )
   -- 跳转到类型定义
   buf_map( bufnr, 'n', 'gy', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { noremap = true, silent = true } )
   -- 跳转到实现
   buf_map( bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { noremap = true, silent = true } )
   -- 跳转到引用
-  buf_map( bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', { noremap = true, silent = true } )
+  buf_map( bufnr, 'n', 'gr', '<cmd>Lspsaga lsp_finder<cr>', { noremap = true, silent = true } )
   -- 跳转到错误
   buf_map( bufnr, 'n', 'ge', '<cmd>lua vim.diagnostic.goto_next()<cr>', { noremap = true, silent = true } )
   -- TODO: 补全设置
   -- 显示文档
-  buf_map( bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true } )
+  buf_map( bufnr, 'n', 'K', '<cmd>Lspsaga hover_doc<CR>', { noremap = true, silent = true } )
   -- code action 代码修复
-  buf_map( bufnr, 'n', '<m-cr>', '<cmd>lua vim.lsp.buf.code_action()<CR>', { noremap = true, silent = true } )
-  buf_map( bufnr, 'v', '<m-cr>', '<cmd>lua vim.lsp.buf.code_action()<CR>', { noremap = true, silent = true } )
+  buf_map( bufnr, 'n', '<m-cr>', '<cmd>Lspsaga code_action<CR>', { noremap = true, silent = true } )
+  buf_map( bufnr, 'v', '<m-cr>', '<cmd>Lspsaga code_action<CR>', { noremap = true, silent = true } )
   -- 格式化命令
   vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format { async = true }' ]])
 end

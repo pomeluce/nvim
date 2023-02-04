@@ -3,7 +3,7 @@ local M = {}
 function M.config()
   -- 开启鼠标悬停
   vim.cmd([[ set mousemoveevent ]])
-  -- G.opt.termguicolors = true
+  vim.opt.termguicolors = true
 end
 
 function M.setup()
@@ -18,6 +18,10 @@ function M.setup()
     options = {
       -- 不显示关闭按钮
       show_buffer_close_icons = false,
+      -- 显示序号
+      numbers = function(opts)
+        return string.format('%s.', opts.ordinal)
+      end,
       -- 使用 nvim_lsp 进行代码检查
       diagnostics = 'nvim_lsp',
       -- 设置分隔符

@@ -116,7 +116,7 @@ require("packer").startup({
     use({
       "nvim-tree/nvim-tree.lua",
       config = "require('user.plugins.nvim-tree').setup()",
-      cmd = { "NvimTreeToggle", "NvimTreeFindFileToggle" },
+      cmd = { "NvimTreeToggle", "NvimTreeFindFileToggle", "NvimTreeOpen" },
     })
 
     -- markdown 预览插件 导航生成插件
@@ -156,6 +156,13 @@ require("packer").startup({
 
     -- 字符环绕
     use({ "tpope/vim-surround" })
+
+    -- 启动面板
+    use {
+      'glepnir/dashboard-nvim',
+      config =  "require('user.plugins.dashboard').setup()",
+      requires = { 'nvim-tree/nvim-web-devicons' },
+    }
   end,
   -- 窗口浮动显示
   config = {
