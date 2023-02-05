@@ -30,7 +30,7 @@ function M.setup()
     },
     -- 顶栏 winbar 设置
     symbol_in_winbar = {
-      enable = true,
+      enable = false,
       separator = " ",
       hide_keyword = true,
       show_file = true,

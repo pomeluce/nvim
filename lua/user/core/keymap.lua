@@ -124,15 +124,17 @@ keymap(
   { silent = true, expr = true }
 )
 -- 全局文本搜索(yay -S the_silver_searcher fd bat)
-keymap('n', '<leader>ft', ':Ag<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>ft', ':Telescope live_grep<cr>', { noremap = true, silent = true })
 -- 文件列表查找
-keymap('n', '<leader>ff', ':Files<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>ff', ':Telescope find_files<cr>', { noremap = true, silent = true })
 -- 当前文本内容查找
-keymap('n', '<leader>fw', ':BLines<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>fw', ':Telescope current_buffer_fuzzy_find<cr>', { noremap = true, silent = true })
 -- git 文件查找
-keymap('n', '<leader>fg', ':GFiles?<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>fg', ':Telescope git_status<cr>', { noremap = true, silent = true })
 -- 查看历史文件
-keymap('n', '<leader>fh', ':FHistory<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>fh', ':Telescope oldfiles<cr>', { noremap = true, silent = true })
+-- 查看项目列表
+keymap('n', '<leader>fp', ':Telescope projects theme=dropdown<cr>', { noremap = true, silent = true })
 keymap('n', '<leader>rt', '<cmd>lua require("spectre").open()<CR>', { noremap = true, silent = true })
 keymap(
   'v',
@@ -164,4 +166,4 @@ keymap('s', '<s-tab>', 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab
 keymap('n', 'C', '<cmd>lua require"gitsigns".blame_line{full=true}<CR>', { noremap = true, silent = true })
 -- translator 翻译
 keymap('n', '<leader>tr', ':TranslateW<CR>', { noremap = true, silent = true })
-keymap('v', '<leader>tr', ':TranslateWV<CR>', { noremap = true, silent = true })
+keymap('v', '<leader>tr', ':TranslateW<CR>', { noremap = true, silent = true })

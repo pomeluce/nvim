@@ -108,6 +108,18 @@ require('packer').startup {
       after = 'fzf',
     }
 
+    -- telescope 文件搜索
+    use {
+      'nvim-telescope/telescope.nvim',
+      config = "require('user.plugins.telescope').setup()",
+      branch = '0.1.x',
+      requires = { { 'nvim-lua/plenary.nvim' } },
+    }
+    use { 'nvim-telescope/telescope-media-files.nvim' }
+
+    -- 项目管理
+    use { 'ahmedkhalf/project.nvim', config = "require('user.plugins.project').setup()" }
+
     -- spectre
     use { 'windwp/nvim-spectre', requires = 'nvim-lua/plenary.nvim', event = 'BufRead' }
 
