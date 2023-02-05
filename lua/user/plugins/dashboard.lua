@@ -28,7 +28,7 @@ function M.setup()
         ' ════╝     ╚═════╝    ╚═╝  ╚═╝     ╚═══╝     ╚═╝   ╚═╝     ╚═ ',
         '                                                              ',
         '                                                              ',
-        '                   [ Jorvim version 1.2.1 ]                   ',
+        '                   [ Jorvim version 1.2.2 ]                   ',
         '                                                              ',
         '                                                              ',
         '                                                              ',
@@ -43,7 +43,7 @@ function M.setup()
           key = 'l',
           keymap = 'leader s p',
           key_hl = 'Number',
-          action = 'NvimTreeOpen /home/developcode/Web/',
+          action = 'cd /home/developcode/Web/ | NvimTreeOpen',
         },
         {
           icon = '📌  ',

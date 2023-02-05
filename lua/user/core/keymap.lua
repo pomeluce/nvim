@@ -154,7 +154,7 @@ keymap(
   { noremap = true, silent = true, expr = true }
 )
 -- dashboard 封面快捷键
-keymap('n', '<leader>sp', ':NvimTreeOpen /home/developcode/Web/<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>sp', ':cd  /home/developcode/Web/ | NvimTreeOpen<cr>', { noremap = true, silent = true })
 keymap('n', '<leader>es', ':edit $MYVIMRC<cr>', { noremap = true, silent = true })
 keymap('n', '<leader>ek', ':edit $HOME/.config/nvim/lua/user/core/keymap.lua<cr>', { noremap = true, silent = true })
 -- vsnip 快捷键设置

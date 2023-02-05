@@ -141,6 +141,8 @@ function M.setup()
       debounce_delay = 50,
       icons = { hint = '', info = '', warning = '', error = '' },
     },
+    sync_root_with_cwd = true,
+    respect_buf_cwd = true,
   }
 end
 
