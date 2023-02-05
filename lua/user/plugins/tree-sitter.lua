@@ -11,7 +11,7 @@ function M.setup()
     return
   end
 
-  treesitter.setup {
+  treesitter.setup({
     -- 安装全部解析器
     ensure_installed = "all",
     -- 忽略安装的解析器
@@ -20,7 +20,7 @@ function M.setup()
     highlight = {
       enable = true
     },
-  }
+  })
 
   -- TODO: 高亮设置
   vim.cmd('match Todo /TODO\\(:.*\\)*/')

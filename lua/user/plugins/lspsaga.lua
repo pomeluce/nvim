@@ -15,8 +15,6 @@ function M.setup()
     ui = {
       -- 主题
       theme = "round",
-      -- This option only works in Neovim 0.9
-      title = true,
       -- 圆角边框
       border = "rounded",
       winblend = 0,

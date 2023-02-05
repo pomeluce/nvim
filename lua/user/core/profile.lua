@@ -38,7 +38,7 @@ opt.ignorecase = true
 opt.smartcase = true
 
 -- 超时时间
-opt.timeoutlen = 1500
+opt.timeoutlen = 500
 
 -- 退格键处理
 opt.backspace = "indent,eol,start"

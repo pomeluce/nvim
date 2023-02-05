@@ -5,7 +5,6 @@ function M.config()
 end
 
 function M.setup()
-  local luasnip = require('luasnip')
   local lspkind = require('lspkind')
   local status, cmp = pcall(require, "cmp")
   if not status then
@@ -18,7 +17,7 @@ function M.setup()
     -- 设置代码片段引擎，用于根据代码片段补全
     snippet = {
       expand = function(args)
-        luasnip.lsp_expand(args.body)
+        vim.fn["vsnip#anonymous"](args.body)
       end,
     },
     -- 显示边框
@@ -43,7 +42,7 @@ function M.setup()
     -- 补全来源
     sources = {
       { name = 'nvim_lsp' },
-      { name = 'luasnip' },
+      { name = 'vsnip' },
       { name = 'buffer' },
       { name = 'path' },
       { name = 'nvim_lua' },
