@@ -4,7 +4,7 @@ function M.config()
   -- 要预览的浏览器
   vim.g.mkdp_browser = 'firefox'
   -- makedown 配色文件
-  vim.g.mkdp_markdown_css = '~/.config/nvim/colors/markdown.css'
+  vim.g.mkdp_markdown_css = '~/.config/nvim/colors/github.css'
   -- 页面标题
   vim.g.mkdp_page_title = '${name}'
   -- 预览选项

@@ -1,12 +1,12 @@
 local fn = vim.fn
 local packer_bootstrap = false
-local install_path = fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-local compiled_path = fn.stdpath 'config' .. '/plugin/packer_compiled.lua'
+local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+local compiled_path = fn.stdpath('config') .. '/plugin/packer_compiled.lua'
 if fn.empty(fn.glob(install_path)) > 0 then
-  print 'Installing packer.nvim...'
+  print('Installing packer.nvim...')
   fn.system { 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path }
   fn.system { 'rm', '-rf', compiled_path }
-  vim.cmd [[packadd packer.nvim]]
+  vim.cmd([[packadd packer.nvim]])
   packer_bootstrap = true
 end
 
@@ -174,6 +174,9 @@ require('packer').startup {
 
     -- git 状态
     use { 'lewis6991/gitsigns.nvim', config = "require('user.plugins.gitsigns').setup()" }
+
+    -- translate 插件
+    use { 'voldikss/vim-translator', config = "require('user.plugins.translator').setup()", event = 'BufRead' }
   end,
   -- 窗口浮动显示
   config = {

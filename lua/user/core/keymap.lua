@@ -162,3 +162,6 @@ keymap('i', '<s-tab>', 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab
 keymap('s', '<s-tab>', 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, noremap = true })
 -- git 提交历史查看
 keymap('n', 'C', '<cmd>lua require"gitsigns".blame_line{full=true}<CR>', { noremap = true, silent = true })
+-- translator 翻译
+keymap('n', '<leader>tr', ':TranslateW<CR>', { noremap = true, silent = true })
+keymap('v', '<leader>tr', ':TranslateWV<CR>', { noremap = true, silent = true })

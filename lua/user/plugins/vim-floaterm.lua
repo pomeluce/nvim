@@ -18,7 +18,7 @@ end
 
 function M.runFile()
   vim.cmd('w')
-  local ft = vim.eval('&ft')
+  local ft = vim.api.nvim_eval('&ft')
   local run_cmd = { javascript = 'node', typescript = 'ts-node', html = 'firefox', python = 'python', go = 'go run',
     sh = 'bash', lua = 'lua' }
   if run_cmd[ft] then M.toggleFT('RUN', run_cmd[ft] .. ' %')
