@@ -99,15 +99,6 @@ require('packer').startup {
     -- 浮动终端
     use { 'voldikss/vim-floaterm', config = "require('user.plugins.vim-floaterm').setup()" }
 
-    -- fzf
-    use { 'junegunn/fzf' }
-    use {
-      'junegunn/fzf.vim',
-      config = "require('user.plugins.fzf').setup()",
-      run = 'cd ~/.fzf && ./install --all',
-      after = 'fzf',
-    }
-
     -- telescope 文件搜索
     use {
       'nvim-telescope/telescope.nvim',

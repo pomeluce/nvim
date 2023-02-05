@@ -6,7 +6,7 @@ autocmd("BufWritePost", {
   group = autoGroup,
   callback = function()
     if vim.fn.expand("<afile>") == "plugins-setup.lua" then
-      vim.cmd('source plugins-setup.lua')
+      vim.cmd('source $HOME/.config/nvim/lua/user/plugins-setup.lua')
       vim.cmd('PackerSync')
     end
   end,
