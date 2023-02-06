@@ -1,5 +1,6 @@
 require("user.plugins.colorscheme").config()
 require("user.plugins.cmp").config()
+require("user.plugins.jdtls").config()
 require("user.plugins.vsnip").config()
 require("user.plugins.vim-interestingwords").config()
 require("user.plugins.vim-visual-multi").config()

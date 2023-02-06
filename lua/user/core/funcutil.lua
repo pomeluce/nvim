@@ -39,7 +39,9 @@ vim.cmd('command! -nargs=* SetTab lua require("user.core.funcutil").switchTab(<q
 -- 折叠方法
 function M.magicFold()
   local l_line = vim.fn.trim(vim.fn.getline('.'))
-  if l_line == '' then return end
+  if l_line == '' then
+    return
+  end
   local l_up, l_down = 0, 0
   if l_line:sub(1, 1) == '}' then
     vim.cmd('norm! ^%')
@@ -71,8 +73,8 @@ vim.cmd('com! MagicFold lua require("user.core.funcutil").magicFold()')
 
 -- space 行首行尾跳转
 function M.magicMove()
-  local l_first, l_head = 1,
-      vim.fn.len(vim.fn.getline('.')) - vim.fn.len(vim.fn.substitute(vim.fn.getline('.'), '^\\s*', '', 'G')) + 1
+  local l_first, l_head =
+    1, vim.fn.len(vim.fn.getline('.')) - vim.fn.len(vim.fn.substitute(vim.fn.getline('.'), '^\\s*', '', 'G')) + 1
   local l_before = vim.fn.col('.')
   vim.cmd(l_before == l_first and l_first ~= l_head and 'norm! ^' or 'norm! $')
   local l_after = vim.fn.col('.')
@@ -83,7 +85,6 @@ end
 
 vim.cmd('com! MagicMove lua require("user.core.funcutil").magicMove()')
 
-
 -- 驼峰转换
 vim.cmd('com! ToggleHump lua require("user.core.funcutil").toggleHump()')
 
@@ -91,11 +92,44 @@ function M.toggleHump()
   local l, c1, c2 = vim.fn.line('.'), vim.fn.col("'<"), vim.fn.col("'>")
   local line = vim.fn.getline(l)
   local w = line:sub(c1, c2)
-  w = w:find('_') and w:gsub('_(.)', function(c) return c:upper() end) or
-      w:gsub('^%u', function(c) return c:lower() end):gsub('%u', function(c) return '_' .. c:lower() end)
-  vim.fn.setbufline('%', l,
-    string.format('%s%s%s', c1 == 1 and '' or line:sub(1, c1 - 1), w, c2 == 1 and '' or line:sub(c2 + 1)))
+  w = w:find('_') and w:gsub('_(.)', function(c)
+    return c:upper()
+  end) or w:gsub('^%u', function(c)
+    return c:lower()
+  end):gsub('%u', function(c)
+    return '_' .. c:lower()
+  end)
+  vim.fn.setbufline(
+    '%',
+    l,
+    string.format('%s%s%s', c1 == 1 and '' or line:sub(1, c1 - 1), w, c2 == 1 and '' or line:sub(c2 + 1))
+  )
   vim.fn.cursor(l, c1)
+end
+
+M.Windows = 'Windows'
+M.Linux = 'Linux'
+M.Mac = 'Mac'
+
+-- 系统类型判断
+function M.os_type()
+  local has = vim.fn.has
+  local t = M.Linux
+  if has('win32') == 1 or has('win64') == 1 then
+    t = M.Windows
+  elseif has('mac') == 1 then
+    t = M.Mac
+  end
+  return t
+end
+
+M.is_win = M.os_type() == M.Windows
+M.is_linux = M.os_type() == M.Linux
+M.is_mac = M.os_type() == M.Mac
+
+
+M.or_default = function(default, input)
+  return default and default or input
 end
 
 return M

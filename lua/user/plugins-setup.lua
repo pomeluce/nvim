@@ -55,6 +55,9 @@ require('packer').startup {
       requires = { 'hrsh7th/cmp-vsnip', 'rafamadriz/friendly-snippets' },
     }
 
+    -- jdtls 配置
+    use { 'mfussenegger/nvim-jdtls', ft = 'java', config = "require('user.plugins.jdtls').setup()" }
+
     -- vv 快速选中内容插件
     use { 'terryma/vim-expand-region', event = 'CursorHold' }
 

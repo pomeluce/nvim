@@ -28,7 +28,7 @@ function M.setup()
         ' ════╝     ╚═════╝    ╚═╝  ╚═╝     ╚═══╝     ╚═╝   ╚═╝     ╚═ ',
         '                                                              ',
         '                                                              ',
-        '                   [ Jorvim version 1.2.2 ]                   ',
+        '                   [ Jorvim version 1.3.2 ]                   ',
         '                                                              ',
         '                                                              ',
         '                                                              ',

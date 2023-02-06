@@ -6,7 +6,7 @@ local servers = {
   "cssls",
   "eslint",
   "html",
-  "jsonls",
+  "kotlin_language_server",
   "tsserver",
   "sumneko_lua",
   "marksman",
