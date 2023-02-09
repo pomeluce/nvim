@@ -1,4 +1,5 @@
 local M = {}
+local autocmd = vim.api.nvim_create_autocmd
 
 -- 文件保存
 function M.magicSave()
@@ -105,31 +106,6 @@ function M.toggleHump()
     string.format('%s%s%s', c1 == 1 and '' or line:sub(1, c1 - 1), w, c2 == 1 and '' or line:sub(c2 + 1))
   )
   vim.fn.cursor(l, c1)
-end
-
-M.Windows = 'Windows'
-M.Linux = 'Linux'
-M.Mac = 'Mac'
-
--- 系统类型判断
-function M.os_type()
-  local has = vim.fn.has
-  local t = M.Linux
-  if has('win32') == 1 or has('win64') == 1 then
-    t = M.Windows
-  elseif has('mac') == 1 then
-    t = M.Mac
-  end
-  return t
-end
-
-M.is_win = M.os_type() == M.Windows
-M.is_linux = M.os_type() == M.Linux
-M.is_mac = M.os_type() == M.Mac
-
-
-M.or_default = function(default, input)
-  return default and default or input
 end
 
 return M

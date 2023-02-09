@@ -52,7 +52,7 @@ M.setup = function()
   })
 end
 
-local function lsp_highlight_document(client)
+M.lsp_highlight_document = function(client)
   -- 以 server_capabilities 设置自动命令
   if client.server_capabilities.documentHighlight then
     vim.api.nvim_exec([[
@@ -65,28 +65,28 @@ local function lsp_highlight_document(client)
   end
 end
 
-local function lsp_keymaps(bufnr)
+M.lsp_keymaps = function(bufnr)
   -- 快捷键设置
   local buf_map = vim.api.nvim_buf_set_keymap
   -- 重命名
-  buf_map( bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', { noremap = true, silent = true } )
+  buf_map(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', { noremap = true, silent = true })
   -- TODO: goto 跳转
   -- 跳转到定义
-  buf_map( bufnr, 'n', 'gd', '<cmd>Lspsaga goto_definition<cr>', { noremap = true, silent = true } )
+  buf_map(bufnr, 'n', 'gd', '<cmd>Lspsaga goto_definition<cr>', { noremap = true, silent = true })
   -- 跳转到类型定义
-  buf_map( bufnr, 'n', 'gy', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { noremap = true, silent = true } )
+  buf_map(bufnr, 'n', 'gy', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { noremap = true, silent = true })
   -- 跳转到实现
-  buf_map( bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { noremap = true, silent = true } )
+  buf_map(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { noremap = true, silent = true })
   -- 跳转到引用
-  buf_map( bufnr, 'n', 'gr', '<cmd>Lspsaga lsp_finder<cr>', { noremap = true, silent = true } )
+  buf_map(bufnr, 'n', 'gr', '<cmd>Lspsaga lsp_finder<cr>', { noremap = true, silent = true })
   -- 跳转到错误
-  buf_map( bufnr, 'n', 'ge', '<cmd>lua vim.diagnostic.goto_next()<cr>', { noremap = true, silent = true } )
+  buf_map(bufnr, 'n', 'ge', '<cmd>lua vim.diagnostic.goto_next()<cr>', { noremap = true, silent = true })
   -- TODO: 补全设置
   -- 显示文档
-  buf_map( bufnr, 'n', 'K', '<cmd>Lspsaga hover_doc<CR>', { noremap = true, silent = true } )
+  buf_map(bufnr, 'n', 'K', '<cmd>Lspsaga hover_doc<CR>', { noremap = true, silent = true })
   -- code action 代码修复
-  buf_map( bufnr, 'n', '<m-cr>', '<cmd>Lspsaga code_action<CR>', { noremap = true, silent = true } )
-  buf_map( bufnr, 'v', '<m-cr>', '<cmd>Lspsaga code_action<CR>', { noremap = true, silent = true } )
+  buf_map(bufnr, 'n', '<m-cr>', '<cmd>Lspsaga code_action<CR>', { noremap = true, silent = true })
+  buf_map(bufnr, 'v', '<m-cr>', '<cmd>Lspsaga code_action<CR>', { noremap = true, silent = true })
   -- 格式化命令
   vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format { async = true }' ]])
 end
@@ -95,8 +95,8 @@ M.on_attach = function(client, bufnr)
   if client.name == "tsserver" then
     client.server_capabilities.documentFormattingProvider = false
   end
-  lsp_keymaps(bufnr)
-  lsp_highlight_document(client)
+  M.lsp_keymaps(bufnr)
+  M.lsp_highlight_document(client)
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
