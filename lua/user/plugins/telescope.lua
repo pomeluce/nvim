@@ -17,7 +17,17 @@ function M.setup()
       prompt_prefix = '🔍 ',
       selection_caret = ' ',
       path_display = { 'smart' },
-
+      vimgrep_arguments = {
+        'rg',
+        '--color=never',
+        '--no-heading',
+        '--with-filename',
+        '--line-number',
+        '--column',
+        '--smart-case',
+        '--no-ignore',
+        '--hidden',
+      },
       mappings = {
         i = {
           -- 切换历史搜索
@@ -80,6 +90,7 @@ function M.setup()
     pickers = {
       find_files = {
         theme = 'dropdown',
+        hidden = true,
       },
       current_buffer_fuzzy_find = {
         theme = 'dropdown',
@@ -97,9 +108,9 @@ function M.setup()
     extensions = {
       media_files = {
         -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
-        filetypes = { "png", "webp", "jpg", "jpeg", "pdf", "mp4" },
-        find_cmd = "rg"
-      }
+        filetypes = { 'png', 'webp', 'jpg', 'jpeg', 'pdf', 'mp4' },
+        find_cmd = 'rg',
+      },
     },
   }
 

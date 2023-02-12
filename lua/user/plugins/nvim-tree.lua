@@ -134,7 +134,7 @@ function M.setup()
         },
       },
     },
-    filters = { dotfiles = true },
+    filters = { dotfiles = false },
     diagnostics = {
       enable = true,
       show_on_dirs = true,

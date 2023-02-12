@@ -1,6 +1,6 @@
 local null_ls_status_ok, null_ls = pcall(require, 'null-ls')
 if not null_ls_status_ok then
-  vim.notify 'null-ls 未找到'
+  vim.notify('null-ls 未找到')
   return
 end
 
@@ -15,11 +15,11 @@ null_ls.setup {
   sources = {
     formatting.prettierd.with {
       env = {
-        PRETTIERD_DEFAULT_CONFIG = vim.fn.expand '~/.config/nvim/.prettierrc.json',
+        PRETTIERD_DEFAULT_CONFIG = vim.fn.expand('~/.config/nvim/.prettierrc.json'),
       },
     },
     formatting.stylua.with {
-      extra_args = { '--config-path', vim.fn.expand '~/.config/nvim/.stylua.toml' },
+      extra_args = { '--config-path', vim.fn.expand('~/.config/nvim/.stylua.toml') },
     },
     code_actions.gitsigns,
     diagnostics.flake8,

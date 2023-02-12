@@ -180,6 +180,9 @@ require('packer').startup {
 
     -- translate 插件
     use { 'voldikss/vim-translator', config = "require('user.plugins.translator').setup()", event = 'BufRead' }
+
+    -- session 管理
+    use { 'rmagatti/auto-session', config = "require('user.plugins.session').setup()" }
   end,
   -- 窗口浮动显示
   config = {
