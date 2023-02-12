@@ -11,10 +11,7 @@ return {
       },
       workspace = {
         -- neovim 运行时文件
-        library = {
-          [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-          [vim.fn.stdpath("config") .. "/lua"] = true,
-        },
+        library = vim.api.nvim_get_runtime_file('', true),
         checkThirdParty = false,
       },
       -- 不发送测试数据
