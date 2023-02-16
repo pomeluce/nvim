@@ -102,10 +102,10 @@ function M.setup()
         open_win_config = function()
           local columns = vim.o.columns
           local lines = vim.o.lines
-          local width = math.max(math.floor(columns * 0.5), 50)
-          local height = math.max(math.floor(lines * 0.5), 20)
-          local left = math.ceil((columns - width) * 0.5)
-          local top = math.ceil((lines - height) * 0.5 - 2)
+          local width = math.max(math.floor(columns * 0.2), 15)
+          local height = math.max(math.floor(lines * 0.5), 25)
+          local left = math.ceil((columns - width) * 1)
+          local top = math.ceil((lines - height) * 0 - 2)
           return { relative = 'editor', border = 'rounded', width = width, height = height, row = top, col = left }
         end,
       },
