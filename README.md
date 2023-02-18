@@ -1,64 +1,36 @@
-## JorVim IDE 目录结构
+## JorVim IDE
+
+### 目录结构
 
 ```
-├── init.lua
+.
+├── cache
+│   ├── db_config
+│   ├── undodir
+│   └── viewdir
 ├── colors
-│   ├── github.css
-│   ├── markdown.css
-│   ├── monokai.vim
-│   └── solarized8_high.vim
+├── .gitignore
+├── init.lua
 ├── LICENSE
 ├── lua
 │   └── user
 │       ├── core
-│       │   ├── autocmd.lua
-│       │   ├── funcutil.lua
-│       │   ├── keymap.lua
-│       │   └── profile.lua
 │       ├── lsp
-│       │   ├── config
-│       │   │   ├── cpp.lua
-│       │   │   ├── cssls.lua
-│       │   │   ├── lua_ls.lua
-│       │   │   └── volar.lua
-│       │   ├── handlers.lua
-│       │   ├── init.lua
-│       │   ├── mason.lua
-│       │   └── null-ls.lua
 │       ├── plugins
-│       │   ├── autopairs.lua
-│       │   ├── bufferline.lua
-│       │   ├── cmp.lua
-│       │   ├── colorscheme.lua
-│       │   ├── comment.lua
-│       │   ├── copilot.lua
-│       │   ├── dashboard.lua
-│       │   ├── emmet.lua
-│       │   ├── gitsigns.lua
-│       │   ├── indentline.lua
-│       │   ├── init.lua
-│       │   ├── lspsaga.lua
-│       │   ├── lualine.lua
-│       │   ├── markdown.lua
-│       │   ├── nvim-tree.lua
-│       │   ├── project.lua
-│       │   ├── session.lua
-│       │   ├── symbols-outline.lua
-│       │   ├── telescope.lua
-│       │   ├── translator.lua
-│       │   ├── tree-sitter.lua
-│       │   ├── vim-dadbod.lua
-│       │   ├── vim-floaterm.lua
-│       │   ├── vim-interestingwords.lua
-│       │   ├── vim-visual-multi.lua
-│       │   └── vsnip.lua
 │       └── plugins-setup.lua
 ├── plugin
 │   └── packer_compiled.lua
 ├── .prettierrc.json
 ├── README.md
 ├── snippets
+│   ├── gitignore.json
 │   ├── html.json
 │   └── vue.json
 └── .stylua.toml
 ```
+
+### 快捷键
+
+<details>
+<summary>快捷键配置</summary>
+</details>

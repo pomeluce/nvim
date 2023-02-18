@@ -13,13 +13,19 @@ local code_actions = null_ls.builtins.code_actions
 null_ls.setup {
   debug = false,
   sources = {
+    -- prettier 格式化配置
     formatting.prettierd.with {
       env = {
         PRETTIERD_DEFAULT_CONFIG = vim.fn.expand('~/.config/nvim/.prettierrc.json'),
       },
     },
+    -- lua 格式化配置
     formatting.stylua.with {
       extra_args = { '--config-path', vim.fn.expand('~/.config/nvim/.stylua.toml') },
+    },
+
+    formatting.clang_format.with {
+      extra_args = { '--style=file:' .. vim.fn.stdpath('config') .. '/.clang-format' },
     },
     code_actions.gitsigns,
     diagnostics.flake8,

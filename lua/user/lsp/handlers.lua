@@ -3,15 +3,15 @@ local M = {}
 M.setup = function()
   -- 设置高亮标签
   local signs = {
-    { name = "DiagnosticSignError", text = "" },
-    { name = "DiagnosticSignWarn", text = "" },
-    { name = "DiagnosticSignHint", text = "" },
-    { name = "DiagnosticSignInfo", text = "" },
+    { name = 'DiagnosticSignError', text = '' },
+    { name = 'DiagnosticSignWarn', text = '' },
+    { name = 'DiagnosticSignHint', text = '' },
+    { name = 'DiagnosticSignInfo', text = '' },
   }
 
   -- 设置标签
   for _, sign in ipairs(signs) do
-    vim.fn.sign_define(sign.name, { text = sign.text, texthl = sign.name, numhl = "" })
+    vim.fn.sign_define(sign.name, { text = sign.text, texthl = sign.name, numhl = '' })
   end
 
   -- 诊断配置
@@ -31,37 +31,40 @@ M.setup = function()
     -- 浮动窗口
     float = {
       focusable = false,
-      style = "minimal",
-      border = "rounded",
-      source = "always",
-      header = "",
-      prefix = "",
+      style = 'minimal',
+      border = 'rounded',
+      source = 'always',
+      header = '',
+      prefix = '',
     },
   }
   -- 设置诊断配置
   vim.diagnostic.config(config)
 
   -- 悬浮窗口添加边框
-  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = "rounded",
+  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
+    border = 'rounded',
   })
 
   -- 签名帮助添加边框
-  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-    border = "single"
+  vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+    border = 'single',
   })
 end
 
 M.lsp_highlight_document = function(client)
   -- 以 server_capabilities 设置自动命令
   if client.server_capabilities.documentHighlight then
-    vim.api.nvim_exec([[
-      augroup lsp_highlight_document 
+    vim.api.nvim_exec(
+      [[
+      augroup lsp_highlight_document
         autocmd! * <buffer>
         autocmd CursorHold * lua vim.lsp.buf.document_highlight()
         autocmd CursorMoved * lua vim.lsp.buf.clear_references()
       augroup END
-    ]], false)
+    ]],
+      false
+    )
   end
 end
 
@@ -92,7 +95,7 @@ M.lsp_keymaps = function(bufnr)
 end
 
 M.on_attach = function(client, bufnr)
-  if client.name == "tsserver" then
+  if client.name == 'tsserver' then
     client.server_capabilities.documentFormattingProvider = false
   end
   M.lsp_keymaps(bufnr)
@@ -101,7 +104,7 @@ end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+local status_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
 if not status_ok then
   vim.notify('cmp_nvim_lsp 未找到')
   return

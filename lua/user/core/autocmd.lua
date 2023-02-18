@@ -61,3 +61,15 @@ autocmd('BufLeave,BufWinEnter', {
     pcall(vim.cmd, [[ silent! loadview ]])
   end,
 })
+
+-- 设置 git 高亮组
+local highlightGroup = vim.api.nvim_create_augroup('custom_theme_highlights', { clear = true })
+autocmd('BufReadPost', {
+  group = highlightGroup,
+  pattern = '*',
+  callback = function()
+    vim.cmd('highlight GitSignsAdd guifg=#43a047')
+    vim.cmd('highlight GitSignsChange guifg=#fbc02d')
+    vim.cmd('highlight GitSignsDetele guifg=#f44336')
+  end,
+})
