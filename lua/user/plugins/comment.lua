@@ -16,6 +16,7 @@ function M.setup()
     -- N 模式注释快捷键
     toggler = {
       line = '<leader>/',
+      block = '<leader><leader>/',
     },
     -- V 模式注释快捷键
     opleader = {

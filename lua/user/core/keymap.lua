@@ -13,7 +13,7 @@ keymap('i', 'jk', '<esc>', { noremap = true, silent = true })
 keymap('n', 'S', ':MagicSave<cr>', { noremap = true, silent = true })
 keymap('n', 'Q', ':q!<cr>', { noremap = true, silent = true })
 -- 粘贴之后不复制被粘贴的文本
-keymap('v', 'p', '"_dhp', { noremap = true, silent = true })
+keymap('v', 'p', '"_dp', { noremap = true, silent = true })
 -- 选中全文, 从当前选中的 { 复制全文
 keymap('n', '<m-a>', 'ggVG', { noremap = true })
 keymap('n', '<m-s>', 'vi{', { noremap = true })
