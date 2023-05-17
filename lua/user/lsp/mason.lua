@@ -9,7 +9,7 @@ local servers = {
   'kotlin_language_server',
   'lua_ls',
   'marksman',
-  'sqls',
+  'sqlls',
   'tailwindcss',
   'tsserver',
   'volar',
