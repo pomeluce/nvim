@@ -11,10 +11,10 @@ function M.setup()
     vim.notify("one_monokai 没有加载或还没有安装")
     return
   end
-  vim.cmd([[ colorscheme one_monokai ]])
   one_monokai.setup({
     transparent = true,
   })
+  vim.cmd([[ colorscheme one_monokai ]])
 end
 
 return M
