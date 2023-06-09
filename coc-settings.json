@@ -28,6 +28,7 @@
     "border": true,
     "rounded": true
   },
+  "tsserver.trace.server": "messages",
   "translator.engines": ["google", "youdao"],
   "translator.enableHover": false,
   "git.addedSign.hlGroup": "GitSignsAdd",
@@ -71,5 +72,6 @@
   "tsserver.enable": true,
   "volar.takeOverMode.enabled": true,
   "volar.autoCreateQuotes": true,
-  "Lua.diagnostics.globals": ["vim"]
+  "Lua.diagnostics.globals": ["vim"],
+  "scss.lint.unknownAtRules": "ignore"
 }

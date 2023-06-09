@@ -11,6 +11,18 @@ autocmd('BufWritePost', {
   end,
 })
 
+
+-- 自动切换输入法
+autocmd('InsertLeave', {
+  group = autoGroup,
+  pattern = '*',
+  callback = function()
+    if vim.api.nvim_get_mode().mode == 'n' then
+      vim.fn.system('busctl call --user org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 SetAsciiMode b 1')
+    end
+  end
+})
+
 -- 用 o 换行不要延续注释
 autocmd('BufEnter', {
   group = autoGroup,

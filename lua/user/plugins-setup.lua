@@ -145,9 +145,6 @@ require('packer').startup {
 
     -- session 管理
     use { 'rmagatti/auto-session', config = "require('user.plugins.session').setup()" }
-
-    -- 退出时 insert 模式时, 切换到英文输入法
-    use { 'yaocccc/vim-fcitx2en', event = 'InsertLeavePre' }
   end,
   -- 窗口浮动显示
   config = {

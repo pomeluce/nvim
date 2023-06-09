@@ -4,6 +4,7 @@ function M.config()
   -- 安装插件
   vim.g.coc_global_extensions = {
     '@yaegassy/coc-volar',
+    '@yaegassy/coc-tailwindcss3',
     'coc-marketplace',
     'coc-css',
     'coc-clangd',
