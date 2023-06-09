@@ -94,6 +94,7 @@ opt.foldenable = true
 -- 手动建立折叠
 opt.foldmethod = "manual"
 opt.viewdir = os.getenv("HOME") .. "/.config/nvim/cache/viewdir"
+opt.foldtext = 'v: call MagicFold'
 
 -- 设置命令行高度
 opt.cmdheight = 1

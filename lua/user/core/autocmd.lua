@@ -17,22 +17,12 @@ autocmd('BufEnter', {
   pattern = '*',
   callback = function()
     vim.opt.formatoptions = vim.opt.formatoptions
-      - 'o' -- O 和 o, 不要延续注释
-      + 'r' -- 回车延续注释
+        - 'o' -- O 和 o, 不要延续注释
+        + 'r' -- 回车延续注释
   end,
 })
 
--- 光标回到上次位置
-autocmd('BufReadPost', {
-  group = autoGroup,
-  pattern = '*',
-  callback = function()
-    if vim.fn.line('\'"') > 1 and vim.fn.line('\'"') <= vim.fn.line('$') then
-      vim.cmd('normal! g`"')
-    end
-  end,
-})
-
+-- 自动切换只读模式为可写模式
 autocmd('BufEnter', {
   group = autoGroup,
   pattern = '*',

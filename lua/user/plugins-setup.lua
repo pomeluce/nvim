@@ -27,33 +27,8 @@ require('packer').startup {
     -- 配置主题
     use { 'cpea2506/one_monokai.nvim', config = "require('user.plugins.colorscheme').setup()" }
 
-    -- lsp 配置
-    use {
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-      'neovim/nvim-lspconfig',
-      'jose-elias-alvarez/null-ls.nvim',
-    }
-
-    -- cmp 补全
-    use {
-      'hrsh7th/nvim-cmp',
-      config = "require('user.plugins.cmp').setup()",
-      requires = {
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-buffer',
-        'hrsh7th/cmp-path',
-        'hrsh7th/cmp-nvim-lua',
-        'hrsh7th/cmp-cmdline',
-        'onsails/lspkind.nvim',
-      },
-    }
-    -- 代码片段
-    use {
-      'hrsh7th/vim-vsnip',
-      config = "require('user.plugins.vsnip').setup()",
-      requires = { 'hrsh7th/cmp-vsnip', 'rafamadriz/friendly-snippets' },
-    }
+    -- coc 配置
+    use { 'neoclide/coc.nvim', config = "require('user.plugins.coc').setup()", branch = 'release' }
 
     -- vv 快速选中内容插件
     use { 'terryma/vim-expand-region', event = 'CursorHold' }
@@ -71,13 +46,6 @@ require('packer').startup {
       config = "require('user.plugins.vim-visual-multi').setup()",
       event = 'CursorHold',
     }
-
-    -- 括号自动补全
-    use { 'windwp/nvim-autopairs', config = "require('user.plugins.autopairs').setup()", event = 'VimEnter' }
-
-    -- 标签补全
-    use { 'mattn/emmet-vim', config = "require('user.plugins.emmet').setup()", event = 'VimEnter' }
-    use { 'alvan/vim-closetag', event = 'VimEnter' }
 
     -- 数据库可视化UI
     use { 'tpope/vim-dadbod', cmd = { 'DBUI' } }
@@ -175,14 +143,11 @@ require('packer').startup {
       requires = { 'nvim-tree/nvim-web-devicons' },
     }
 
-    -- git 状态
-    use { 'lewis6991/gitsigns.nvim', config = "require('user.plugins.gitsigns').setup()" }
-
-    -- translate 插件
-    use { 'voldikss/vim-translator', config = "require('user.plugins.translator').setup()", event = 'BufRead' }
-
     -- session 管理
     use { 'rmagatti/auto-session', config = "require('user.plugins.session').setup()" }
+
+    -- 退出时 insert 模式时, 切换到英文输入法
+    use { 'yaocccc/vim-fcitx2en', event = 'InsertLeavePre' }
   end,
   -- 窗口浮动显示
   config = {

@@ -37,45 +37,34 @@ end
 
 vim.cmd('command! -nargs=* SetTab lua require("user.core.funcutil").switchTab(<q-args>)')
 
--- 折叠方法
+-- 代码折叠
 function M.magicFold()
-  local l_line = vim.fn.trim(vim.fn.getline('.'))
-  if l_line == '' then
-    return
-  end
-  local l_up, l_down = 0, 0
-  if l_line:sub(1, 1) == '}' then
-    vim.cmd('norm! ^%')
-    l_up = vim.fn.line('.')
-    vim.cmd('norm! %')
-  end
-  if l_line:sub(-1) == '{' then
-    vim.cmd('norm! $%')
-    l_down = vim.fn.line('.')
-    vim.cmd('norm! %')
-  end
-  local ok = pcall(function()
-    if l_up ~= 0 and l_down ~= 0 then
-      vim.cmd('norm! ' .. l_up .. 'GV' .. l_down .. 'Gzf')
-    elseif l_up ~= 0 then
-      vim.cmd('norm! V' .. l_up .. 'Gzf')
-    elseif l_down ~= 0 then
-      vim.cmd('norm! V' .. l_down .. 'Gzf')
-    else
-      vim.cmd('norm! za')
-    end
-  end)
-  if not ok then
-    vim.cmd('redraw!')
-  end
+  local spacetext = ("        "):sub(0, vim.opt.shiftwidth:get())
+  local line = vim.fn.getline(vim.v.foldstart):gsub("\t", spacetext)
+  local folded = vim.v.foldend - vim.v.foldstart + 1
+  local findresult = line:find('%S')
+  if not findresult then return '+ folded ' .. folded .. ' lines ' end
+  local empty = findresult - 1
+  local funcs = {
+    [0] = function(_) return '' .. line end,
+    [1] = function(_) return '+' .. line:sub(2) end,
+    [2] = function(_) return '+ ' .. line:sub(3) end,
+    [-1] = function(c)
+      local result = ' ' .. line:sub(c + 1)
+      local foldednumlen = #tostring(folded)
+      for _ = 1, c - 2 - foldednumlen do result = '-' .. result end
+      return '+' .. folded .. result
+    end,
+  }
+  return funcs[empty <= 2 and empty or -1](empty) .. ' folded ' .. folded .. ' lines '
 end
 
 vim.cmd('com! MagicFold lua require("user.core.funcutil").magicFold()')
 
 -- space 行首行尾跳转
 function M.magicMove()
-  local l_first, l_head =
-    1, vim.fn.len(vim.fn.getline('.')) - vim.fn.len(vim.fn.substitute(vim.fn.getline('.'), '^\\s*', '', 'G')) + 1
+  local l_first, l_head = 1,
+      vim.fn.len(vim.fn.getline('.')) - vim.fn.len(vim.fn.substitute(vim.fn.getline('.'), '^\\s*', '', 'G')) + 1
   local l_before = vim.fn.col('.')
   vim.cmd(l_before == l_first and l_first ~= l_head and 'norm! ^' or 'norm! $')
   local l_after = vim.fn.col('.')
@@ -87,25 +76,21 @@ end
 vim.cmd('com! MagicMove lua require("user.core.funcutil").magicMove()')
 
 -- 驼峰转换
-vim.cmd('com! ToggleHump lua require("user.core.funcutil").toggleHump()')
-
-function M.toggleHump()
-  local l, c1, c2 = vim.fn.line('.'), vim.fn.col("'<"), vim.fn.col("'>")
-  local line = vim.fn.getline(l)
-  local w = line:sub(c1, c2)
-  w = w:find('_') and w:gsub('_(.)', function(c)
-    return c:upper()
-  end) or w:gsub('^%u', function(c)
-    return c:lower()
-  end):gsub('%u', function(c)
-    return '_' .. c:lower()
-  end)
-  vim.fn.setbufline(
-    '%',
-    l,
-    string.format('%s%s%s', c1 == 1 and '' or line:sub(1, c1 - 1), w, c2 == 1 and '' or line:sub(c2 + 1))
-  )
-  vim.fn.cursor(l, c1)
+function M.toggleHump(upperCase)
+  vim.fn.execute('normal! gv"tx')
+  local w = vim.fn.getreg('t')
+  local toHump = w:find('_') ~= nil
+  if toHump then
+    w = w:gsub('_(%w)', function(c) return c:upper() end)
+  else
+    w = w:gsub('(%u)', function(c) return '_' .. c:lower() end)
+  end
+  if w:sub(1, 1) == '_' then w = w:sub(2) end
+  if upperCase then w = w:sub(1, 1):upper() .. w:sub(2) end
+  vim.fn.setreg('t', w)
+  vim.fn.execute('normal! "tP')
 end
+
+vim.cmd('com! ToggleHump lua require("user.core.funcutil").toggleHump()')
 
 return M

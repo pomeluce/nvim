@@ -12,8 +12,10 @@ keymap('v', ';', ':', {})
 keymap('i', 'jk', '<esc>', { noremap = true, silent = true })
 keymap('n', 'S', ':MagicSave<cr>', { noremap = true, silent = true })
 keymap('n', 'Q', ':q!<cr>', { noremap = true, silent = true })
+-- 设置删除后不复制删除后的文本
+keymap('v', 'c', '"_c', { noremap = true })
 -- 粘贴之后不复制被粘贴的文本
-keymap('v', 'p', '"_dp', { noremap = true, silent = true })
+keymap('v', 'p', '"_dhp', { noremap = true, silent = true })
 -- 选中全文, 从当前选中的 { 复制全文
 keymap('n', '<m-a>', 'ggVG', { noremap = true })
 keymap('n', '<m-s>', 'vi{', { noremap = true })
@@ -55,6 +57,19 @@ keymap('i', '<m-right>', '<esc>:bn<cr>', { noremap = true, silent = true })
 -- 跳转到上次编辑位置
 keymap('n', 'ga', "'.", { noremap = true, silent = true })
 keymap('n', 'g;', '$a;<esc>', { noremap = true, silent = true })
+-- 跳转到定义
+keymap("n", "gd", "<Plug>(coc-definition)", { silent = true })
+-- 跳转到类型定义
+keymap("n", "gy", "<Plug>(coc-type-definition)", { silent = true })
+-- 跳转到实现
+keymap("n", "gi", "<Plug>(coc-implementation)", { silent = true })
+-- 跳转到引用
+keymap("n", "gr", "<Plug>(coc-references)", { silent = true })
+-- 跳转到上一个错误
+keymap("n", "(", "<Plug>(coc-diagnostic-prev)", { silent = true })
+-- 跳转到下一个错误
+keymap("n", "ge", "<Plug>(coc-diagnostic-next)", { silent = true })
+keymap("n", ")", "<Plug>(coc-diagnostic-next)", { silent = true })
 
 -- TODO: 代码光标移动
 -- 向上移动行
@@ -72,34 +87,85 @@ keymap('v', '>', '>gv', { noremap = true })
 keymap('v', '<s-tab>', '<gv', { noremap = true })
 keymap('v', '<tab>', '>gv', { noremap = true })
 
+-- TODO: 代码提示
+-- 选中下一个提示
+keymap(
+  "i",
+  "<c-j>",
+  "coc#pum#visible() ? coc#pum#next(1) : coc#refresh()",
+  { silent = true, noremap = true, expr = true }
+)
+-- 选中上一个提示
+keymap(
+  "i",
+  "<c-k>",
+  [[coc#pum#visible() ? coc#pum#prev(1) : coc#refresh()]],
+  { silent = true, noremap = true, expr = true }
+)
+-- 弹出代码提示
+keymap("i", "<c-space>", "coc#refresh()", { silent = true, expr = true })
+-- 选中提示
+keymap("i", "<tab>", [[coc#pum#visible() ? coc#pum#confirm() : '<tab>']], { silent = true, noremap = true, expr = true })
+-- copilot 代码提示
+keymap('i', '<tab><space>', 'copilot#Accept("<Right>")', { script = true, silent = true, expr = true })
+
+-- TODO: 代码格式化
+keymap('n', '<leader>fm', ':Format<CR> | :OR<cr>', { noremap = true, silent = true })
+keymap('v', '<leader>fm', '<Plug>(coc-format-selected)', { noremap = true, silent = true })
+
+-- TODO: 代码折叠
+keymap('n', 'zz', "foldlevel('.') > 0 ? 'za' : 'va{zf^'", { noremap = true, silent = true, expr = true })
+keymap('v', 'z', 'zf', { noremap = true, silent = true })
+
+-- TODO: coc 配置
+-- 重启 coc
+keymap('n', '<F3>', ":silent CocRestart<cr>", { silent = true, noremap = true })
+-- 开关 coc
+keymap(
+  'n',
+  '<F4>',
+  "get(g:, 'coc_enabled', 0) == 1 ? ':CocDisable<cr>' : ':CocEnable<cr>'",
+  { silent = true, noremap = true, expr = true }
+)
+-- 编辑当前文件 snippets 配置
+keymap('n', '<F9>', ":CocCommand snippets.editSnippets<cr>", { silent = true, noremap = true })
+-- 悬浮信息
+keymap('n', 'K', ':call CocAction("doHover")<cr>', { silent = true })
+-- 当前行 git 提交历史查看
+keymap(
+  'n',
+  'C',
+  "get(b:, 'coc_git_blame', '') ==# 'Not committed yet' ? \"<Plug>(coc-git-chunkinfo)\" : \"<Plug>(coc-git-commit)\"",
+  { silent = true, expr = true }
+)
+keymap(
+  'n',
+  '\\g',
+  ":call coc#config('git.addGBlameToVirtualText',  !get(g:coc_user_config, 'git.addGBlameToVirtualText', 1)) | call nvim_buf_clear_namespace(bufnr(), -1, line('.') - 1, line('.'))<cr>",
+  { silent = true }
+)
+-- 文本翻译
+keymap('n', '<leader>t', "<Plug>(coc-translator-p)", { silent = true })
+keymap('v', '<leader>t', "<Plug>(coc-translator-pv)", { silent = true })
+
 -- TODO: 其他配置
 -- 全局替换 c-s = :%s/
 keymap('n', '<c-s>', ':%s/\\v//gc<left><left><left><left>', { noremap = true })
 keymap('v', '<c-s>', ':s/\\v//gc<left><left><left><left>', { noremap = true })
--- 打开高度为 10 的终端
-keymap('n', 'tt', ':below 10sp | term<cr>a', { noremap = true, silent = true })
 -- 取消搜索高亮
 keymap('n', '<leader>nh', ':nohlsearch<cr>', { noremap = true, silent = true })
 -- 重载配置文件
 keymap('n', '<F2>', ':luafile %<cr>', { noremap = true, silent = true })
 -- 行尾添加分号
 keymap('n', '<leader>;', 'A;<esc>', { noremap = true, silent = true })
--- 代码折叠
-keymap(
-  'n',
-  '--',
-  "foldclosed(line('.')) == -1 ? ':MagicFold<cr>' : 'za'",
-  { noremap = true, silent = true, expr = true }
-)
-keymap('v', '-', 'zf', { noremap = true })
 -- space 行首行尾跳转
 keymap('n', '<space>', ':MagicMove<cr>', { noremap = true, silent = true })
 keymap('n', '0', '%', { noremap = true })
 keymap('v', '0', '%', { noremap = true })
 -- 驼峰转换
-keymap('v', 'th', ':lua require("user.core.funcutil").toggleHump()<cr>', { noremap = true, silent = true })
-
---TODO: 插件快捷键
+keymap('v', 't', ':lua require("user.core.funcutil").toggleHump(false)<cr>', { noremap = true, silent = true })
+keymap('v', 'T', ':lua require("user.core.funcutil").toggleHump(true)<cr>', { noremap = true, silent = true })
+-- 快速选中
 keymap('v', 'v', '<Plug>(expand_region_expand)', { silent = true })
 keymap('v', 'V', '<Plug>(expand_region_shrink)', { silent = true })
 -- 高亮当前光标下单词
@@ -110,10 +176,6 @@ keymap('n', 'FF', ':call UncolorAllWords()<cr>', { noremap = true, silent = true
 keymap('n', 'n', ":call WordNavigation('forward')<cr>", { noremap = true, silent = true })
 keymap('n', 'N', ":call WordNavigation('backward')<cr>", { noremap = true, silent = true })
 keymap('n', '<leader>ss', ':SymbolsOutline<CR>', { noremap = true, silent = true })
--- 代码格式化
-keymap('n', '<leader>fm', ':Format<CR>', { noremap = true, silent = true })
-keymap('v', '<leader>fm', ':Format<CR>', { noremap = true, silent = true })
-keymap('i', '<Right>', 'copilot#Accept("<Right>")', { script = true, silent = true, expr = true })
 -- 根据文件类型启动浮动终端执行当前文件
 keymap('n', '<F5>', ':lua require("user.plugins.vim-floaterm").runFile()<cr>', { noremap = true, silent = true })
 keymap('i', '<F5>', '<esc>:lua require("user.plugins.vim-floaterm").runFile()<cr>', { noremap = true, silent = true })
@@ -138,8 +200,7 @@ keymap('n', '<leader>fp', ':Telescope projects theme=dropdown<cr>', { noremap = 
 keymap('n', '<leader>rt', '<cmd>lua require("spectre").open()<CR>', { noremap = true, silent = true })
 keymap(
   'v',
-  '<leader>rt',
-  '<esc>:lua require("spectre").open_visual({ select_word=true })<CR>',
+  '<leader>rt', '<esc>:lua require("spectre").open_visual({ select_word=true })<CR>',
   { noremap = true, silent = true }
 )
 -- 语法高亮
@@ -154,16 +215,6 @@ keymap(
   { noremap = true, silent = true, expr = true }
 )
 -- dashboard 封面快捷键
-keymap('n', '<leader>sp', ':cd  /home/developcode/Web/ | NvimTreeOpen<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>sp', ':cd  ~/Workspace/ | NvimTreeOpen<cr>', { noremap = true, silent = true })
 keymap('n', '<leader>es', ':edit $MYVIMRC<cr>', { noremap = true, silent = true })
 keymap('n', '<leader>ek', ':edit $HOME/.config/nvim/lua/user/core/keymap.lua<cr>', { noremap = true, silent = true })
--- vsnip 快捷键设置
-keymap('i', '<tab>', 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<tab>"', { expr = true, noremap = true })
-keymap('s', '<tab>', 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<tab>"', { expr = true, noremap = true })
-keymap('i', '<s-tab>', 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, noremap = true })
-keymap('s', '<s-tab>', 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, noremap = true })
--- git 提交历史查看
-keymap('n', 'C', '<cmd>lua require"gitsigns".blame_line{full=true}<CR>', { noremap = true, silent = true })
--- translator 翻译
-keymap('n', '<leader>tr', ':TranslateW<CR>', { noremap = true, silent = true })
-keymap('v', '<leader>tr', ':TranslateW<CR>', { noremap = true, silent = true })
