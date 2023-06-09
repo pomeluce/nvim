@@ -88,6 +88,8 @@ keymap('v', '<s-tab>', '<gv', { noremap = true })
 keymap('v', '<tab>', '>gv', { noremap = true })
 
 -- TODO: 代码提示
+-- 智能提示
+keymap('n', '<m-cr>', '<Plug>(coc-fix-current)', { silent = true })
 -- 选中下一个提示
 keymap(
   "i",
@@ -110,7 +112,7 @@ keymap("i", "<tab>", [[coc#pum#visible() ? coc#pum#confirm() : '<tab>']], { sile
 keymap('i', '<tab><space>', 'copilot#Accept("<Right>")', { script = true, silent = true, expr = true })
 
 -- TODO: 代码格式化
-keymap('n', '<leader>fm', ':Format<CR> | :OR<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>fm', ':OR<cr> | :Format<cr>', { noremap = true, silent = true })
 keymap('v', '<leader>fm', '<Plug>(coc-format-selected)', { noremap = true, silent = true })
 
 -- TODO: 代码折叠
