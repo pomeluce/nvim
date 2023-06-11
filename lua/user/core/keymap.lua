@@ -200,11 +200,6 @@ keymap('n', '<leader>fh', ':Telescope oldfiles<cr>', { noremap = true, silent = 
 -- 查看项目列表
 keymap('n', '<leader>fp', ':Telescope projects theme=dropdown<cr>', { noremap = true, silent = true })
 keymap('n', '<leader>rt', '<cmd>lua require("spectre").open()<CR>', { noremap = true, silent = true })
-keymap(
-  'v',
-  '<leader>rt', '<esc>:lua require("spectre").open_visual({ select_word=true })<CR>',
-  { noremap = true, silent = true }
-)
 -- 语法高亮
 keymap('n', 'H', ':TSHighlightCapturesUnderCursor<CR>', { noremap = true, silent = true })
 -- 刷新语法高亮

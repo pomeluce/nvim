@@ -55,9 +55,6 @@ require('packer').startup {
       after = 'vim-dadbod',
     }
 
-    -- 代码提示样式
-    use { 'glepnir/lspsaga.nvim', config = "require('user.plugins.lspsaga').setup()", branch = 'main' }
-
     -- structs 列表
     use { 'simrat39/symbols-outline.nvim', config = "require('user.plugins.symbols-outline').setup()" }
 
@@ -78,9 +75,6 @@ require('packer').startup {
 
     -- 项目管理
     use { 'ahmedkhalf/project.nvim', config = "require('user.plugins.project').setup()" }
-
-    -- spectre
-    use { 'windwp/nvim-spectre', requires = 'nvim-lua/plenary.nvim', event = 'BufRead' }
 
     -- tree-sitter
     use {
@@ -145,6 +139,9 @@ require('packer').startup {
 
     -- session 管理
     use { 'rmagatti/auto-session', config = "require('user.plugins.session').setup()" }
+
+    -- 代码折叠
+    use { 'yaocccc/nvim-foldsign', config = 'require("nvim-foldsign").setup()', event = 'CursorHold' }
   end,
   -- 窗口浮动显示
   config = {

@@ -1,4 +1,4 @@
-## JorVim IDE
+## PomeluceVim IDE
 
 ### 目录结构
 

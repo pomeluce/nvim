@@ -30,6 +30,8 @@
   },
   "tsserver.enable": true,
   "tsserver.trace.server": "messages",
+  "tsserver.locale": "zh-CN",
+  "tsserver.useLocalTsdk": true,
   "translator.engines": ["google", "youdao"],
   "translator.enableHover": false,
   "git.addedSign.hlGroup": "GitSignsAdd",

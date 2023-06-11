@@ -94,7 +94,7 @@ opt.foldenable = true
 -- 手动建立折叠
 opt.foldmethod = "manual"
 opt.viewdir = os.getenv("HOME") .. "/.config/nvim/cache/viewdir"
-opt.foldtext = 'v: call MagicFold'
+opt.foldtext = 'v:lua.vim.cmd("MagicFold")'
 
 -- 设置命令行高度
 opt.cmdheight = 1
@@ -123,7 +123,7 @@ opt.cul = true
 
 -- 显示左侧图标指示列
 opt.signcolumn = "yes"
-opt.fillchars = "stlnc:-"
+opt.fillchars = "fold:-,stlnc:#,eob: ,foldsep:="
 vim.cmd([[
     let &t_SI.="\e[5 q"
     let &t_EI.="\e[1 q"

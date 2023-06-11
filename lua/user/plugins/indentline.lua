@@ -2,8 +2,6 @@ local M = {}
 
 function M.config()
   vim.opt.list = true
-  -- 设置行尾换行符
-  -- G.opt.listchars:append "eol:↴"
 end
 
 function M.setup()

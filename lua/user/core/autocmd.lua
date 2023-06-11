@@ -53,14 +53,14 @@ autocmd('FileType', {
   group = autoGroup,
   pattern = '*',
   callback = function()
-    pcall(vim.cmd, [[ silent! mkview ]])
+    pcall(vim.cmd, [[ silent! loadview ]])
   end,
 })
 autocmd('BufLeave,BufWinEnter', {
   group = autoGroup,
   pattern = '*',
   callback = function()
-    pcall(vim.cmd, [[ silent! loadview ]])
+    pcall(vim.cmd, [[ silent! mkview ]])
   end,
 })
 
