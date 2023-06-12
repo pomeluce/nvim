@@ -1,5 +1,4 @@
 local M = {}
-local autocmd = vim.api.nvim_create_autocmd
 
 -- 文件保存
 function M.magicSave()

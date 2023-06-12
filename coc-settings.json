@@ -28,7 +28,7 @@
     "border": true,
     "rounded": true
   },
-  "tsserver.enable": true,
+  "tsserver.enable": false,
   "tsserver.trace.server": "messages",
   "tsserver.locale": "zh-CN",
   "tsserver.useLocalTsdk": true,

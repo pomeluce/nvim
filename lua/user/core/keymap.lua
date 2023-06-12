@@ -94,14 +94,14 @@ keymap('n', '<m-cr>', '<Plug>(coc-fix-current)', { silent = true })
 keymap(
   "i",
   "<c-j>",
-  "coc#pum#visible() ? coc#pum#next(1) : coc#refresh()",
+  "coc#pum#visible() ? coc#pum#next(0) : coc#refresh()",
   { silent = true, noremap = true, expr = true }
 )
 -- 选中上一个提示
 keymap(
   "i",
   "<c-k>",
-  [[coc#pum#visible() ? coc#pum#prev(1) : coc#refresh()]],
+  [[coc#pum#visible() ? coc#pum#prev(0) : coc#refresh()]],
   { silent = true, noremap = true, expr = true }
 )
 -- 弹出代码提示
@@ -112,7 +112,7 @@ keymap("i", "<tab>", [[coc#pum#visible() ? coc#pum#confirm() : '<tab>']], { sile
 keymap('i', '<tab><space>', 'copilot#Accept("<Right>")', { script = true, silent = true, expr = true })
 
 -- TODO: 代码格式化
-keymap('n', '<leader>fm', ':OR<cr> | :Format<cr>', { noremap = true, silent = true })
+keymap('n', '<leader>fm', ':Format<cr>', { noremap = true, silent = true })
 keymap('v', '<leader>fm', '<Plug>(coc-format-selected)', { noremap = true, silent = true })
 
 -- TODO: 代码折叠

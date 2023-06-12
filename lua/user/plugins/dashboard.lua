@@ -99,7 +99,7 @@ function M.setup()
         },
       },
       -- 底部信息
-      footer = { '', ' Jorvim is a nvim config for web developer' },
+      footer = { '', ' Pomelucevim is a nvim config for web developer' },
     },
   }
   ---@diagnostic disable-next-line: redundant-parameter

@@ -12,7 +12,7 @@ function M.setup()
   end
 
   session.setup {
-    log_level = 'info',
+    log_level = 'error',
     -- 忽略的目录
     auto_session_suppress_dirs = { '~/', '~/Downloads', '/' },
     -- session 保存的目录
@@ -25,6 +25,15 @@ function M.setup()
     -- the configs below are lua only
     bypass_session_save_file_types = nil,
   }
+
+  -- 判断是否附带 + 开头的参数，如果有则不加载 session, 防止命令被覆盖
+  local args = vim.v.argv;
+  for _, arg in ipairs(args) do
+    if arg:sub(1, 1) == '+' then
+      vim.g.auto_session_enabled = false
+      break
+    end
+  end
 end
 
 return M
