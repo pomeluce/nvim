@@ -137,6 +137,13 @@ require('packer').startup {
       requires = { 'nvim-tree/nvim-web-devicons' },
     }
 
+    -- tabout 插件
+    use {
+      'abecodes/tabout.nvim',
+      config = "require('user.plugins.tabout').setup()",
+      after = { 'nvim-treesitter', 'coc.nvim' }
+    }
+
     -- session 管理
     use { 'rmagatti/auto-session', config = "require('user.plugins.session').setup()" }
 
