@@ -72,6 +72,7 @@
   "prettier.trailingComma": "all",
   "prettier.useTabs": false,
   "prettier.vueIndentScriptAndStyle": false,
+  "rust-analyzer.server.path": "/usr/bin/rust-analyzer",
   "volar.takeOverMode.enabled": true,
   "volar.autoCreateQuotes": true,
   "Lua.diagnostics.globals": ["vim"],

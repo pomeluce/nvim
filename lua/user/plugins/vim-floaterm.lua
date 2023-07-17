@@ -5,7 +5,7 @@ function M.toggleFT(name, cmd)
   if vim.fn['floaterm#terminal#get_bufnr'](name) ~= -1 then
     vim.cmd(string.format('exec "FloatermToggle %s"', name))
   else
-    vim.cmd(string.format('FloatermNew --name=%s %s', name, cmd))
+    vim.cmd(string.format('FloatermNew --name=%s --autoclose=0 %s', name, cmd))
   end
 end
 
@@ -25,6 +25,7 @@ function M.runFile()
   elseif ft == 'markdown' then vim.cmd('MarkdownPreview')
   elseif ft == 'java' then M.toggleFT('RUN', 'javac % && java %<')
   elseif ft == 'c' then M.toggleFT('RUN', 'gcc % -o %< && ./%< && rm %<')
+  elseif ft == 'rust' then M.toggleFT('RUN', 'rustc % -o %< && ./%< && rm %<')
   end
 end
 

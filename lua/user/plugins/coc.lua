@@ -16,6 +16,7 @@ function M.config()
     'coc-pairs',
     'coc-prettier',
     'coc-pyright',
+    'coc-rust-analyzer',
     'coc-sh',
     'coc-snippets',
     'coc-sumneko-lua',
