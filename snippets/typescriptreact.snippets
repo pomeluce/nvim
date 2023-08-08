@@ -1,3 +1,19 @@
 snippet log "consloe.log"
 console.log(${0})
 endsnippet
+snippet ttemp "vue jsx/tsx component template"
+import { SlotsType } from 'vue';
+
+const props = {};
+
+export default defineComponent({
+  name: '${1}',
+  props: { ...props },
+  slots: Object as SlotsType<{
+    default?: () => any;
+  }>,
+  setup() {
+    return () => <main></main>;
+  },
+});
+endsnippet

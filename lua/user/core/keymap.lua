@@ -72,6 +72,11 @@ keymap("n", "ge", "<Plug>(coc-diagnostic-next)", { silent = true })
 keymap("n", ")", "<Plug>(coc-diagnostic-next)", { silent = true })
 
 -- TODO: 代码光标移动
+-- 插入模式下移动
+keymap('i', '<m-h>', '<left>', { noremap = true })
+keymap('i', '<m-l>', '<right>', { noremap = true })
+keymap('i', '<m-k>', '<up>', { noremap = true })
+keymap('i', '<m-j>', '<down>', { noremap = true })
 -- 向上移动行
 keymap('n', '<c-m-J>', ':m+<cr>', { noremap = true, silent = true })
 keymap('i', '<c-m-J>', '<esc>:m+<cr>i', { noremap = true, silent = true })

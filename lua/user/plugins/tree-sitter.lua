@@ -15,7 +15,7 @@ function M.setup()
     -- 安装全部解析器
     ensure_installed = "all",
     -- 忽略安装的解析器
-    ignore_install = { "swift", "phpdoc" },
+    ignore_install = { "swift", "phpdoc", "matlab" },
     --开启高亮
     highlight = {
       enable = true

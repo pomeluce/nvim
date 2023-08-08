@@ -31,6 +31,7 @@ function M.setup()
   })
   -- 单独设置注释
   ft.set('java', { '// %s', '/* %s */' })
+  ft.set('ini', { '; %s'})
 end
 
 return M
