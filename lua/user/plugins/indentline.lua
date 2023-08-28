@@ -5,12 +5,7 @@ function M.config()
 end
 
 function M.setup()
-  local status_ok, indent_blankline = pcall(require, "indent_blankline")
-  if not status_ok then
-    vim.notify("indent_blankline 没有加载或未安装")
-    return
-  end
-  indent_blankline.setup({
+  return {
     -- 空行占位符
     space_char_blankline = " ",
     -- 用 treesitter 判断上下文
@@ -36,7 +31,7 @@ function M.setup()
     },
     -- 竖线样式
     char = "▏",
-  })
+  }
 end
 
 return M

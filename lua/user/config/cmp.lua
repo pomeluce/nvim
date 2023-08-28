@@ -1,0 +1,41 @@
+local cmp_conf = require('user.plugins.cmp');
+local copilot = require('user.plugins.copilot');
+
+return {
+  "hrsh7th/nvim-cmp",
+  dependencies = {
+    'hrsh7th/cmp-path',
+    'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-cmdline',
+    'onsails/lspkind.nvim',
+    -- copilot 智能提示
+    {
+      "zbirenbaum/copilot.lua",
+      dependencies = {
+        { "zbirenbaum/copilot-cmp", main = 'copilot_cmp', opts = {} },
+      },
+      main = 'copilot',
+      cmd = "Copilot",
+      event = "InsertEnter",
+      opts = copilot.setup,
+    },
+    {
+      'saadparwaiz1/cmp_luasnip',
+      dependencies = {
+        'L3MON4D3/LuaSnip',
+        dependencies = {
+          "rafamadriz/friendly-snippets",
+        },
+      }
+    }
+  },
+  config = function()
+    require("luasnip.loaders.from_vscode").lazy_load()
+    -- require("luasnip.loaders.from_vscode").lazy_load({ paths = { '~/.config/nvim/snippets' } })
+    local cmp = require('cmp')
+    cmp.setup(cmp_conf.setup(cmp))
+    cmp_conf.cmp_cmdline(cmp)
+    vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
+  end
+}

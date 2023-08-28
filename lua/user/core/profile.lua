@@ -20,7 +20,7 @@ opt.conceallevel = 0
 opt.clipboard:append('unnamedplus')
 
 -- 搜索高亮
-opt.hlsearch = true
+opt.hlsearch = false
 
 -- 插入括号时短暂跳转到配备括号
 opt.showmatch = true
@@ -81,8 +81,12 @@ opt.backup = false
 opt.swapfile = false
 opt.wrap = false
 
+-- 自动读取文件修改结果
+opt.autoread = true
+
 -- 持久化撤销
 opt.undofile = true
+---@diagnostic disable-next-line: assign-type-mismatch
 opt.undodir = os.getenv("HOME") .. "/.config/nvim/cache/undodir"
 
 -- vim 保存 1000 条文件记录
@@ -93,6 +97,7 @@ opt.foldenable = true
 
 -- 手动建立折叠
 opt.foldmethod = "manual"
+---@diagnostic disable-next-line: assign-type-mismatch
 opt.viewdir = os.getenv("HOME") .. "/.config/nvim/cache/viewdir"
 opt.foldtext = 'v:lua.vim.cmd("MagicFold")'
 
@@ -121,9 +126,17 @@ opt.numberwidth = 2
 -- 高亮当前行
 opt.cul = true
 
+-- 独立配置加载
+opt.exrc = true
+
 -- 显示左侧图标指示列
 opt.signcolumn = "yes"
-opt.fillchars = "fold:-,stlnc:#,eob: ,foldsep:="
+opt.fillchars = {
+  fold = '-',
+  stlnc = '~',
+  eob = ' ',
+  foldsep = '='
+}
 vim.cmd([[
     let &t_SI.="\e[5 q"
     let &t_EI.="\e[1 q"

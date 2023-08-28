@@ -1,32 +1,29 @@
-## PomeluceVim IDE
+## RapidifyVim IDE
 
 ### 目录结构
 
 ```
-.
-├── cache
-│   ├── db_config
-│   ├── undodir
-│   └── viewdir
-├── colors
-├── .gitignore
-├── init.lua
-├── LICENSE
-├── lua
-│   └── user
-│       ├── core
-│       ├── lsp
-│       ├── plugins
-│       └── plugins-setup.lua
-├── plugin
-│   └── packer_compiled.lua
-├── .prettierrc.json
-├── README.md
-├── snippets
-│   ├── gitignore.json
-│   ├── html.json
-│   └── vue.json
-└── .stylua.toml
+ .
+├──  cache
+├──  colors
+├──  lua
+│   └──  user
+│       ├──  config
+│       ├──  core
+│       ├──  dap
+│       ├──  fmt
+│       ├──  lsp
+│       ├──  plugins
+│       └──  setup.lua
+├──  init.lua
+├──  lazy-lock.json
+├──  LICENSE
+├──  neoconf.json
+├──  README.md
+├──  snippets
+├──  .gitignore
+├──  .prettierrc.json
+└──  .stylua.toml
 ```
 
 ### 快捷键

@@ -4,15 +4,8 @@ function M.config()
   -- do nothing
 end
 
-function M.setup()
-  local status, telescope = pcall(require, 'telescope')
-  if not status then
-    vim.notify('telescope 没有加载或未安装')
-    return
-  end
-  telescope.load_extension('media_files')
-  local actions = require('telescope.actions')
-  local setting = {
+function M.setup(actions)
+  return {
     defaults = {
       prompt_prefix = '🔍 ',
       selection_caret = ' ',
@@ -111,11 +104,14 @@ function M.setup()
         filetypes = { 'png', 'webp', 'jpg', 'jpeg', 'pdf', 'mp4' },
         find_cmd = 'rg',
       },
+      fzf = {
+        fuzzy = true,                    -- false will only do exact matching
+        override_generic_sorter = true,  -- override the generic sorter
+        override_file_sorter = true,     -- override the file sorter
+        case_mode = "smart_case",        -- or "ignore_case" or "respect_case", the default case_mode is "smart_case"
+      }
     },
   }
-
-  ---@diagnostic disable-next-line: redundant-parameter
-  telescope.setup(setting)
 end
 
 return M

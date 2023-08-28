@@ -14,7 +14,7 @@ end
 
 function M.config()
   -- 连接文件保存位置
-  vim.g.db_ui_save_location = '~/.config/dotfiles/nvim/cache/db_config'
+  vim.g.db_ui_save_location = '~/.config/nvim/cache/db_config'
   -- 使用 nerd font
   vim.g.db_ui_use_nerd_fonts = 1
   -- 强制回显通知

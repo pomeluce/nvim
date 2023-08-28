@@ -1,11 +1,14 @@
 local M = {}
 
 function M.config()
-  vim.g.copilot_no_tab_map = true
+  -- do nothing
 end
 
 function M.setup()
-  -- do noting
+  return {
+    suggestion = { enabled = false },
+    panel = { enabled = false },
+  }
 end
 
 return M

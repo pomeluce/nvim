@@ -1,13 +1,11 @@
 local M = {}
 
-function M.config() end
+function M.config()
+  -- do nothing
+end
 
 function M.setup()
-  local status_ok, project = pcall(require, 'project_nvim')
-  if not status_ok then
-    return
-  end
-  project.setup {
+  return {
     -- 激活
     active = true,
     on_config_done = nil,
@@ -25,13 +23,6 @@ function M.setup()
     -- 储存项目的历史路径
     datapath = vim.fn.stdpath('data'),
   }
-
-  local tele_status_ok, telescope = pcall(require, 'telescope')
-  if not tele_status_ok then
-    return
-  end
-
-  telescope.load_extension('projects')
 end
 
 return M

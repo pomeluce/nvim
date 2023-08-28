@@ -5,12 +5,13 @@ local autocmd = vim.api.nvim_create_autocmd
 autocmd('BufWritePost', {
   group = autoGroup,
   callback = function()
-    if vim.fn.expand('%:t') == 'plugins-setup.lua' then
-      vim.cmd('source ~/.config/nvim/lua/user/plugins-setup.lua | PackerSync')
+    local current_file = vim.fn.expand('%')
+    local config_folder = vim.fn.expand('lua/user/config/')
+    if vim.fn.stridx(current_file, config_folder) == 0 then
+      vim.cmd('Lazy sync')
     end
   end,
 })
-
 
 -- 自动切换输入法
 autocmd('InsertLeave', {
@@ -48,19 +49,28 @@ autocmd('BufEnter', {
   end,
 })
 
+-- 自动安装解析器
+autocmd('FileType', {
+  group = autoGroup,
+  pattern = '*',
+  callback = function()
+    require('user.plugins.tree-sitter').parser_bootstrap()
+  end,
+})
+
 -- 自动保存折叠信息
 autocmd('FileType', {
   group = autoGroup,
   pattern = '*',
   callback = function()
-    pcall(vim.cmd, [[ silent! loadview ]])
+    vim.cmd([[ silent! loadview ]])
   end,
 })
 autocmd('BufLeave,BufWinEnter', {
   group = autoGroup,
   pattern = '*',
   callback = function()
-    pcall(vim.cmd, [[ silent! mkview ]])
+    vim.cmd([[ silent! mkview ]])
   end,
 })
 

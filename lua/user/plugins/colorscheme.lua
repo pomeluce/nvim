@@ -6,15 +6,7 @@ end
 
 function M.setup()
   -- 配置主题
-  local status_ok, one_monokai = pcall(require, "one_monokai")
-  if not status_ok then
-    vim.notify("one_monokai 没有加载或还没有安装")
-    return
-  end
-  one_monokai.setup({
-    transparent = true,
-  })
-  vim.cmd([[ colorscheme one_monokai ]])
+  return { transparent = true }
 end
 
 return M

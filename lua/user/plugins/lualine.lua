@@ -5,15 +5,7 @@ function M.config()
 end
 
 function M.setup()
-  -- lualine 配置
-  local status_ok, lualine = pcall(require, "lualine")
-  if not status_ok then
-    vim.notify("lualine 没有加载或未安装")
-    return
-  end
-
-  ---@diagnostic disable-next-line: redundant-parameter
-  lualine.setup({
+  return {
     options = {
       -- 指定皮肤
       -- https://github.com/nvim-lualine/lualine.nvim/blob/master/THEMES.md
@@ -85,7 +77,7 @@ function M.setup()
         "filetype",
       },
     },
-  })
+  }
 end
 
 return M

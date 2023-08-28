@@ -92,4 +92,19 @@ end
 
 vim.cmd('com! ToggleHump lua require("user.core.funcutil").toggleHump()')
 
+-- 设置高亮
+function M.sitterHi(hls)
+    local colormode = vim.o.termguicolors and '' or 'cterm'
+    for group,color in pairs(hls) do
+        local opt = color
+        if color.fg then opt[colormode .. 'fg'] = color.fg end
+        if color.bg then opt[colormode .. 'bg'] = color.bg end
+        opt.bold = color.bold
+        opt.underline = color.underline
+        opt.italic = color.italic
+        opt.strikethrough = color.strikethrough
+        vim.api.nvim_set_hl(0, group, opt)
+    end
+end
+
 return M

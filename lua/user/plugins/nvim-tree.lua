@@ -135,14 +135,7 @@ function M.config()
 end
 
 function M.setup()
-  local status_ok, nvim_tree = pcall(require, 'nvim-tree')
-  if not status_ok then
-    vim.notify('nvim-tree 没有加载或者未安装')
-    return
-  end
-
-  ---@diagnostic disable-next-line: redundant-parameter
-  nvim_tree.setup {
+  return {
     sort_by = 'case_sensitive',
     -- 在多个窗口下打开 buffer 时, 默认使用最近窗口
     actions = {

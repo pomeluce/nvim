@@ -7,13 +7,7 @@ function M.config()
 end
 
 function M.setup()
-  -- bufferline 配置
-  local status_ok, bufferline = pcall(require, "bufferline")
-  if not status_ok then
-    vim.notify("bufferline 没有加载或未安装")
-    return
-  end
-  bufferline.setup({
+  return {
     options = {
       -- 不显示关闭按钮
       show_buffer_close_icons = false,
@@ -21,8 +15,8 @@ function M.setup()
       numbers = function(opts)
         return string.format('%s.', opts.ordinal)
       end,
-      -- 使用 coc 进行代码检查
-      diagnostics = 'coc',
+      -- 使用 lsp 进行代码检查
+      diagnostics = 'lsp',
       -- 设置分隔符
       separator_style = { '', '' },
       -- 设置鼠标悬停显示关闭按钮
@@ -37,7 +31,7 @@ function M.setup()
         style = 'none',
       },
     }
-  })
+  }
 end
 
 return M
