@@ -11,7 +11,6 @@ function M.setup()
       -- 设置封面
       header = {
 
-
         '                                                                              ',
         '                                                                              ',
         '                                                                              ',

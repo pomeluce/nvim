@@ -10,8 +10,8 @@ function M.setup()
       -- 关闭字符增强
       char = {
         enabled = false,
-      }
-    }
+      },
+    },
   }
 end
 return M

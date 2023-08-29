@@ -10,22 +10,29 @@ function M.toggleFT(name, cmd)
 end
 
 function M.setFTToggleMap(key, name, cmd)
-    keymap( 'n', key, string.format(":lua require('user.plugins.vim-floaterm').toggleFT('%s', '%s')<cr>", name, cmd), { noremap = true, silent = true } )
-    keymap( 't', key,
-    "&ft == \"floaterm\" ? printf('<c-\\><c-n>:FloatermHide<cr>%s', floaterm#terminal#get_bufnr('" ..
-    name .. "') == bufnr('%') ? '' : '" .. key .. "') : '" .. key .. "'", { silent = true, expr = true } )
+  keymap('n', key, string.format(":lua require('user.plugins.vim-floaterm').toggleFT('%s', '%s')<cr>", name, cmd), { noremap = true, silent = true })
+  keymap(
+    't',
+    key,
+    "&ft == \"floaterm\" ? printf('<c-\\><c-n>:FloatermHide<cr>%s', floaterm#terminal#get_bufnr('" .. name .. "') == bufnr('%') ? '' : '" .. key .. "') : '" .. key .. "'",
+    { silent = true, expr = true }
+  )
 end
 
 function M.runFile()
   vim.cmd('w')
   local ft = vim.api.nvim_eval('&ft')
-  local run_cmd = { javascript = 'node', typescript = 'ts-node', html = 'firefox', python = 'python', go = 'go run',
-    sh = 'bash', lua = 'lua' }
-  if run_cmd[ft] then M.toggleFT('RUN', run_cmd[ft] .. ' %')
-  elseif ft == 'markdown' then vim.cmd('MarkdownPreview')
-  elseif ft == 'java' then M.toggleFT('RUN', 'javac % && java %<')
-  elseif ft == 'c' then M.toggleFT('RUN', 'gcc % -o %< && ./%< && rm %<')
-  elseif ft == 'rust' then M.toggleFT('RUN', 'rustc % -o %< && ./%< && rm %<')
+  local run_cmd = { javascript = 'node', typescript = 'ts-node', html = 'firefox', python = 'python', go = 'go run', sh = 'bash', lua = 'lua' }
+  if run_cmd[ft] then
+    M.toggleFT('RUN', run_cmd[ft] .. ' %')
+  elseif ft == 'markdown' then
+    vim.cmd('MarkdownPreview')
+  elseif ft == 'java' then
+    M.toggleFT('RUN', 'javac % && java %<')
+  elseif ft == 'c' then
+    M.toggleFT('RUN', 'gcc % -o %< && ./%< && rm %<')
+  elseif ft == 'rust' then
+    M.toggleFT('RUN', 'rustc % -o %< && ./%< && rm %<')
   end
 end
 

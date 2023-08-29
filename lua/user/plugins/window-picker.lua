@@ -11,8 +11,8 @@ function M.setup()
       include_current_win = true,
       -- 窗口排除列表
       bo = {
-        filetype = { "fidget", 'NvimTree' }
-      }
+        filetype = { 'fidget', 'NvimTree' },
+      },
     },
     prompt_message = 'Pick window: ',
     highlights = {

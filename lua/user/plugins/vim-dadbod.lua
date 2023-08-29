@@ -25,8 +25,8 @@ function M.config()
       ['List'] = 'SELECT * from `{schema}`.`{table}` LIMIT 100;',
       ['Indexes'] = 'SHOW INDEXES FROM `{schema}`.`{table}`;',
       ['Table Fields'] = 'DESCRIBE `{schema}`.`{table}`;',
-      ['Alter Table'] = 'ALTER TABLE `{schema}`.`{table}` ADD '
-    }
+      ['Alter Table'] = 'ALTER TABLE `{schema}`.`{table}` ADD ',
+    },
   }
   vim.cmd('com! CALLDB lua require("user.plugins.vim-dadbod").DBUI()')
 end

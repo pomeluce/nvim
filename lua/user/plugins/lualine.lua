@@ -9,24 +9,24 @@ function M.setup()
     options = {
       -- 指定皮肤
       -- https://github.com/nvim-lualine/lualine.nvim/blob/master/THEMES.md
-      theme = "onedark",
+      theme = 'onedark',
       -- 开启图标
       icons_enabled = true,
       -- 分割线
       component_separators = {
-        left = "",
-        right = "",
+        left = '',
+        right = '',
       },
       -- https://github.com/ryanoasis/powerline-extra-symbols
       section_separators = {
-        left = "",
-        right = ""
+        left = '',
+        right = '',
       },
       -- 启用全局状态栏
       globalstatus = true,
     },
     -- 更改 nvim-tree 外观
-    extensions = { "nvim-tree" },
+    extensions = { 'nvim-tree' },
     sections = {
       lualine_b = {
         -- git branch
@@ -51,20 +51,20 @@ function M.setup()
           update_in_insert = true,
           -- 显示诊断, 即使没有错误
           always_visible = true,
-        }
+        },
       },
       lualine_c = {
         -- 文件名称
-        "filename",
+        'filename',
         -- lsp 文件进度百分比
-        { "lsp_progress", spinner_symbols = { " ", " ", " ", " ", " ", " " }, },
+        { 'lsp_progress', spinner_symbols = { ' ', ' ', ' ', ' ', ' ', ' ' } },
       },
       lualine_x = {
         -- 文件大小
-        "filesize",
+        'filesize',
         -- 文件格式
         {
-          "fileformat",
+          'fileformat',
           symbols = {
             unix = '', -- e712
             dos = '', -- e70f
@@ -72,9 +72,9 @@ function M.setup()
           },
         },
         -- 显示编码
-        "encoding",
+        'encoding',
         -- 文件类型
-        "filetype",
+        'filetype',
       },
     },
   }

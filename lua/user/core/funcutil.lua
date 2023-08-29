@@ -38,20 +38,30 @@ vim.cmd('command! -nargs=* SetTab lua require("user.core.funcutil").switchTab(<q
 
 -- 代码折叠
 function M.magicFold()
-  local spacetext = ("        "):sub(0, vim.opt.shiftwidth:get())
-  local line = vim.fn.getline(vim.v.foldstart):gsub("\t", spacetext)
+  local spacetext = ('        '):sub(0, vim.opt.shiftwidth:get())
+  local line = vim.fn.getline(vim.v.foldstart):gsub('\t', spacetext)
   local folded = vim.v.foldend - vim.v.foldstart + 1
   local findresult = line:find('%S')
-  if not findresult then return '+ folded ' .. folded .. ' lines ' end
+  if not findresult then
+    return '+ folded ' .. folded .. ' lines '
+  end
   local empty = findresult - 1
   local funcs = {
-    [0] = function(_) return '' .. line end,
-    [1] = function(_) return '+' .. line:sub(2) end,
-    [2] = function(_) return '+ ' .. line:sub(3) end,
+    [0] = function(_)
+      return '' .. line
+    end,
+    [1] = function(_)
+      return '+' .. line:sub(2)
+    end,
+    [2] = function(_)
+      return '+ ' .. line:sub(3)
+    end,
     [-1] = function(c)
       local result = ' ' .. line:sub(c + 1)
       local foldednumlen = #tostring(folded)
-      for _ = 1, c - 2 - foldednumlen do result = '-' .. result end
+      for _ = 1, c - 2 - foldednumlen do
+        result = '-' .. result
+      end
       return '+' .. folded .. result
     end,
   }
@@ -62,8 +72,7 @@ vim.cmd('com! MagicFold lua require("user.core.funcutil").magicFold()')
 
 -- space 行首行尾跳转
 function M.magicMove()
-  local l_first, l_head = 1,
-      vim.fn.len(vim.fn.getline('.')) - vim.fn.len(vim.fn.substitute(vim.fn.getline('.'), '^\\s*', '', 'G')) + 1
+  local l_first, l_head = 1, vim.fn.len(vim.fn.getline('.')) - vim.fn.len(vim.fn.substitute(vim.fn.getline('.'), '^\\s*', '', 'G')) + 1
   local l_before = vim.fn.col('.')
   vim.cmd(l_before == l_first and l_first ~= l_head and 'norm! ^' or 'norm! $')
   local l_after = vim.fn.col('.')
@@ -80,12 +89,20 @@ function M.toggleHump(upperCase)
   local w = vim.fn.getreg('t')
   local toHump = w:find('_') ~= nil
   if toHump then
-    w = w:gsub('_(%w)', function(c) return c:upper() end)
+    w = w:gsub('_(%w)', function(c)
+      return c:upper()
+    end)
   else
-    w = w:gsub('(%u)', function(c) return '_' .. c:lower() end)
+    w = w:gsub('(%u)', function(c)
+      return '_' .. c:lower()
+    end)
   end
-  if w:sub(1, 1) == '_' then w = w:sub(2) end
-  if upperCase then w = w:sub(1, 1):upper() .. w:sub(2) end
+  if w:sub(1, 1) == '_' then
+    w = w:sub(2)
+  end
+  if upperCase then
+    w = w:sub(1, 1):upper() .. w:sub(2)
+  end
   vim.fn.setreg('t', w)
   vim.fn.execute('normal! "tP')
 end
@@ -94,17 +111,21 @@ vim.cmd('com! ToggleHump lua require("user.core.funcutil").toggleHump()')
 
 -- 设置高亮
 function M.sitterHi(hls)
-    local colormode = vim.o.termguicolors and '' or 'cterm'
-    for group,color in pairs(hls) do
-        local opt = color
-        if color.fg then opt[colormode .. 'fg'] = color.fg end
-        if color.bg then opt[colormode .. 'bg'] = color.bg end
-        opt.bold = color.bold
-        opt.underline = color.underline
-        opt.italic = color.italic
-        opt.strikethrough = color.strikethrough
-        vim.api.nvim_set_hl(0, group, opt)
+  local colormode = vim.o.termguicolors and '' or 'cterm'
+  for group, color in pairs(hls) do
+    local opt = color
+    if color.fg then
+      opt[colormode .. 'fg'] = color.fg
     end
+    if color.bg then
+      opt[colormode .. 'bg'] = color.bg
+    end
+    opt.bold = color.bold
+    opt.underline = color.underline
+    opt.italic = color.italic
+    opt.strikethrough = color.strikethrough
+    vim.api.nvim_set_hl(0, group, opt)
+  end
 end
 
 return M

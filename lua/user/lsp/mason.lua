@@ -17,7 +17,7 @@ local lsp_servers = {
 }
 
 -- dap 列表
-local dap_servers = { 'js', }
+local dap_servers = { 'js' }
 
 -- formmater 列表
 --[[ local formmater_servers = {
@@ -56,17 +56,17 @@ require('mason-lspconfig').setup {
       local opt = {}
       local result, conf = pcall(require, 'user.lsp.config.' .. server_name)
       if result then
-        opt = vim.tbl_deep_extend('force', conf, opt);
+        opt = vim.tbl_deep_extend('force', conf, opt)
       end
-      require('lspconfig')[server_name].setup({
+      require('lspconfig')[server_name].setup {
         settings = opt,
         on_attach = require('user.lsp.handlers').on_attach,
         capabilities = require('user.lsp.handlers').capabilities,
-      })
+      }
     end,
   },
 }
 -- 加载 mason-nvim-dap
-require('mason-nvim-dap').setup({
+require('mason-nvim-dap').setup {
   ensure_installed = dap_servers,
-})
+}

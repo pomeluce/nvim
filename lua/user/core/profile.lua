@@ -1,11 +1,11 @@
 local opt = vim.opt
 
 -- 设置 python3 对应的目录，你可以手动 export PYTHON=$(which python3) 到你的终端配置中
-vim.g.python3_host_prog = os.getenv("PYTHON")
+vim.g.python3_host_prog = os.getenv('PYTHON')
 
 -- 命令提示
 opt.showcmd = true
-opt.encoding = "utf-8"
+opt.encoding = 'utf-8'
 
 -- tab 键提示
 opt.wildmenu = true
@@ -29,7 +29,7 @@ opt.showmatch = true
 opt.incsearch = true
 
 -- 命令效果预览
-opt.inccommand = "split"
+opt.inccommand = 'split'
 
 -- 搜索模式忽略大小写
 opt.ignorecase = true
@@ -41,13 +41,13 @@ opt.smartcase = true
 opt.timeoutlen = 500
 
 -- 退格键处理
-opt.backspace = "indent,eol,start"
+opt.backspace = 'indent,eol,start'
 
 -- 允许换行跨越边界
-opt.whichwrap = "<,>,[,],h,l"
+opt.whichwrap = '<,>,[,],h,l'
 
 -- 允许鼠标移动
-opt.mouse = "a"
+opt.mouse = 'a'
 
 -- 错误无提示音 去除屏幕闪烁
 opt.vb = true
@@ -87,7 +87,7 @@ opt.autoread = true
 -- 持久化撤销
 opt.undofile = true
 ---@diagnostic disable-next-line: assign-type-mismatch
-opt.undodir = os.getenv("HOME") .. "/.config/nvim/cache/undodir"
+opt.undodir = os.getenv('HOME') .. '/.config/nvim/cache/undodir'
 
 -- vim 保存 1000 条文件记录
 opt.viminfo = "!,'10000,<50,s10,h"
@@ -96,9 +96,9 @@ opt.viminfo = "!,'10000,<50,s10,h"
 opt.foldenable = true
 
 -- 手动建立折叠
-opt.foldmethod = "manual"
+opt.foldmethod = 'manual'
 ---@diagnostic disable-next-line: assign-type-mismatch
-opt.viewdir = os.getenv("HOME") .. "/.config/nvim/cache/viewdir"
+opt.viewdir = os.getenv('HOME') .. '/.config/nvim/cache/viewdir'
 opt.foldtext = 'v:lua.vim.cmd("MagicFold")'
 
 -- 设置命令行高度
@@ -130,12 +130,12 @@ opt.cul = true
 opt.exrc = true
 
 -- 显示左侧图标指示列
-opt.signcolumn = "yes"
+opt.signcolumn = 'yes'
 opt.fillchars = {
   fold = '-',
   stlnc = '~',
   eob = ' ',
-  foldsep = '='
+  foldsep = '=',
 }
 vim.cmd([[
     let &t_SI.="\e[5 q"

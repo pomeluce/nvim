@@ -63,7 +63,7 @@ M.lsp_highlight_document = function(client)
       pattern = '*',
       callback = function()
         vim.lsp.buf.document_highlight()
-      end
+      end,
     })
 
     vim.api.nvim_create_autocmd('CursorHold', {
@@ -71,11 +71,10 @@ M.lsp_highlight_document = function(client)
       pattern = '*',
       callback = function()
         vim.lsp.buf.clear_references()
-      end
+      end,
     })
   end
 end
-
 
 M.on_attach = function(client, buffer)
   require('user.core.keymap').lsp_keymaps(buffer)

@@ -21,7 +21,7 @@ autocmd('InsertLeave', {
     if vim.api.nvim_get_mode().mode == 'n' then
       vim.fn.system('busctl call --user org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 SetAsciiMode b 1')
     end
-  end
+  end,
 })
 
 -- 用 o 换行不要延续注释
@@ -30,8 +30,8 @@ autocmd('BufEnter', {
   pattern = '*',
   callback = function()
     vim.opt.formatoptions = vim.opt.formatoptions
-        - 'o' -- O 和 o, 不要延续注释
-        + 'r' -- 回车延续注释
+      - 'o' -- O 和 o, 不要延续注释
+      + 'r' -- 回车延续注释
   end,
 })
 

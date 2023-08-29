@@ -23,14 +23,14 @@ function M.setup()
       hover = {
         enabled = true,
         delay = 70,
-        reveal = { 'close' }
+        reveal = { 'close' },
       },
       -- 设置当前文件下划线
       indicator = {
         -- icon = '', -- this should be omitted if indicator style is not 'icon'
         style = 'none',
       },
-    }
+    },
   }
 end
 
