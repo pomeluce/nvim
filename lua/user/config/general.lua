@@ -1,17 +1,17 @@
-local telescope = require('user.plugins.telescope');
-local comment = require('user.plugins.comment');
-local project = require('user.plugins.project');
-local persistence = require('user.plugins.persistence');
-local autopairs = require('user.plugins.autopairs');
-local flash = require('user.plugins.flash');
-local markdown = require('user.plugins.markdown');
-local picker = require('user.plugins.window-picker');
+local telescope = require('user.plugins.telescope')
+local comment = require('user.plugins.comment')
+local project = require('user.plugins.project')
+local persistence = require('user.plugins.persistence')
+local autopairs = require('user.plugins.autopairs')
+local flash = require('user.plugins.flash')
+local markdown = require('user.plugins.markdown')
+local picker = require('user.plugins.window-picker')
 
 return {
   -- 中文help doc
   {
     'yianwillis/vimcdoc',
-    event = 'VimEnter'
+    event = 'VimEnter',
   },
   -- 全局文件搜索
   {
@@ -46,8 +46,8 @@ return {
   },
   -- markdown 简单预览
   {
-    "ellisonleao/glow.nvim",
-    cmd = "Glow",
+    'ellisonleao/glow.nvim',
+    cmd = 'Glow',
     opts = markdown.setup(),
   },
   -- 代码注释
@@ -65,15 +65,15 @@ return {
   },
   -- session 管理
   {
-    "folke/persistence.nvim",
-    event = "BufReadPre",
+    'folke/persistence.nvim',
+    event = 'BufReadPre',
     opts = persistence.setup(),
   },
   -- 数据库管理
   {
     'kristijanhusak/vim-dadbod-ui',
     dependencies = {
-      { 'tpope/vim-dadbod', cmd = { 'DBUI' } }
+      { 'tpope/vim-dadbod', cmd = { 'DBUI' } },
     },
   },
   -- 字符环绕
@@ -84,21 +84,21 @@ return {
   -- auot-pairs
   {
     'windwp/nvim-autopairs',
-    event = "InsertEnter",
+    event = 'InsertEnter',
     opts = autopairs.setup(),
   },
   -- 移动加速
   { 'rhysd/accelerated-jk' },
   -- 快速跳转
   {
-    "folke/flash.nvim",
-    event = "VeryLazy",
+    'folke/flash.nvim',
+    event = 'VeryLazy',
     opts = flash.setup(),
   },
   -- which-key
   {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
+    'folke/which-key.nvim',
+    event = 'VeryLazy',
     opts = {},
   },
   -- window picker 快速切换窗口

@@ -1,6 +1,6 @@
 return {
   'mhartington/formatter.nvim',
-  config = function ()
+  config = function()
     require('user.fmt.handlers')
-  end
+  end,
 }

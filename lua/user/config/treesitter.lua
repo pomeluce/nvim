@@ -4,6 +4,7 @@ return {
   -- 语法高亮
   {
     'nvim-treesitter/nvim-treesitter',
+    event = 'VeryLazy',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
@@ -15,6 +16,5 @@ return {
       -- 自动根据文件类型设置解析器
       treesitter.parser_bootstrap()
     end,
-    event = 'BufRead',
   },
 }

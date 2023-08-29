@@ -239,7 +239,7 @@ M.lsp_keymaps = function(buffer)
   -- 跳转到引用
   keymap('n', 'gr', require('telescope.builtin').lsp_references, { desc = 'goto reference', buffer = buffer, noremap = true, silent = true })
   -- 跳转到错误
-  keymap('n', 'ge', ':lua require("telescope.builtin").diagnostics({ bufnr = 0 })<cr>', { desc = 'goto error', buffer = buffer, noremap = true, silent = true })
+  keymap('n', 'ge', '<cmd>Lspsaga diagnostic_jump_next<cr>', { desc = 'goto error', buffer = buffer, noremap = true, silent = true })
   -- 显示 structure 列表
   keymap('n', '<leader>ss', '<cmd>Lspsaga outline<cr>', { desc = 'structure list', buffer = buffer, noremap = true, silent = true })
   -- 显示文档

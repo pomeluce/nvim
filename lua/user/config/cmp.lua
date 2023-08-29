@@ -1,8 +1,8 @@
-local cmp_conf = require('user.plugins.cmp');
-local copilot = require('user.plugins.copilot');
+local cmp_conf = require('user.plugins.cmp')
+local copilot = require('user.plugins.copilot')
 
 return {
-  "hrsh7th/nvim-cmp",
+  'hrsh7th/nvim-cmp',
   dependencies = {
     'hrsh7th/cmp-path',
     'hrsh7th/cmp-nvim-lsp',
@@ -11,13 +11,13 @@ return {
     'onsails/lspkind.nvim',
     -- copilot 智能提示
     {
-      "zbirenbaum/copilot.lua",
+      'zbirenbaum/copilot.lua',
       dependencies = {
-        { "zbirenbaum/copilot-cmp", main = 'copilot_cmp', opts = {} },
+        { 'zbirenbaum/copilot-cmp', main = 'copilot_cmp', opts = {} },
       },
       main = 'copilot',
-      cmd = "Copilot",
-      event = "InsertEnter",
+      cmd = 'Copilot',
+      event = 'InsertEnter',
       opts = copilot.setup,
     },
     {
@@ -25,17 +25,19 @@ return {
       dependencies = {
         'L3MON4D3/LuaSnip',
         dependencies = {
-          "rafamadriz/friendly-snippets",
+          'rafamadriz/friendly-snippets',
         },
-      }
-    }
+      },
+    },
   },
   config = function()
-    require("luasnip.loaders.from_vscode").lazy_load()
-    -- require("luasnip.loaders.from_vscode").lazy_load({ paths = { '~/.config/nvim/snippets' } })
+    -- 预定义代码片段
+    require('luasnip.loaders.from_vscode').lazy_load()
+    -- 自定义代码片段
+    require('luasnip.loaders.from_snipmate').lazy_load { paths = { './snippets' } }
     local cmp = require('cmp')
     cmp.setup(cmp_conf.setup(cmp))
     cmp_conf.cmp_cmdline(cmp)
-    vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
-  end
+    vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = '#6CC644' })
+  end,
 }
