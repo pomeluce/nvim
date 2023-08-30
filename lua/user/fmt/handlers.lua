@@ -43,7 +43,6 @@ require('formatter').setup {
         return {
           exe = 'rustfmt',
           args = {
-            '--edition 2021',
             '--config-path',
             vim.fn.expand('~/.config/nvim/.rustfmt.toml'),
           },
@@ -52,7 +51,7 @@ require('formatter').setup {
       end,
     },
     scss = { preitter('scss') },
-    toml = { require('formatter.filetypes.toml').taplo() },
+    toml = { require('formatter.filetypes.toml').taplo },
     typescript = { preitter('typescript') },
     typescriptreact = { preitter('typescript') },
     vue = { preitter('vue') },

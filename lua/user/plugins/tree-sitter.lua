@@ -33,7 +33,24 @@ end
 function M.setup()
   return {
     -- 安装常用解析器
-    ensure_installed = { 'c', 'cmake', 'cpp', 'go', 'java', 'javascript', 'json', 'lua', 'markdown', 'markdown_inline', 'python', 'rust', 'toml', 'typescript', 'yaml' },
+    ensure_installed = {
+      'c',
+      'cmake',
+      'cpp',
+      'go',
+      'java',
+      'javascript',
+      'json',
+      'lua',
+      'markdown',
+      'markdown_inline',
+      'python',
+      'rust',
+      'toml',
+      'typescript',
+      'vue',
+      'yaml',
+    },
     --开启高亮
     highlight = {
       enable = true,
