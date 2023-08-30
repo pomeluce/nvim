@@ -76,6 +76,9 @@ function M.setup()
         -- 不选中多余的空格
         include_surrounding_whitespace = false,
       },
+      context_commentstring = {
+        enable = true,
+      },
     },
   }
 end

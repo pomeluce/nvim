@@ -24,7 +24,7 @@ function M.setup()
         '╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚═════╝ ╚═╝╚═╝        ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝',
         '                                                                              ',
         '                                                                              ',
-        '                        [ rapidify-vim version 3.5.1 ]                        ',
+        '                        [ rapidify-vim version 3.7.1 ]                        ',
         '                                                                              ',
         '                                                                              ',
         '                                                                              ',

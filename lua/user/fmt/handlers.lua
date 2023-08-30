@@ -37,12 +37,25 @@ require('formatter').setup {
     javascriptreact = { preitter },
     json = { preitter },
     markdown = { preitter('markdown') },
+    rust = {
+      -- rules: https://rust-lang.github.io/rustfmt
+      function()
+        return {
+          exe = 'rustfmt',
+          args = {
+            '--edition 2021',
+            '--config-path',
+            vim.fn.expand('~/.config/nvim/.rustfmt.toml'),
+          },
+          stdin = true,
+        }
+      end,
+    },
     scss = { preitter('scss') },
+    toml = { require('formatter.filetypes.toml').taplo() },
     typescript = { preitter('typescript') },
     typescriptreact = { preitter('typescript') },
     vue = { preitter('vue') },
-    ['*'] = {
-      require('formatter.filetypes.any').remove_trailing_whitespace,
-    },
+    ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
   },
 }

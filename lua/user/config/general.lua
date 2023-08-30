@@ -4,7 +4,6 @@ local project = require('user.plugins.project')
 local persistence = require('user.plugins.persistence')
 local autopairs = require('user.plugins.autopairs')
 local flash = require('user.plugins.flash')
-local markdown = require('user.plugins.markdown')
 local picker = require('user.plugins.window-picker')
 
 return {
@@ -16,6 +15,7 @@ return {
   -- 全局文件搜索
   {
     'nvim-telescope/telescope.nvim',
+    event = 'VeryLazy',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -43,12 +43,6 @@ return {
     build = 'cd app && yarn install',
     cmd = 'MarkdownPreview',
     ft = 'markdown',
-  },
-  -- markdown 简单预览
-  {
-    'ellisonleao/glow.nvim',
-    cmd = 'Glow',
-    opts = markdown.setup(),
   },
   -- 代码注释
   {

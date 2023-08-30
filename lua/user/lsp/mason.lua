@@ -21,8 +21,9 @@ local dap_servers = { 'js' }
 
 -- formmater 列表
 --[[ local formmater_servers = {
+  'prettierd',
+  'rustfmt', -- should installed rustup
   'stylua',
-  'prettierd'
 } ]]
 
 -- mason 设置
@@ -50,23 +51,20 @@ require('mason-lspconfig').setup {
   ensure_installed = lsp_servers,
   -- 自动安装
   automatic_installation = true,
-  -- lsp 配置
-  handlers = {
-    function(server_name)
-      local opt = {}
-      local result, conf = pcall(require, 'user.lsp.config.' .. server_name)
-      if result then
-        opt = vim.tbl_deep_extend('force', conf, opt)
-      end
-      require('lspconfig')[server_name].setup {
-        settings = opt,
-        on_attach = require('user.lsp.handlers').on_attach,
-        capabilities = require('user.lsp.handlers').capabilities,
-      }
-    end,
-  },
 }
 -- 加载 mason-nvim-dap
 require('mason-nvim-dap').setup {
   ensure_installed = dap_servers,
 }
+
+-- lsp 配置
+for _, server in pairs(lsp_servers) do
+  local opt = {
+    on_attach = require('user.lsp.handlers').on_attach,
+    capabilities = require('user.lsp.handlers').capabilities,
+  }
+  local result, config = pcall(require, 'user.lsp.config.' .. server)
+  if result then
+    require('lspconfig')[server].setup(vim.tbl_deep_extend('keep', opt, config))
+  end
+end

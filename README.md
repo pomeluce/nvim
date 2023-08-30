@@ -1,4 +1,11 @@
 ## RapidifyVim IDE
+<!-- markdown-toc GFM -->
+
+* [目录结构](#目录结构)
+* [快捷键](#快捷键)
+    * [基础快捷键](#基础快捷键)
+
+<!-- markdown-toc -->
 
 ### 目录结构
 
@@ -23,6 +30,7 @@
 ├──snippets
 ├──.gitignore
 ├──.prettierrc.json
+├──.rustfmt.toml
 └──.stylua.toml
 ```
 
@@ -125,7 +133,3 @@
 | n       | K                | hover documents                        |
 | n, v    | alt + return     | code action                            |
 | n       | leader + f + m   | 代码格式化                             |
-
-<details>
-<summary>快捷键配置</summary>
-</details>
