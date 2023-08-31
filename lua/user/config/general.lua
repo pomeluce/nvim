@@ -37,9 +37,10 @@ return {
     end,
   },
   -- markdown 预览插件 导航生成插件
-  { 'mzlogin/vim-markdown-toc', ft = 'markdown' },
+  { 'mzlogin/vim-markdown-toc', event = 'VeryLazy', ft = 'markdown' },
   {
     'iamcco/markdown-preview.nvim',
+    event = 'VeryLazy',
     build = 'cd app && yarn install',
     cmd = 'MarkdownPreview',
     ft = 'markdown',
