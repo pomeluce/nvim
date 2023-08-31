@@ -12,6 +12,7 @@ local lsp_servers = {
   'rust_analyzer',
   'sqlls',
   'tailwindcss',
+  'taplo',
   'tsserver',
   'volar',
 }

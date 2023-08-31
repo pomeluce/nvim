@@ -1,0 +1,6 @@
+[formatting]
+array_trailing_comma = true
+array_auto_expand = true
+array_auto_collapse = true
+compact_arrays = false
+column_width = 120

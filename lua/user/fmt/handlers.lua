@@ -51,7 +51,21 @@ require('formatter').setup {
       end,
     },
     scss = { preitter('scss') },
-    toml = { require('formatter.filetypes.toml').taplo },
+    toml = {
+      function()
+        return {
+          exe = 'taplo',
+          args = {
+            '--config',
+            vim.fn.expand('~/.config/nvim/.taplo.toml'),
+            'fmt',
+            '-',
+          },
+          stdin = true,
+          try_node_modules = true,
+        }
+      end,
+    },
     typescript = { preitter('typescript') },
     typescriptreact = { preitter('typescript') },
     vue = { preitter('vue') },

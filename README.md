@@ -1,20 +1,42 @@
 ## RapidifyVim IDE
+
 <!-- markdown-toc GFM -->
 
+* [使用说明](#使用说明)
 * [目录结构](#目录结构)
-* [快捷键](#快捷键)
-    * [基础快捷键](#基础快捷键)
+* [基础快捷键](#基础快捷键)
+* [插件快捷键](#插件快捷键)
 
 <!-- markdown-toc -->
+
+### 使用说明
+
+1. backup 原有 nvim 配置, 并删除 nvim 数据目录
+
+```
+cp ~/.config/nvim /you/backup/path/nvim-bak
+
+rm -rf ~/.local/share/nvim/
+```
+
+2. 拉取 RapidifyVim 配置
+
+```shell
+cd ~/.config/ && git clone https://github.com/pomeluce/nvim.git
+```
+
+3. 执行 nvim 命令, 等待安装完成
+
+```
+nvim
+```
 
 ### 目录结构
 
 ```
 .
-├──cache
 ├──colors
-├──lua
-│   └──user
+├──lua/user
 │       ├──config
 │       ├──core
 │       ├──dap
@@ -31,12 +53,11 @@
 ├──.gitignore
 ├──.prettierrc.json
 ├──.rustfmt.toml
-└──.stylua.toml
+├──.stylua.toml
+└──.taplo.toml
 ```
 
-### 快捷键
-
-#### 基础快捷键
+### 基础快捷键
 
 | mode    | 快捷键           | 说明                                   |
 | ------- | ---------------- | -------------------------------------- |
@@ -133,3 +154,26 @@
 | n       | K                | hover documents                        |
 | n, v    | alt + return     | code action                            |
 | n       | leader + f + m   | 代码格式化                             |
+
+### 插件快捷键
+
+<details>
+<summary style="cursor: pointer;">floaterm 浮动终端</summary>
+
+| mode | 快捷键   | 说明                   |
+| ---- | -------- | ---------------------- |
+| n    | ctrl + b | 打开数据库 ui          |
+| n    | ctrl + p | 打开 ranger 文件管理器 |
+| n    | ctrl + t | 打开浮动终端           |
+
+</details>
+
+<details>
+<summary style="cursor: pointer;">comment 注释</summary>
+
+| mode  | 快捷键              | 说明     |
+| ----- | ------------------- | -------- |
+| n, v  | leader + /          | 单行注释 |
+| n , v | leader + leader + / | 多行注释 |
+
+</details>
