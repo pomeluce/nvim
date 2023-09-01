@@ -36,15 +36,16 @@ function M.setup()
           'diff',
           -- 开启颜色
           colored = true,
+          symbols = { added = '+', modified = '~', removed = '-' },
         },
         {
           -- 诊断信息
           'diagnostics',
           -- 诊断来源 coc
-          sources = { 'nvim_diagnostic', 'coc' },
+          sources = { 'nvim_diagnostic', 'nvim_lsp' },
           -- 诊断级别
           sections = { 'error', 'warn', 'info' },
-          symbols = { error = 'E', warn = 'W', info = 'I' },
+          symbols = { error = '󰬌 ', warn = '󰬞 ', info = '󰬐 ' },
           -- 开启颜色
           colored = true,
           -- 在插入模式下更新诊断
@@ -55,9 +56,25 @@ function M.setup()
       },
       lualine_c = {
         -- 文件名称
-        'filename',
-        -- lsp 文件进度百分比
-        { 'lsp_progress', spinner_symbols = { ' ', ' ', ' ', ' ', ' ', ' ' } },
+        {
+          'filename',
+          file_status = true, -- Displays file status (readonly status, modified status)
+          newfile_status = true, -- Display new file status (new file means no write after created)
+          path = 1, -- 0: Just the filename
+          -- 1: Relative path
+          -- 2: Absolute path
+          -- 3: Absolute path, with tilde as the home directory
+          -- 4: Filename and parent dir, with tilde as the home directory
+
+          shorting_target = 40, -- Shortens path to leave 40 spaces in the window
+          -- for other components. (terrible name, any suggestions?)
+          symbols = {
+            modified = '[+]', -- Text to show when the file is modified.
+            readonly = '[-]', -- Text to show when the file is non-modifiable or readonly.
+            unnamed = '[No Name]', -- Text to show for unnamed buffers.
+            newfile = '[New]', -- Text to show for newly created file before first write
+          },
+        },
       },
       lualine_x = {
         -- 文件大小
@@ -75,6 +92,14 @@ function M.setup()
         'encoding',
         -- 文件类型
         'filetype',
+      },
+      lualine_y = {
+        {
+          'datetime',
+          -- options: default, us, uk, iso, or your own format string ("%H:%M", etc..)
+          style = '%H:%M:%S',
+        },
+        'progress',
       },
     },
   }

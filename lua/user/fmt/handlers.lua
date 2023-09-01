@@ -35,7 +35,7 @@ require('formatter').setup {
     },
     javascript = { preitter },
     javascriptreact = { preitter },
-    json = { preitter },
+    jsonc = { preitter },
     markdown = { preitter('markdown') },
     rust = {
       -- rules: https://rust-lang.github.io/rustfmt
@@ -56,10 +56,10 @@ require('formatter').setup {
         return {
           exe = 'taplo',
           args = {
-            '--config',
-            vim.fn.expand('~/.config/nvim/.taplo.toml'),
             'fmt',
             '-',
+            '--config',
+            vim.fn.expand('~/.config/nvim/.taplo.toml'),
           },
           stdin = true,
           try_node_modules = true,
