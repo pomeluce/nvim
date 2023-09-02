@@ -5,6 +5,7 @@ local persistence = require('user.plugins.persistence')
 local autopairs = require('user.plugins.autopairs')
 local flash = require('user.plugins.flash')
 local picker = require('user.plugins.window-picker')
+local whickkey = require('user.plugins.whichkey')
 
 return {
   -- 中文help doc
@@ -94,7 +95,7 @@ return {
   {
     'folke/which-key.nvim',
     event = 'VeryLazy',
-    opts = {},
+    opts = whickkey.setup(),
   },
   -- window picker 快速切换窗口
   {

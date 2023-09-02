@@ -7,10 +7,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local opts = {
-  install = {
-    -- try to load one of these colorschemes when starting an installation during startup
-    colorscheme = { 'one_monokai' },
-  },
+  install = { colorscheme = { 'one_monokai' } },
   ui = {
     -- a number <1 is a percentage., >1 is a fixed size
     size = { width = 0.8, height = 0.8 },
@@ -37,12 +34,7 @@ local opts = {
       source = ' ',
       start = '',
       task = '✔ ',
-      list = {
-        '●',
-        '➜',
-        '★',
-        '‒',
-      },
+      list = { '●', '➜', '★', '‒' },
     },
   },
 }
