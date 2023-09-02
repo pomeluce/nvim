@@ -13,43 +13,8 @@ M.setup = function()
   for _, sign in ipairs(signs) do
     vim.fn.sign_define(sign.name, { text = sign.text, texthl = sign.name, numhl = '' })
   end
-
-  -- 诊断配置
-  local config = {
-    -- 禁用虚拟文本
-    virtual_text = false,
-    -- 显示 signs
-    signs = {
-      active = true,
-    },
-    -- 再插入模式下，显示诊断信息
-    update_in_insert = true,
-    -- 设置下划线
-    underline = true,
-    -- 对诊断信息进行排序
-    severity_sort = true,
-    -- 浮动窗口
-    float = {
-      focusable = false,
-      style = 'minimal',
-      border = 'rounded',
-      source = 'always',
-      header = '',
-      prefix = '',
-    },
-  }
-  -- 设置诊断配置
-  vim.diagnostic.config(config)
-
-  -- 悬浮窗口添加边框
-  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = 'rounded',
-  })
-
-  -- 签名帮助添加边框
-  vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-    border = 'single',
-  })
+  -- lspinfo 添加边框
+  require('lspconfig.ui.windows').default_options.border = 'rounded'
 end
 
 M.lsp_highlight_document = function(client)
