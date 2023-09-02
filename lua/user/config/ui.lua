@@ -22,7 +22,7 @@ return {
   -- inlineBlank 配置
   {
     'lukas-reineke/indent-blankline.nvim',
-    event = 'VeryLazy',
+    event = 'BufRead',
     opts = indentline.setup(),
   },
   -- 面包屑

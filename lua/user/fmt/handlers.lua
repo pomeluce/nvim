@@ -35,6 +35,7 @@ require('formatter').setup {
     },
     javascript = { preitter },
     javascriptreact = { preitter },
+    json = { preitter },
     jsonc = { preitter },
     markdown = { preitter('markdown') },
     rust = {
