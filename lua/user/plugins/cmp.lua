@@ -87,7 +87,7 @@ function M.setup(cmp)
     sources = cmp.config.sources {
       { name = 'copilot' },
       { name = 'nvim_lsp' },
-      { name = 'luasnip' }, -- For luasnip users.
+      { name = 'luasnip' },
       { name = 'path' },
       { name = 'buffer' },
       -- { name = 'nvim_lua' },

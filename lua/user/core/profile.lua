@@ -82,7 +82,7 @@ opt.swapfile = false
 opt.wrap = false
 
 -- 自动读取文件修改结果
-opt.autoread = true
+opt.autoread = false
 
 -- 持久化撤销
 opt.undofile = true
@@ -102,7 +102,7 @@ opt.viewdir = os.getenv('HOME') .. '/.config/nvim/cache/viewdir'
 opt.foldtext = 'v:lua.vim.cmd("MagicFold")'
 
 -- 设置命令行高度
-opt.cmdheight = 1
+opt.cmdheight = 0
 
 -- 刷新交换文件所需的毫秒数
 opt.updatetime = 300

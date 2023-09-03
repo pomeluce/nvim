@@ -4,6 +4,7 @@ local indentline = require('user.plugins.indentline')
 local gitsigns = require('user.plugins.gitsigns')
 local dashboard = require('user.plugins.dashboard')
 local nvimtree = require('user.plugins.nvim-tree')
+local noice = require('user.plugins.noice')
 
 return {
   -- buffer 标签
@@ -14,6 +15,7 @@ return {
   -- 状态栏插件
   {
     'nvim-lualine/lualine.nvim',
+    event = 'BufRead',
     dependencies = {
       'nvim-tree/nvim-web-devicons',
     },
@@ -53,6 +55,16 @@ return {
     event = 'VeryLazy',
     cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle', 'NvimTreeOpen' },
     opts = nvimtree.setup(),
+  },
+  -- noice
+  {
+    'folke/noice.nvim',
+    event = 'VeryLazy',
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+      { 'rcarriga/nvim-notify', opts = { background_colour = '#000000' } },
+    },
+    opts = noice.setup(),
   },
   --- 浮动终端
   { 'voldikss/vim-floaterm', event = 'VeryLazy' },

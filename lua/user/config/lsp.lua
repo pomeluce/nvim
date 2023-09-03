@@ -9,7 +9,7 @@ return {
     'jay-babu/mason-nvim-dap.nvim',
     { 'folke/neoconf.nvim', opts = {} },
     { 'folke/neodev.nvim', opts = {} },
-    { 'j-hui/fidget.nvim', tag = 'legacy', event = 'LspAttach', opts = {} },
+    -- { 'j-hui/fidget.nvim', tag = 'legacy', event = 'LspAttach', opts = {} },
     { 'nvimdev/lspsaga.nvim', opts = lspsaga.setup() },
   },
   config = function()
