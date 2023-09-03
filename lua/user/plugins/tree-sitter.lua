@@ -16,7 +16,7 @@ function M.parser_bootstrap()
   local util = require('user.core.funcutil')
   util.sitterHi {
     ['@comment'] = { fg = '#868e96', italic = true },
-    ['@variable'] = { fg = '#a891e0' },
+    -- ['@variable'] = { fg = '#a891e0' },
   }
   util.sitterHi {
     Todo = { fg = '#ffd8a8', bg = '#f76707', bold = true },
