@@ -10,12 +10,13 @@ return {
   -- buffer 标签
   {
     'akinsho/bufferline.nvim',
+    event = 'BufWinEnter',
     opts = bufferline.setup(),
   },
   -- 状态栏插件
   {
     'nvim-lualine/lualine.nvim',
-    event = 'BufRead',
+    event = 'BufWinEnter',
     dependencies = {
       'nvim-tree/nvim-web-devicons',
     },
