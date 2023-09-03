@@ -13,7 +13,7 @@ function M.setup()
           col = '50%',
         },
         size = {
-          width = 60,
+          width = '70%',
           height = 'auto',
         },
       },

@@ -28,6 +28,8 @@ return {
         main = 'project_nvim',
         opts = project.setup(),
       },
+      -- camelcase 命名转换
+      { 'johmsalas/text-case.nvim' },
     },
     config = function()
       local actions = require('telescope.actions')
@@ -35,6 +37,7 @@ return {
       require('telescope').load_extension('media_files')
       require('telescope').load_extension('fzf')
       require('telescope').load_extension('projects')
+      require('telescope').load_extension('textcase')
     end,
   },
   -- markdown 预览插件 导航生成插件
@@ -104,6 +107,11 @@ return {
     event = 'VeryLazy',
     version = '2.*',
     opts = picker.setup(),
+  },
+  -- 翻译插件
+  {
+    'voldikss/vim-translator',
+    event = 'VeryLazy',
   },
   -- tabout
   -- {

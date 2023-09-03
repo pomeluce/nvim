@@ -124,14 +124,12 @@ keymap('v', 'z', 'zf', { desc = 'add fold', noremap = true, silent = true })
 keymap('n', 'C', ':lua require("gitsigns").blame_line { full = true }<cr>', { desc = 'check blame line', silent = true, noremap = true })
 -- 切换显示当前行 git 提交历史
 keymap('n', '\\g', ':lua require("gitsigns").toggle_current_line_blame()<cr>', { desc = 'toggle show blame line', silent = true })
--- 文本翻译
--- keymap('n', '<leader>t', "<Plug>(coc-translator-p)", { silent = true })
--- keymap('v', '<leader>t', "<Plug>(coc-translator-pv)", { silent = true })
 
--- TODO: 其他配置
--- 驼峰转换
-keymap('v', 't', ':lua require("user.core.funcutil").toggleHump(false)<cr>', { desc = 'toggle hump', noremap = true, silent = true })
-keymap('v', 'T', ':lua require("user.core.funcutil").toggleHump(true)<cr>', { desc = 'toggle hump', noremap = true, silent = true })
+-- TODO: 文本翻译
+keymap({ 'n', 'v' }, '<leader>tr', ':TranslateW<CR>', { desc = 'translator text', noremap = true, silent = true })
+
+-- TODO: 驼峰转换
+keymap({ 'n', 'v' }, 'th', '<cmd>TextCaseOpenTelescope<CR>', { desc = 'toggle hump', noremap = true, silent = true })
 
 -- TODO: 浮动终端
 keymap('n', '<F5>', ':lua require("user.plugins.vim-floaterm").runFile()<cr>', { desc = 'run file', noremap = true, silent = true })
