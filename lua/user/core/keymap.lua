@@ -227,15 +227,15 @@ M.lsp_keymaps = function(buffer)
   -- 重命名
   keymap('n', '<leader>rn', '<cmd>Lspsaga rename ++project<cr>', { desc = 'rename variable', buffer = buffer, noremap = true, silent = true })
   -- 跳转到定义
-  keymap('n', 'gd', require('telescope.builtin').lsp_definitions, { desc = 'goto definitions', buffer = buffer, noremap = true, silent = true })
+  keymap('n', 'gd', '<cmd>Telescope lsp_definitions theme=dropdown<cr>', { desc = 'goto definitions', buffer = buffer, noremap = true, silent = true })
   -- 跳转到声明
-  keymap('n', 'gD', require('telescope.builtin').lsp_type_definitions, { desc = 'goto declaration', buffer = buffer, noremap = true, silent = true })
+  keymap('n', 'gD', '<cmd>Telescope lsp_type_definitions theme=dropdown<cr>', { desc = 'goto declaration', buffer = buffer, noremap = true, silent = true })
   -- 跳转到类型定义
-  keymap('n', 'gt', require('telescope.builtin').lsp_type_definitions, { desc = 'goto type definitions', buffer = buffer, noremap = true, silent = true })
+  keymap('n', 'gt', '<cmd>Telescope lsp_type_definitions theme=dropdown<cr>', { desc = 'goto type definitions', buffer = buffer, noremap = true, silent = true })
   -- 跳转到实现
-  keymap('n', 'gi', require('telescope.builtin').lsp_implementations, { desc = 'goto implementation', buffer = buffer, noremap = true, silent = true })
+  keymap('n', 'gi', '<cmd>Telescope lsp_implementations theme=dropdown<cr>', { desc = 'goto implementation', buffer = buffer, noremap = true, silent = true })
   -- 跳转到引用
-  keymap('n', 'gr', require('telescope.builtin').lsp_references, { desc = 'goto reference', buffer = buffer, noremap = true, silent = true })
+  keymap('n', 'gr', '<cmd>Telescope lsp_references theme=dropdown<cr>', { desc = 'goto reference', buffer = buffer, noremap = true, silent = true })
   -- 跳转到错误
   keymap('n', 'ge', '<cmd>Lspsaga diagnostic_jump_next<cr>', { desc = 'goto error', buffer = buffer, noremap = true, silent = true })
   -- 显示 structure 列表
