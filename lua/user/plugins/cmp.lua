@@ -86,6 +86,7 @@ function M.setup(cmp)
     -- 补全来源
     sources = cmp.config.sources {
       { name = 'copilot' },
+      { name = 'codeium' },
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
       { name = 'path' },
@@ -127,6 +128,7 @@ function M.setup(cmp)
           Operator = '󰆕',
           TypeParameter = '󰊄',
           Copilot = '',
+          Codeium = '',
         },
         -- 设置补全项的前缀
         before = function(entry, vim_item)

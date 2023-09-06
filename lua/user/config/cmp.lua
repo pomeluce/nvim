@@ -1,9 +1,10 @@
-local cmp_conf = require('user.plugins.cmp')
+local cfg = require('user.plugins.cmp')
 local copilot = require('user.plugins.copilot')
+local codeium = require('user.plugins.codeium')
 
 return {
   'hrsh7th/nvim-cmp',
-  event = 'VeryLazy',
+  event = 'InsertEnter',
   dependencies = {
     'hrsh7th/cmp-path',
     'hrsh7th/cmp-nvim-lsp',
@@ -19,10 +20,16 @@ return {
       main = 'copilot',
       cmd = 'Copilot',
       event = 'InsertEnter',
-      opts = copilot.setup,
+      -- opts = copilot.setup,
+    },
+    --- codeium 智能提示
+    {
+      'jcdickinson/codeium.nvim',
+      opts = codeium.setup(),
     },
     {
       'saadparwaiz1/cmp_luasnip',
+      event = 'InsertEnter',
       dependencies = {
         'L3MON4D3/LuaSnip',
         dependencies = {
@@ -37,8 +44,9 @@ return {
     -- 自定义代码片段
     require('luasnip.loaders.from_snipmate').lazy_load { paths = { './snippets' } }
     local cmp = require('cmp')
-    cmp.setup(cmp_conf.setup(cmp))
-    cmp_conf.cmp_cmdline(cmp)
+    cmp.setup(cfg.setup(cmp))
+    cfg.cmp_cmdline(cmp)
     vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = '#6CC644' })
+    vim.api.nvim_set_hl(0, 'CmpItemKindCodeium', { fg = '#6CC644' })
   end,
 }
