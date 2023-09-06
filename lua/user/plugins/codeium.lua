@@ -5,7 +5,10 @@ function M.config()
 end
 
 function M.setup()
-  return {}
+  return {
+    config_path = vim.fn.stdpath('data') .. '/codeium/config.json',
+    bin_path = vim.fn.stdpath('data') .. '/codeium/bin',
+  }
 end
 
 return M
