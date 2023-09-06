@@ -1,6 +1,7 @@
 require('user.plugins.autopairs').config()
 require('user.plugins.bufferline').config()
 require('user.plugins.cmp').config()
+require('user.plugins.codeium').config()
 require('user.plugins.colorscheme').config()
 require('user.plugins.comment').config()
 require('user.plugins.copilot').config()

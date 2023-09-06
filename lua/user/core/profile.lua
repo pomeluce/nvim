@@ -99,7 +99,7 @@ opt.foldenable = true
 opt.foldmethod = 'manual'
 ---@diagnostic disable-next-line: assign-type-mismatch
 opt.viewdir = os.getenv('HOME') .. '/.config/nvim/cache/viewdir'
-opt.foldtext = 'v:lua.vim.cmd("MagicFold")'
+opt.foldtext = 'v:lua.vim.cmd("RifyFold")'
 
 -- 设置命令行高度
 opt.cmdheight = 0

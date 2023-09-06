@@ -35,20 +35,6 @@ autocmd('BufEnter', {
   end,
 })
 
--- 自动切换只读模式为可写模式
-autocmd('BufEnter', {
-  group = autoGroup,
-  pattern = '*',
-  callback = function()
-    if vim.fn.getbufvar(0, '&buftype') == '' and vim.fn.getbufvar(0, '&readonly') == 1 then
-      vim.cmd([[
-        setlocal buftype=acwrite
-        setlocal noreadonly
-      ]])
-    end
-  end,
-})
-
 -- 自动安装解析器
 autocmd('FileType', {
   group = autoGroup,
