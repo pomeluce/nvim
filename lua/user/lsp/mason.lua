@@ -22,7 +22,7 @@ local dap_servers = { 'js' }
 
 -- formmater 列表
 --[[ local formmater_servers = {
-  'prettierd',
+  'prettier',
   'rustfmt', -- should installed rustup
   'stylua',
 } ]]
