@@ -52,7 +52,7 @@ autocmd('FileType', {
     vim.cmd([[ silent! loadview ]])
   end,
 })
-autocmd('BufLeave,BufWinEnter', {
+autocmd({ 'BufLeave', 'BufWinEnter' }, {
   group = autoGroup,
   pattern = '*',
   callback = function()
