@@ -1,4 +1,4 @@
-## RapidifyVim IDE
+## RifyVim IDE
 
 <!-- markdown-toc GFM -->
 
@@ -19,7 +19,7 @@ cp ~/.config/nvim /you/backup/path/nvim-bak
 rm -rf ~/.local/share/nvim/
 ```
 
-2. 拉取 RapidifyVim 配置
+2. 拉取 RifyVim 配置
 
 ```shell
 cd ~/.config/ && git clone https://github.com/pomeluce/nvim.git
