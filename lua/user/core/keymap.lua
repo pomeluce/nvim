@@ -180,6 +180,9 @@ keymap('n', '<leader>ql', [[<cmd>lua require("persistence").load({ last = true }
 -- 停止 persistence, 退出时不保存 session
 keymap('n', '<leader>qd', [[<cmd>lua require("persistence").stop()<cr>]], { desc = 'stop persistence' })
 
+-- TODO: 文档注释
+keymap('n', '<leader>d/', ':lua require("neogen").generate()<cr>', { desc = 'doc comment', noremap = true, silent = true })
+
 -- TODO: Dap 快捷键配置
 keymap('n', '<F2>', function()
   require('telescope').extensions.dap.configurations {}

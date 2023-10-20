@@ -24,4 +24,11 @@ function M.setup()
   }
 end
 
+function M.docSetup()
+  return {
+    enabled = true,
+    input_after_comment = true,
+  }
+end
+
 return M

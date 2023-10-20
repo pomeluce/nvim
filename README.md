@@ -130,6 +130,7 @@ nvim
 | n       | leader + q + l   | 恢复最后一次 session                   |
 | n       | leader + q + s   | 恢复上一次 session                     |
 | n       | leader + q + d   | 停止 persistence, 退出时不保存 session |
+| n       | leader + d + /   | 文档注释                               |
 | n       | F2               | start breakpoint debug                 |
 | n       | F10              | step over breakpoint debug             |
 | n       | F11              | step into breakpoint debug             |

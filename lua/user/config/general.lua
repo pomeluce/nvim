@@ -62,6 +62,13 @@ return {
     end,
     event = 'BufRead',
   },
+  -- 文档注释
+  {
+    'danymat/neogen',
+    dependencies = 'nvim-treesitter/nvim-treesitter',
+    opts = comment.docSetup(),
+    event = 'BufRead',
+  },
   -- session 管理
   {
     'folke/persistence.nvim',
