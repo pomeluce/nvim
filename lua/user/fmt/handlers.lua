@@ -1,6 +1,8 @@
-local function preitter(parser)
+local function prettier(parser)
   local common_args = {
     '--stdin-filepath',
+    vim.fn.shellescape(vim.api.nvim_buf_get_name(0), true),
+    '--config',
     vim.fn.expand('~/.config/nvim/.prettierrc.json'),
   }
 
@@ -18,7 +20,7 @@ require('formatter').setup {
   logging = true,
   log_level = vim.log.levels.WARN,
   filetype = {
-    css = { preitter('css') },
+    css = { prettier('css') },
     lua = {
       function()
         return {
@@ -33,11 +35,11 @@ require('formatter').setup {
         }
       end,
     },
-    javascript = { preitter },
-    javascriptreact = { preitter },
-    json = { preitter },
-    jsonc = { preitter },
-    markdown = { preitter('markdown') },
+    javascript = { prettier },
+    javascriptreact = { prettier },
+    json = { prettier },
+    jsonc = { prettier },
+    markdown = { prettier('markdown') },
     rust = {
       -- rules: https://rust-lang.github.io/rustfmt
       function()
@@ -51,7 +53,7 @@ require('formatter').setup {
         }
       end,
     },
-    scss = { preitter('scss') },
+    scss = { prettier('scss') },
     toml = {
       function()
         return {
@@ -67,9 +69,9 @@ require('formatter').setup {
         }
       end,
     },
-    typescript = { preitter('typescript') },
-    typescriptreact = { preitter('typescript') },
-    vue = { preitter('vue') },
+    typescript = { prettier('typescript') },
+    typescriptreact = { prettier('typescript') },
+    vue = { prettier('vue') },
     ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
   },
 }
