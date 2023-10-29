@@ -4,7 +4,7 @@ function M.config()
   -- do nothing
 end
 
-function M.setup()
+function M.setup(pre_hook)
   return {
     -- N 模式注释快捷键
     toggler = {
@@ -21,6 +21,7 @@ function M.setup()
       basic = true,
       extra = false,
     },
+    pre_hook = pre_hook,
   }
 end
 

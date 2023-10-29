@@ -52,9 +52,10 @@ return {
   -- 代码注释
   {
     'numToStr/Comment.nvim',
-    opts = comment.setup(),
-    config = function(_, opts)
-      require('Comment').setup(opts)
+    dependencies = 'JoosepAlviste/nvim-ts-context-commentstring',
+    config = function()
+      local pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()
+      require('Comment').setup(comment.setup(pre_hook))
       local ft = require('Comment.ft')
       -- 单独设置注释
       ft.set('java', { '// %s', '/* %s */' })
