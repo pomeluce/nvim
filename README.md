@@ -19,13 +19,19 @@ cp ~/.config/nvim /you/backup/path/nvim-bak
 rm -rf ~/.local/share/nvim/
 ```
 
-2. 拉取 RifyVim 配置
+2. 所需环境
+
+```
+yay -S python-pynvim the_silver_searcher fd bat ripgrep
+```
+
+3. 拉取 RifyVim 配置
 
 ```shell
 cd ~/.config/ && git clone https://github.com/pomeluce/nvim.git
 ```
 
-3. 执行 nvim 命令, 等待安装完成
+4. 执行 nvim 命令, 等待安装完成
 
 ```
 nvim
