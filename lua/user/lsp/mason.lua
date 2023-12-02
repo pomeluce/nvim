@@ -22,9 +22,12 @@ local dap_servers = { 'js' }
 
 -- formmater 列表
 --[[ local formmater_servers = {
+  'beautysh',
   'prettier',
   'rustfmt', -- should installed rustup
+  'shfmt',
   'stylua',
+  'yamlfmt'
 } ]]
 
 -- mason 设置
