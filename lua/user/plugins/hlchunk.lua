@@ -8,7 +8,7 @@ function M.setup()
   return {
     chunk = {
       style = {
-        { fg = '#E47E67' },
+        { fg = '#79AC78' },
         { fg = '#c21f30' }, -- 这个高亮是用来标志错误的代码块
       },
       use_treesitter = false,
@@ -21,7 +21,7 @@ function M.setup()
     line_num = {
       enable = true,
       use_treesitter = false,
-      style = '#E47E67',
+      style = '#79AC78',
     },
     blank = {
       enable = false,
