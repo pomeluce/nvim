@@ -54,6 +54,7 @@ require('formatter').setup {
       end,
     },
     scss = { prettier('scss') },
+    sh = { require('formatter.filetypes.sh').shfmt },
     toml = {
       function()
         return {
@@ -71,7 +72,9 @@ require('formatter').setup {
     },
     typescript = { prettier('typescript') },
     typescriptreact = { prettier('typescript') },
+    yaml = { prettier('yaml') },
     vue = { prettier('vue') },
+    zsh = { require('formatter.filetypes.zsh').beautysh },
     ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
   },
 }

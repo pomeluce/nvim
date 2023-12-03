@@ -27,7 +27,6 @@ local dap_servers = { 'js' }
   'rustfmt', -- should installed rustup
   'shfmt',
   'stylua',
-  'yamlfmt'
 } ]]
 
 -- mason 设置
