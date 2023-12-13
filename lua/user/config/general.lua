@@ -95,7 +95,7 @@ return {
     opts = autopairs.setup(),
   },
   -- 移动加速
-  { 'rhysd/accelerated-jk' },
+  -- { 'rhysd/accelerated-jk' },
   -- 快速跳转
   {
     'folke/flash.nvim',
