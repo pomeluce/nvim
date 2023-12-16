@@ -14,6 +14,7 @@ local lsp_servers = {
   'tailwindcss',
   'taplo',
   'tsserver',
+  'unocss',
   'volar',
 }
 

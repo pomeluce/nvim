@@ -29,7 +29,7 @@ return {
         opts = project.setup(),
       },
       -- camelcase 命名转换
-      { 'johmsalas/text-case.nvim' },
+      { 'johmsalas/text-case.nvim', opts = {} },
     },
     config = function()
       local actions = require('telescope.actions')
