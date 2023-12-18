@@ -99,6 +99,9 @@ function M.setup()
         enable = true,
       },
     },
+    autotag = {
+      enable = true,
+    },
   }
 end
 
