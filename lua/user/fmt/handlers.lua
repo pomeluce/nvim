@@ -21,6 +21,7 @@ require('formatter').setup {
   log_level = vim.log.levels.WARN,
   filetype = {
     css = { prettier('css') },
+    html = { prettier },
     lua = {
       function()
         return {

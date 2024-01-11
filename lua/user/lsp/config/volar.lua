@@ -1,14 +1,18 @@
 local function get_ts_server_path(root_dir)
   local util = require('lspconfig.util')
-  local project_root = util.find_node_modules_ancestor(root_dir)
 
-  local local_tsserverlib = project_root ~= nil and util.path.join(project_root, 'node_modules', 'typescript', 'lib', 'tsserverlibrary.js')
-  local global_tsserverlib = '/usr/lib/node_modules/typescript/lib/tsserverlibrary.js'
-
-  if local_tsserverlib and util.path.exists(local_tsserverlib) then
-    return local_tsserverlib
+  local global_ts = '/usr/lib/node_modules/typescript/lib/tsserverlibrary.js'
+  local found_ts = ''
+  local function check_dir(path)
+    found_ts = util.path.join(path, 'node_modules', 'typescript', 'lib')
+    if util.path.exists(found_ts) then
+      return path
+    end
+  end
+  if util.search_ancestors(root_dir, check_dir) then
+    return found_ts
   else
-    return global_tsserverlib
+    return global_ts
   end
 end
 
