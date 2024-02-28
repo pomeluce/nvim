@@ -5,7 +5,7 @@ function M.toggleFT(name, cmd)
   if vim.fn['floaterm#terminal#get_bufnr'](name) ~= -1 then
     vim.cmd(string.format('exec "FloatermToggle %s"', name))
   else
-    vim.cmd(string.format('FloatermNew --name=%s --autoclose=0 %s', name, cmd))
+    vim.cmd(string.format('FloatermNew --name=%s --autoclose=1 %s', name, cmd))
   end
 end
 

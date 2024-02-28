@@ -172,14 +172,6 @@ keymap('n', '<leader>sp', ':cd  /wsp/code/web | NvimTreeOpen<cr>', { desc = 'sho
 keymap('n', '<leader>es', ':edit $MYVIMRC<cr>', { desc = 'edit vim config', noremap = true, silent = true })
 keymap('n', '<leader>ek', ':edit $HOME/.config/nvim/lua/user/core/keymap.lua<cr>', { desc = 'edito vim keymap', noremap = true, silent = true })
 
--- TODO: session 管理
--- 恢复当前目录 session
-keymap('n', '<leader>qs', [[<cmd>lua require("persistence").load()<cr>]], { desc = 'load current session' })
--- 恢复上次 session
-keymap('n', '<leader>ql', [[<cmd>lua require("persistence").load({ last = true })<cr>]], { desc = 'load last session' })
--- 停止 persistence, 退出时不保存 session
-keymap('n', '<leader>qd', [[<cmd>lua require("persistence").stop()<cr>]], { desc = 'stop persistence' })
-
 -- TODO: 文档注释
 keymap('n', '<leader>d/', ':lua require("neogen").generate()<cr>', { desc = 'doc comment', noremap = true, silent = true })
 

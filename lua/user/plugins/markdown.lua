@@ -2,7 +2,7 @@ local M = {}
 
 function M.config()
   -- 要预览的浏览器
-  vim.g.mkdp_browser = 'firefox'
+  vim.g.mkdp_browser = require('user-config').mkdp_browser or ''
   -- makedown 配色文件
   vim.g.mkdp_markdown_css = '~/.config/nvim/colors/github.css'
   -- 页面标题

@@ -1,7 +1,7 @@
 local telescope = require('user.plugins.telescope')
 local comment = require('user.plugins.comment')
 local project = require('user.plugins.project')
-local persistence = require('user.plugins.persistence')
+local session = require('user.plugins.session')
 local autopairs = require('user.plugins.autopairs')
 local flash = require('user.plugins.flash')
 local picker = require('user.plugins.window-picker')
@@ -72,9 +72,14 @@ return {
   },
   -- session 管理
   {
-    'folke/persistence.nvim',
-    event = 'BufReadPre',
-    opts = persistence.setup(),
+    'rmagatti/auto-session',
+    config = function()
+      require('auto-session').setup(session.setup())
+      -- 判断 nvim 启动时是否带有参数，如果有则不加载 session, 防止命令被覆盖
+      if #vim.v.argv > 2 then
+        vim.g.auto_session_enabled = false
+      end
+    end,
   },
   -- 数据库管理
   {
@@ -94,8 +99,6 @@ return {
     event = 'InsertEnter',
     opts = autopairs.setup(),
   },
-  -- 移动加速
-  -- { 'rhysd/accelerated-jk' },
   -- 快速跳转
   {
     'folke/flash.nvim',
@@ -121,10 +124,4 @@ return {
     'voldikss/vim-translator',
     event = 'VeryLazy',
   },
-  -- tabout
-  -- {
-  --   "abecodes/tabout.nvim",
-  --   event = "InsertEnter",
-  --   opts = tabout.setup(),
-  -- },
 }
