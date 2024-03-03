@@ -10,7 +10,7 @@ vim.g.maplocalleader = ' '
 -- 基本键位映射
 keymap('n', 's', '<nop>', {})
 keymap({ 'n', 'v' }, ';', ':', { desc = 'into cmd mode' })
-keymap('i', 'jk', '<esc>', { desc = 'Esc', noremap = true, silent = true })
+-- keymap('i', 'jk', '<esc>', { desc = 'Esc', noremap = true, silent = true })
 keymap('n', 'S', ':RifySave<cr>', { desc = 'save file', noremap = true, silent = true })
 keymap('n', 'Q', ':q!<cr>', { desc = 'confrim exit', noremap = true, silent = true })
 -- keymap('n', 'j', '<Plug>(accelerated_jk_gj)', { noremap = true })
