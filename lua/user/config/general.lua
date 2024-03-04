@@ -61,18 +61,19 @@ return {
       ft.set('java', { '// %s', '/* %s */' })
       ft.set('ini', { '; %s' })
     end,
-    event = 'BufRead',
+    event = 'VeryLazy',
   },
   -- 文档注释
   {
     'danymat/neogen',
     dependencies = 'nvim-treesitter/nvim-treesitter',
     opts = comment.docSetup(),
-    event = 'BufRead',
+    event = 'VeryLazy',
   },
   -- session 管理
   {
     'rmagatti/auto-session',
+    event = 'VeryLazy',
     config = function()
       require('auto-session').setup(session.setup())
       -- 判断 nvim 启动时是否带有参数，如果有则不加载 session, 防止命令被覆盖
@@ -91,7 +92,7 @@ return {
   -- 字符环绕
   {
     'tpope/vim-surround',
-    event = 'BufRead',
+    event = 'VeryLazy',
   },
   -- auot-pairs
   {

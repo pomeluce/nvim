@@ -136,6 +136,7 @@ nvim
 | n       | leader + e + s   | 编辑 vim 配置                |
 | n       | leader + e + k   | 编辑快捷键                   |
 | n       | leader + d + /   | 文档注释                     |
+| n       | leader + r + s   | 恢复项目会话                 |
 | n       | F2               | start breakpoint debug       |
 | n       | F10              | step over breakpoint debug   |
 | n       | F11              | step into breakpoint debug   |

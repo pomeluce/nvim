@@ -175,6 +175,9 @@ keymap('n', '<leader>ek', ':edit $HOME/.config/nvim/lua/user/core/keymap.lua<cr>
 -- TODO: 文档注释
 keymap('n', '<leader>d/', ':lua require("neogen").generate()<cr>', { desc = 'doc comment', noremap = true, silent = true })
 
+-- TODO: session 恢复
+keymap('n', '<leader>rs', ':SessionRestore<cr>', { desc = 'restore project session', noremap = true, silent = true })
+
 -- TODO: Dap 快捷键配置
 keymap('n', '<F2>', function()
   require('telescope').extensions.dap.configurations {}
