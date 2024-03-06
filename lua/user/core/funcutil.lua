@@ -11,6 +11,9 @@ function M.save()
   --   local pass = vim.fn.input('Enter your password: ')
   --   vim.cmd('w !echo ' .. pass .. ' | sudo -S tee > /dev/null %')
   -- else
+  -- 保存工作会话
+  vim.cmd('SessionSave')
+  -- 写入文件
   vim.cmd('w')
   -- end
 end

@@ -24,7 +24,7 @@ function M.setup()
         '              ╚═╝  ╚═╝╚═╝╚═╝        ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝              ',
         '                                                                               ',
         '                                                                               ',
-        '                           [ RifyVim version 3.7.5 ]                           ',
+        '                           [ RifyVim version 3.7.7 ]                           ',
         '                                                                               ',
         '                                                                               ',
         '                                                                               ',

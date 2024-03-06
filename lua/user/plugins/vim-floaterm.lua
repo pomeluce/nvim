@@ -1,16 +1,17 @@
 local M = {}
 local keymap = vim.api.nvim_set_keymap
 
-function M.toggleFT(name, cmd)
+function M.toggleFT(name, cmd, isClose)
+  isClose = isClose == true and 1 or 0
   if vim.fn['floaterm#terminal#get_bufnr'](name) ~= -1 then
     vim.cmd(string.format('exec "FloatermToggle %s"', name))
   else
-    vim.cmd(string.format('FloatermNew --name=%s --autoclose=1 %s', name, cmd))
+    vim.cmd(string.format('FloatermNew --name=%s --autoclose=%s %s', name, isClose, cmd))
   end
 end
 
 function M.setFTToggleMap(key, name, cmd)
-  keymap('n', key, string.format(":lua require('user.plugins.vim-floaterm').toggleFT('%s', '%s')<cr>", name, cmd), { noremap = true, silent = true })
+  keymap('n', key, string.format(":lua require('user.plugins.vim-floaterm').toggleFT('%s', '%s', %s)<cr>", name, cmd, true), { noremap = true, silent = true })
   keymap(
     't',
     key,
@@ -22,7 +23,9 @@ end
 function M.runFile()
   vim.cmd('w')
   local ft = vim.api.nvim_eval('&ft')
-  local run_cmd = { javascript = 'node', typescript = 'ts-node', html = 'firefox', python = 'python', go = 'go run', sh = 'bash', lua = 'lua' }
+  local run_cmd =
+    vim.list_extend({ javascript = 'node', typescript = 'ts-node', html = 'firefox', python = 'python', go = 'go run', sh = 'bash', lua = 'lua' }, require('user-config').run_cmd)
+
   if run_cmd[ft] then
     M.toggleFT('RUN', run_cmd[ft] .. ' %')
   elseif ft == 'markdown' then
