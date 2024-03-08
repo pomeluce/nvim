@@ -1,5 +1,5 @@
 local cfg = require('user.plugins.cmp')
-local copilot = require('user.plugins.copilot')
+-- local copilot = require('user.plugins.copilot')
 local codeium = require('user.plugins.codeium')
 
 return {
@@ -44,7 +44,7 @@ return {
     -- 自定义代码片段
     require('luasnip.loaders.from_snipmate').lazy_load { paths = { './snippets' } }
     local cmp = require('cmp')
-    cmp.setup(cfg.setup(cmp))
+    cmp.setup(cfg.setup(cmp, require('cmp.types')))
     cfg.cmp_cmdline(cmp)
     vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = '#6CC644' })
     vim.api.nvim_set_hl(0, 'CmpItemKindCodeium', { fg = '#6CC644' })

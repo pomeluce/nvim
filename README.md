@@ -184,3 +184,13 @@ nvim
 | n , v | leader + leader + / | 多行注释 |
 
 </details>
+
+<details>
+<summary style="cursor: pointer;">tabout 跳出</summary>
+
+| mode | 快捷键   | 说明          |
+| ---- | -------- | ------------- |
+| i    | ctrl + t | tab 功能      |
+| i    | ctrl + d | 反向 tab 功能 |
+
+</details>

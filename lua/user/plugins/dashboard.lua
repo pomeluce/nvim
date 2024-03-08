@@ -24,7 +24,7 @@ function M.setup()
         '              ╚═╝  ╚═╝╚═╝╚═╝        ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝              ',
         '                                                                               ',
         '                                                                               ',
-        '                           [ RifyVim version 3.7.7 ]                           ',
+        '                           [ RifyVim version 3.8.1 ]                           ',
         '                                                                               ',
         '                                                                               ',
         '                                                                               ',
@@ -94,7 +94,7 @@ function M.setup()
         },
       },
       -- 底部信息
-      footer = { '', ' RifyVim is a nvim config for web developer' },
+      footer = { '', ' RifyVim is a nvim config for developer' },
     },
   }
 end

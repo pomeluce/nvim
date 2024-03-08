@@ -1,9 +1,16 @@
 local M = {}
 
-local has_words_before = function()
-  unpack = unpack or table.unpack
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
+local source = function(name, types)
+  return {
+    name = name,
+    entry_filter = function(entry, _)
+      local kind = types.lsp.CompletionItemKind[entry:get_kind()]
+      if kind == 'Text' then
+        return false
+      end
+      return true
+    end,
+  }
 end
 
 function M.config()
@@ -35,7 +42,7 @@ function M.cmp_cmdline(cmp)
   })
 end
 
-function M.setup(cmp)
+function M.setup(cmp, types)
   local lspkind = require('lspkind')
   local luasnip = require('luasnip')
   return {
@@ -60,8 +67,6 @@ function M.setup(cmp)
           cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
         elseif luasnip.expand_or_jumpable() then
           luasnip.expand_or_jump()
-        elseif has_words_before() then
-          cmp.complete()
         else
           fallback()
         end
@@ -87,10 +92,10 @@ function M.setup(cmp)
     sources = cmp.config.sources {
       { name = 'copilot' },
       { name = 'codeium' },
-      { name = 'nvim_lsp' },
-      { name = 'luasnip' },
-      { name = 'path' },
-      { name = 'buffer' },
+      source('nvim_lsp', types),
+      source('luasnip', types),
+      source('path', types),
+      source('buffer', types),
       -- { name = 'nvim_lua' },
     },
     -- 设置补全显示的格式

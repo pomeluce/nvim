@@ -1,4 +1,5 @@
 local opt = vim.opt
+local is_wsl = vim.fn.has('wsl') == 1
 
 -- 设置 python3 对应的目录，你可以手动 export PYTHON=$(which python3) 到你的终端配置中
 vim.g.python3_host_prog = os.getenv('PYTHON')
@@ -141,3 +142,19 @@ vim.cmd([[
     let &t_SI.="\e[5 q"
     let &t_EI.="\e[1 q"
 ]])
+
+-- wsl 剪切板配置
+if is_wsl then
+  vim.g.clipboard = {
+    name = 'WslClipboard',
+    copy = {
+      ['+'] = 'clip.exe',
+      ['*'] = 'clip.exe',
+    },
+    paste = {
+      ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+      ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    },
+    cache_enabled = 0,
+  }
+end
