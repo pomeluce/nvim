@@ -141,9 +141,9 @@ nvim
 | n       | F10              | step over breakpoint debug   |
 | n       | F11              | step into breakpoint debug   |
 | n       | F12              | step out breakpoint debug    |
-| n       | leader + b       | toggle breakpoint debug      |
+| n       | leader + d + b   | toggle breakpoint debug      |
 | n       | leader + B       | set breakpoint debug         |
-| n       | leader + l + p   | log point breakpoint debug   |
+| n       | leader + d + m   | log point breakpoint debug   |
 | n       | leader + d + r   | open debug repl              |
 | n       | leader + d + l   | run last debug               |
 | n, v    | leader + d + h   | debug hover                  |
