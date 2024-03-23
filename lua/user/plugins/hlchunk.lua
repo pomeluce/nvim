@@ -18,6 +18,10 @@ function M.setup()
       -- 更多的字符可以在 https://unicodeplus.com/ 这个网站上找到
       chars = { '│' },
       style = { '#4C5257' },
+      exclude_filetypes = {
+        floaterm = true,
+        dbui = true,
+      },
     },
     line_num = {
       enable = true,

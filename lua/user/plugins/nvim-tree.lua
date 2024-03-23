@@ -160,7 +160,7 @@ function M.setup()
       },
     },
     update_focused_file = {
-      enable = false,
+      enable = true,
       update_root = false,
       ignore_list = {},
     },
