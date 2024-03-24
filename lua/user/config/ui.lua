@@ -5,6 +5,7 @@ local dashboard = require('user.plugins.dashboard')
 local nvimtree = require('user.plugins.nvim-tree')
 local noice = require('user.plugins.noice')
 local hlchunk = require('user.plugins.hlchunk')
+local colorPreview = require('user.plugins.color-preview')
 
 return {
   -- buffer 标签
@@ -75,5 +76,11 @@ return {
     config = function()
       require('illuminate').configure()
     end,
+  },
+  -- 颜色显示
+  {
+    'brenoprata10/nvim-highlight-colors',
+    event = 'VeryLazy',
+    opts = colorPreview.setup(),
   },
 }
