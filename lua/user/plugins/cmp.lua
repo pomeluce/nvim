@@ -90,12 +90,12 @@ function M.setup(cmp, types)
     },
     -- 补全来源
     sources = cmp.config.sources {
-      { name = 'copilot' },
-      { name = 'codeium' },
       source('nvim_lsp', types),
       source('luasnip', types),
       source('path', types),
       source('buffer', types),
+      { name = 'copilot' },
+      { name = 'codeium' },
       -- { name = 'nvim_lua' },
     },
     -- 设置补全显示的格式
