@@ -7,6 +7,7 @@ end
 function M.setup()
   return {
     chunk = {
+      enable = true,
       style = {
         { fg = '#79AC78' },
         { fg = '#c21f30' }, -- 这个高亮是用来标志错误的代码块
@@ -15,6 +16,7 @@ function M.setup()
       exclude_filetypes = {},
     },
     indent = {
+      enable = true,
       -- 更多的字符可以在 https://unicodeplus.com/ 这个网站上找到
       chars = { '│' },
       style = { '#4C5257' },
