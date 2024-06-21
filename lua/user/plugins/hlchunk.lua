@@ -13,7 +13,10 @@ function M.setup()
         { fg = '#c21f30' }, -- 这个高亮是用来标志错误的代码块
       },
       use_treesitter = false,
-      exclude_filetypes = {},
+      exclude_filetypes = {
+        floaterm = true,
+        dbui = true,
+      },
     },
     indent = {
       enable = true,
