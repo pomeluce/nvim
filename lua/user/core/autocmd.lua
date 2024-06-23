@@ -66,8 +66,8 @@ autocmd('BufReadPost', {
   group = highlightGroup,
   pattern = '*',
   callback = function()
-    vim.cmd('highlight GitSignsAdd guifg=#43a047')
-    vim.cmd('highlight GitSignsChange guifg=#fbc02d')
-    vim.cmd('highlight GitSignsDetele guifg=#f44336')
+    vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#43a047' })
+    vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#fbc02d' })
+    vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#f44336' })
   end,
 })
