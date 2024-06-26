@@ -42,7 +42,7 @@ function M.setup()
     -- NOTE: 如果打开 messages, cmdline 会被自动开启
     messages = {
       enabled = true,
-      view = 'notify', -- default view for messages
+      view = 'mini', -- default view for messages
       view_error = 'notify', -- view for errors
       view_warn = 'notify', -- view for warnings
       view_history = 'messages', -- view for :messages
