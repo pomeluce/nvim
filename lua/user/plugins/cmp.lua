@@ -83,6 +83,7 @@ function M.setup(cmp, types)
       end, { 'i', 's' }),
       -- 选择补全项
       ['<cr>'] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
+      ['<esc>'] = cmp.mapping.close(),
     },
     -- 显示补全预览
     experimental = {
