@@ -60,7 +60,14 @@ function M.setup(cmp, types)
     -- 键盘映射
     mapping = cmp.mapping.preset.insert {
       -- 出现补全菜单
-      ['<c-space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      -- ['<c-space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      ['<c-space>'] = cmp.mapping(function()
+        if cmp.visible() then
+          cmp.close()
+        else
+          cmp.complete()
+        end
+      end, { 'i', 'c' }),
       -- 选择下一个补全项
       ['<Tab>'] = cmp.mapping(function(fallback)
         if cmp.visible() then
@@ -83,7 +90,6 @@ function M.setup(cmp, types)
       end, { 'i', 's' }),
       -- 选择补全项
       ['<cr>'] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
-      ['<esc>'] = cmp.mapping.close(),
     },
     -- 显示补全预览
     experimental = {
