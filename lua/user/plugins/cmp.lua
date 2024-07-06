@@ -97,7 +97,7 @@ function M.setup(cmp, types)
     },
     -- 补全来源
     sources = cmp.config.sources {
-      source('nvim_lsp', types),
+      { name = 'nvim_lsp' },
       source('luasnip', types),
       source('path', types),
       source('buffer', types),

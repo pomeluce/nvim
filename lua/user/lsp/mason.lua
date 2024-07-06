@@ -4,7 +4,7 @@ local lsp_servers = {
   'clangd',
   'cmake',
   'cssls',
-  'emmet_ls',
+  'emmet_language_server',
   'html',
   'jsonls',
   'kotlin_language_server',

@@ -7,6 +7,7 @@ local flash = require('user.plugins.flash')
 local picker = require('user.plugins.window-picker')
 local whickkey = require('user.plugins.whichkey')
 local tabout = require('user.plugins.tabout')
+local autotag = require('user.plugins.autotag')
 
 return {
   -- 中文help doc
@@ -131,5 +132,11 @@ return {
     'abecodes/tabout.nvim',
     event = 'InsertEnter',
     opts = tabout.setup(),
+  },
+  -- 标签闭合
+  {
+    'windwp/nvim-ts-autotag',
+    event = 'VeryLazy',
+    opts = autotag.setup(),
   },
 }
