@@ -6,7 +6,7 @@ end
 
 function M.setup()
   return {
-    window = {
+    win = {
       border = 'rounded', -- none, single, double, shadow
       position = 'bottom', -- bottom, top
       margin = { 1, 5, 1, 5 }, -- extra window margin [top, right, bottom, left]. When between 0 and 1, will be treated as a percentage of the screen size.
