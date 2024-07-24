@@ -6,16 +6,8 @@ function M.save()
   if vim.fn.empty(vim.fn.glob(vim.fn.expand('%:p:h'))) == 1 then
     vim.fn.system('mkdir -p ' .. vim.fn.expand('%:p:h'))
   end
-  -- 如果文件不可写, 使用 sudo 来写入
-  -- if vim.bo.buftype == 'acwrite' then
-  --   local pass = vim.fn.input('Enter your password: ')
-  --   vim.cmd('w !echo ' .. pass .. ' | sudo -S tee > /dev/null %')
-  -- else
-  -- 保存工作会话
-  vim.cmd('SessionSave')
   -- 写入文件
   vim.cmd('w')
-  -- end
 end
 
 vim.cmd('com! RifySave lua require("user.core.funcutil").save()')

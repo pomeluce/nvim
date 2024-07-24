@@ -23,6 +23,7 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope-media-files.nvim',
+      'nvim-telescope/telescope-ui-select.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
       -- 项目管理
       {
@@ -37,6 +38,7 @@ return {
       local actions = require('telescope.actions')
       require('telescope').setup(telescope.setup(actions))
       require('telescope').load_extension('media_files')
+      require('telescope').load_extension('ui-select')
       require('telescope').load_extension('fzf')
       require('telescope').load_extension('projects')
       require('telescope').load_extension('textcase')
@@ -74,14 +76,10 @@ return {
   },
   -- session 管理
   {
-    'rmagatti/auto-session',
-    event = 'VeryLazy',
+    'Shatur/neovim-session-manager',
     config = function()
-      require('auto-session').setup(session.setup())
-      -- 判断 nvim 启动时是否带有参数，如果有则不加载 session, 防止命令被覆盖
-      if #vim.v.argv > 2 then
-        vim.g.auto_session_enabled = false
-      end
+      local config = require('session_manager.config')
+      require('session_manager').setup(session.setup(config))
     end,
   },
   -- 数据库管理

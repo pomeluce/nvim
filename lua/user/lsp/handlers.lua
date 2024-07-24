@@ -22,7 +22,7 @@ M.lsp_highlight_document = function(client)
   if client.server_capabilities.documentHighlight then
     -- 清除当前缓冲区中的所有高亮命名空间
     vim.api.nvim_buf_clear_namespace(0, vim.fn.bufnr(), 0, -1)
-    local lsp_highlight_document = vim.api.nvim_create_augroup('lsp_highlight_document')
+    local lsp_highlight_document = vim.api.nvim_create_augroup('lsp_highlight_document', { clear = false })
     vim.api.nvim_create_autocmd('CursorHold', {
       group = lsp_highlight_document,
       pattern = '*',
