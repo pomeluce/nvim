@@ -149,8 +149,6 @@ keymap('n', '<leader>fw', ':Telescope current_buffer_fuzzy_find<cr>', { desc = '
 keymap('n', '<leader>fg', ':Telescope git_status<cr>', { desc = 'search git status file', noremap = true, silent = true })
 -- 查看历史文件
 keymap('n', '<leader>fh', ':Telescope oldfiles<cr>', { desc = 'search history file', noremap = true, silent = true })
--- 查看项目列表
-keymap('n', '<leader>fp', ':Telescope projects theme=dropdown<cr>', { desc = 'show history projects', noremap = true, silent = true })
 
 -- TODO: tree-sitter 语法高亮
 -- 查看语法高亮
@@ -176,8 +174,9 @@ keymap('n', '<leader>ek', ':edit $HOME/.config/nvim/lua/user/core/keymap.lua<cr>
 keymap('n', '<leader>d/', ':lua require("neogen").generate()<cr>', { desc = 'doc comment', noremap = true, silent = true })
 
 -- TODO: session 恢复
-keymap('n', '<leader>sr', ':SessionManager load_session<cr>', { desc = 'restore project session', noremap = true, silent = true })
-keymap('n', '<leader>sd', ':SessionManager delete_session<cr>', { desc = 'delete project session', noremap = true, silent = true })
+keymap('n', '<leader>sl', ':NeovimProjectLoadRecent<cr>', { desc = 'load last project session', noremap = true, silent = true })
+keymap('n', '<leader>sp', ':Telescope neovim-project discover theme=dropdown<cr>', { desc = 'select project session', noremap = true, silent = true })
+keymap('n', '<leader>sh', ':Telescope neovim-project history theme=dropdown<cr>', { desc = 'select project session for history', noremap = true, silent = true })
 
 -- TODO: Dap 快捷键配置
 keymap('n', '<F2>', function()

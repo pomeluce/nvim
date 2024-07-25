@@ -1,6 +1,5 @@
 local telescope = require('user.plugins.telescope')
 local comment = require('user.plugins.comment')
-local project = require('user.plugins.project')
 local session = require('user.plugins.session')
 local autopairs = require('user.plugins.autopairs')
 local flash = require('user.plugins.flash')
@@ -25,12 +24,6 @@ return {
       'nvim-telescope/telescope-media-files.nvim',
       'nvim-telescope/telescope-ui-select.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-      -- 项目管理
-      {
-        'ahmedkhalf/project.nvim',
-        main = 'project_nvim',
-        opts = project.setup(),
-      },
       -- camelcase 命名转换
       { 'johmsalas/text-case.nvim', opts = {} },
     },
@@ -40,7 +33,6 @@ return {
       require('telescope').load_extension('media_files')
       require('telescope').load_extension('ui-select')
       require('telescope').load_extension('fzf')
-      require('telescope').load_extension('projects')
       require('telescope').load_extension('textcase')
     end,
   },
@@ -74,13 +66,13 @@ return {
     opts = comment.docSetup(),
     event = 'VeryLazy',
   },
-  -- session 管理
+  -- 项目管理
   {
-    'Shatur/neovim-session-manager',
-    config = function()
-      local config = require('session_manager.config')
-      require('session_manager').setup(session.setup(config))
-    end,
+    'coffebar/neovim-project',
+    dependencies = 'Shatur/neovim-session-manager',
+    opts = session.setup(),
+    lazy = false,
+    priority = 100,
   },
   -- 数据库管理
   {
