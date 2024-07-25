@@ -15,14 +15,14 @@ function M.setup(config)
     -- dir_to_session_filename = dir_to_session_filename,
 
     -- 定义当 neovim 不带参数启动时要做什么, 请参阅下面的"自动加载模式"部分
-    autoload_mode = config.AutoloadMode.LastSession,
+    autoload_mode = config.AutoloadMode.Disabled,
     -- 在退出和会话切换时自动保存最后一个会话
     autosave_last_session = true,
     -- 当没有打开缓冲区, 或者所有缓冲区都不可写或不可列出时, 插件不会保存会话
     autosave_ignore_not_normal = true,
     -- Plugin will not save a session when no buffers are opened, or all of them aren't writable or listed.
     -- 不会自动保存会话的目录列表
-    autosave_ignore_dirs = {},
+    autosave_ignore_dirs = vim.list_extend({ '~', '/' }, require('user-config').ignore_session_dir),
     -- 在保存会话之前, 这些文件类型的所有缓冲区都将关闭
     autosave_ignore_filetypes = {
       'gitcommit',

@@ -17,6 +17,9 @@ local M = {
       lua = 'lua'
   ]]
   run_cmd = {},
+
+  -- 搜索参数
+  grep_args = {},
 }
 
 return M

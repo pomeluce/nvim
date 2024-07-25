@@ -10,16 +10,10 @@ function M.setup(actions)
       prompt_prefix = '🔍 ',
       selection_caret = ' ',
       path_display = { 'smart' },
-      vimgrep_arguments = {
-        'rg',
-        '--color=never',
-        '--no-heading',
-        '--with-filename',
-        '--line-number',
-        '--column',
-        '--smart-case',
-        '--hidden',
-      },
+      vimgrep_arguments = vim.list_extend(
+        { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '--hidden' },
+        require('user-config').grep_args
+      ),
       mappings = {
         i = {
           -- 切换历史搜索
