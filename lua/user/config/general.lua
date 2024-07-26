@@ -70,6 +70,9 @@ return {
   {
     'coffebar/neovim-project',
     dependencies = 'Shatur/neovim-session-manager',
+    cond = function()
+      return #vim.v.argv <= 2
+    end,
     opts = session.setup(),
     lazy = false,
     priority = 100,
