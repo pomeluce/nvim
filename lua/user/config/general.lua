@@ -71,7 +71,13 @@ return {
     'coffebar/neovim-project',
     dependencies = 'Shatur/neovim-session-manager',
     cond = function()
-      return #vim.v.argv <= 2
+      local argv = vim.v.argv
+      for _, arg in ipairs(argv) do
+        if arg == '+CALLDB' then
+          return false
+        end
+      end
+      return true
     end,
     opts = session.setup(),
     lazy = false,
