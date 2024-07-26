@@ -5,17 +5,9 @@ function M.config()
 end
 
 function M.setup()
+  local user_config = require('user-config')
   return {
-    projects = {
-      '/wsp/nvim',
-      '/wsp/dzs',
-      '/wsp/dotfiles',
-      '/wsp/code/cpp/*',
-      '/wsp/code/java/*',
-      '/wsp/code/web/*',
-      '/wsp/code/rust/*',
-      '/wsp/code/sql/*',
-    },
+    projects = vim.list_extend({}, user_config.projects),
     datapath = vim.fn.stdpath('data'),
     -- 非项目目录加载最后一次会话
     last_session_on_startup = true,
@@ -32,7 +24,7 @@ function M.setup()
         'gitrebase',
       },
       -- 不会自动保存会话的目录列表
-      autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, require('user-config').ignore_session_dir),
+      autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, user_config.ignore_session_dir),
     },
   }
 end

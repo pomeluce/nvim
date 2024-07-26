@@ -20,6 +20,18 @@ local M = {
 
   -- 搜索参数
   grep_args = {},
+
+  -- 项目列表
+  projects = {
+    '/wsp/nvim',
+    '/wsp/dzs',
+    '/wsp/dotfiles',
+    '/wsp/code/web/*',
+    '/wsp/code/rust/*',
+    '/wsp/code/sql/*',
+    '/wsp/code/java/*',
+    '/wsp/code/cpp/*',
+  },
 }
 
 return M
