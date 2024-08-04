@@ -128,7 +128,7 @@ nvim
 | n       | leader + f + w   | 在当前 buffer 查找文本       |
 | n       | leader + f + g   | 查看 git diff 文件           |
 | n       | leader + f + h   | 查看历史文件                 |
-| n       | leader + f + p   | 查看项目列表                 |
+| n       | leader + s + h   | 查看项目列表                 |
 | n       | H                | 查看语法高亮                 |
 | n       | R                | 刷新高亮                     |
 | n       | T                | 打开文件树                   |
