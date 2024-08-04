@@ -22,7 +22,7 @@ rm -rf ~/.local/share/nvim/
 2. 所需环境
 
 ```
-yay -S python-pynvim the_silver_searcher fd bat ripgrep unzip
+yay -S python-pynvim the_silver_searcher fd bat ripgrep unzip luarocks
 ```
 
 3. 拉取 RifyVim 配置

@@ -13,10 +13,18 @@ return {
     'node_modules',
     '.git'
   ),
+  init_options = {
+    userLanguages = nil,
+  },
   settings = {
     -- config params: https://github.com/tailwindlabs/tailwindcss-intellisense#extension-settings
     tailwindCSS = {
       classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass' },
+      includeLanguages = {
+        eelixir = 'html-eex',
+        eruby = 'erb',
+        templ = 'html',
+      },
       lint = {
         cssConflict = 'warning',
         invalidApply = 'error',

@@ -108,11 +108,11 @@ return {
     opts = flash.setup(),
   },
   -- which-key
-  {
-    'folke/which-key.nvim',
-    event = 'VeryLazy',
-    opts = whickkey.setup(),
-  },
+  -- {
+  --   'folke/which-key.nvim',
+  --   event = 'VeryLazy',
+  --   opts = whickkey.setup(),
+  -- },
   -- window picker 快速切换窗口
   {
     's1n7ax/nvim-window-picker',

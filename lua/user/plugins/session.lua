@@ -10,7 +10,7 @@ function M.setup()
     projects = vim.list_extend({}, user_config.projects),
     datapath = vim.fn.stdpath('data'),
     -- 非项目目录加载最后一次会话
-    last_session_on_startup = true,
+    last_session_on_startup = false,
     -- 仪表盘模式, 开启取消自动加载
     dashboard_mode = false,
     -- Timeout in milliseconds before trigger FileType autocmd after session load
