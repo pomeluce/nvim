@@ -5,7 +5,7 @@ local session = require('user.plugins.session')
 local autopairs = require('user.plugins.autopairs')
 local flash = require('user.plugins.flash')
 local picker = require('user.plugins.window-picker')
--- local whickkey = require('user.plugins.whichkey')
+local whickkey = require('user.plugins.whichkey')
 local tabout = require('user.plugins.tabout')
 local autotag = require('user.plugins.autotag')
 
@@ -115,11 +115,11 @@ return {
     opts = flash.setup(),
   },
   -- which-key
-  -- {
-  --   'folke/which-key.nvim',
-  --   event = 'VeryLazy',
-  --   opts = whickkey.setup(),
-  -- },
+  {
+    'folke/which-key.nvim',
+    event = 'VeryLazy',
+    opts = whickkey.setup(),
+  },
   -- window picker 快速切换窗口
   {
     's1n7ax/nvim-window-picker',
