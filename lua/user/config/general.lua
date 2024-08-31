@@ -1,6 +1,6 @@
 local telescope = require('user.plugins.telescope')
 local comment = require('user.plugins.comment')
-local project = require('user.plugins.project')
+-- local project = require('user.plugins.project')
 local session = require('user.plugins.session')
 local autopairs = require('user.plugins.autopairs')
 local flash = require('user.plugins.flash')
@@ -26,11 +26,11 @@ return {
       'nvim-telescope/telescope-ui-select.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
       -- 项目管理
-      {
-        'ahmedkhalf/project.nvim',
-        main = 'project_nvim',
-        opts = project.setup(),
-      },
+      -- {
+      --   'ahmedkhalf/project.nvim',
+      --   main = 'project_nvim',
+      --   opts = project.setup(),
+      -- },
       -- camelcase 命名转换
       { 'johmsalas/text-case.nvim', opts = {} },
     },
@@ -87,7 +87,7 @@ return {
       return true
     end,
     opts = session.setup(),
-    lazy = false,
+    event = 'VeryLazy',
     priority = 100,
   },
   -- 数据库管理
