@@ -117,6 +117,8 @@ return {
   -- which-key
   {
     'folke/which-key.nvim',
+    keys = { '<leader>', '"', "'", '`', 'c', 'v', 'g' },
+    cmd = 'WhichKey',
     event = 'VeryLazy',
     opts = whickkey.setup(),
   },
