@@ -1,8 +1,20 @@
 local opt = vim.opt
+local o = vim.o
 local is_wsl = vim.fn.has('wsl') == 1
 
--- 设置 python3 对应的目录，你可以手动 export PYTHON=$(which python3) 到你的终端配置中
-vim.g.python3_host_prog = os.getenv('PYTHON')
+-- 状态栏全局显示
+o.laststatus = 3
+-- 光标行高亮
+o.cursorline = true
+-- 只高亮行号部分
+o.cursorlineopt = 'number'
+
+-- 禁用右下角的标尺显示
+o.ruler = false
+-- 新建的水平分割窗口会出现在当前窗口的下方。
+o.splitbelow = true
+-- 新建的垂直分割窗口会出现在当前窗口的右侧
+o.splitright = true
 
 -- 命令提示
 opt.showcmd = true
@@ -109,7 +121,7 @@ opt.cmdheight = 0
 opt.updatetime = 300
 
 -- 缩短消息长度的标志位列表
-opt.shortmess:append('cI')
+opt.shortmess:append('scI')
 
 -- 光标上下左右保留 30 行
 opt.scrolloff = 30
@@ -132,12 +144,20 @@ opt.exrc = true
 
 -- 显示左侧图标指示列
 opt.signcolumn = 'yes'
+-- 设置填充字符
 opt.fillchars = {
   fold = '-',
   stlnc = '~',
   eob = ' ',
   foldsep = '=',
 }
+
+-- 将 mason.nvim 安装的二进制文件添加到路径中
+local is_windows = vim.fn.has('win32') ~= 0
+local sep = is_windows and '\\' or '/'
+local delim = is_windows and ';' or ':'
+vim.env.PATH = table.concat({ vim.fn.stdpath('data'), 'mason', 'bin' }, sep) .. delim .. vim.env.PATH
+
 vim.cmd([[
     let &t_SI.="\e[5 q"
     let &t_EI.="\e[1 q"

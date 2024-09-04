@@ -1,11 +1,11 @@
-local bufferline = require('user.plugins.bufferline')
-local lualine = require('user.plugins.lualine')
-local gitsigns = require('user.plugins.gitsigns')
-local dashboard = require('user.plugins.dashboard')
-local nvimtree = require('user.plugins.nvim-tree')
-local noice = require('user.plugins.noice')
-local hlchunk = require('user.plugins.hlchunk')
-local colorPreview = require('user.plugins.color-preview')
+local bufferline = require('user.configs.bufferline')
+local lualine = require('user.configs.lualine')
+local gitsigns = require('user.configs.gitsigns')
+local dashboard = require('user.configs.dashboard')
+local nvimtree = require('user.configs.nvim-tree')
+local noice = require('user.configs.noice')
+local hlchunk = require('user.configs.hlchunk')
+local colorPreview = require('user.configs.color-preview')
 
 return {
   -- buffer 标签

@@ -28,7 +28,7 @@ function M.config()
       ['Alter Table'] = 'ALTER TABLE `{schema}`.`{table}` ADD ',
     },
   }
-  vim.cmd('com! CALLDB lua require("user.plugins.vim-dadbod").DBUI()')
+  vim.cmd('com! CALLDB lua require("user.configs.vim-dadbod").DBUI()')
 end
 
 function M.setup()

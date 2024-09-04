@@ -1,4 +1,4 @@
-local treesitter = require('user.plugins.tree-sitter')
+local treesitter = require('user.configs.tree-sitter')
 
 -- 语法高亮
 return {

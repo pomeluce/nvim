@@ -1,13 +1,13 @@
-local telescope = require('user.plugins.telescope')
-local comment = require('user.plugins.comment')
--- local project = require('user.plugins.project')
-local session = require('user.plugins.session')
-local autopairs = require('user.plugins.autopairs')
-local flash = require('user.plugins.flash')
-local picker = require('user.plugins.window-picker')
-local whickkey = require('user.plugins.whichkey')
-local tabout = require('user.plugins.tabout')
-local autotag = require('user.plugins.autotag')
+local telescope = require('user.configs.telescope')
+local comment = require('user.configs.comment')
+-- local project = require('user.configs.project')
+local session = require('user.configs.session')
+local autopairs = require('user.configs.autopairs')
+local flash = require('user.configs.flash')
+local picker = require('user.configs.window-picker')
+local whickkey = require('user.configs.whichkey')
+local tabout = require('user.configs.tabout')
+local autotag = require('user.configs.autotag')
 
 return {
   -- 中文help doc

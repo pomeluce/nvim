@@ -42,7 +42,7 @@ M.lsp_highlight_document = function(client)
 end
 
 M.on_attach = function(client, buffer)
-  require('user.core.keymap').lsp_keymaps(buffer)
+  require('user.core.keymaps').lsp_keymaps(buffer)
   M.lsp_highlight_document(client)
 end
 

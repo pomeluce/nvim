@@ -1,4 +1,4 @@
-local lspsaga = require('user.plugins.lspsaga')
+local lspsaga = require('user.configs.lspsaga')
 
 return {
   'neovim/nvim-lspconfig',

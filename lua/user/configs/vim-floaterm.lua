@@ -11,7 +11,7 @@ function M.toggleFT(name, cmd, isClose)
 end
 
 function M.setFTToggleMap(key, name, cmd)
-  keymap('n', key, string.format(":lua require('user.plugins.vim-floaterm').toggleFT('%s', '%s', %s)<cr>", name, cmd, true), { noremap = true, silent = true })
+  keymap('n', key, string.format(":lua require('user.configs.vim-floaterm').toggleFT('%s', '%s', %s)<cr>", name, cmd, true), { noremap = true, silent = true })
   keymap(
     't',
     key,

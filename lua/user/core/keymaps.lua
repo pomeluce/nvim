@@ -2,10 +2,6 @@ local M = {}
 
 local keymap = vim.keymap.set
 
--- 声明 leader 键
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
 -- TODO: 基础配置
 -- 基本键位映射
 keymap('n', 's', '<nop>', {})
@@ -133,8 +129,8 @@ keymap('n', 'th', '<cmd>Telescope textcase normal_mode theme=dropdown<CR>', { de
 keymap('v', 'th', '<cmd>Telescope textcase visual_mode theme=dropdown<CR>', { desc = 'toggle hump', noremap = true, silent = true })
 
 -- TODO: 浮动终端
-keymap('n', '<F5>', ':lua require("user.plugins.vim-floaterm").runFile()<cr>', { desc = 'run file', noremap = true, silent = true })
-keymap('i', '<F5>', '<esc>:lua require("user.plugins.vim-floaterm").runFile()<cr>', { desc = 'run file', noremap = true, silent = true })
+keymap('n', '<F5>', ':lua require("user.configs.vim-floaterm").runFile()<cr>', { desc = 'run file', noremap = true, silent = true })
+keymap('i', '<F5>', '<esc>:lua require("user.configs.vim-floaterm").runFile()<cr>', { desc = 'run file', noremap = true, silent = true })
 
 -- TODO: telescope 配置
 -- 全局文本搜索(yay -S the_silver_searcher fd bat)

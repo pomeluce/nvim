@@ -131,7 +131,7 @@ function M.config()
   vim.g.nvim_tree_firsttime = 1
   vim.cmd('hi! NvimTreeCursorLine cterm=NONE ctermbg=238')
   vim.cmd('hi! link NvimTreeFolderIcon NvimTreeFolderName')
-  -- vim.cmd("au FileType NvimTree nnoremap <buffer> <silent> C :lua require('user.plugins.nvim-tree').magicCd()<cr>")
+  -- vim.cmd("au FileType NvimTree nnoremap <buffer> <silent> C :lua require('user.configs.nvim-tree').magicCd()<cr>")
 end
 
 function M.setup()

@@ -24,7 +24,7 @@ function M.setup()
         '              ╚═╝  ╚═╝╚═╝╚═╝        ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝              ',
         '                                                                               ',
         '                                                                               ',
-        '                         [ RifyVim version 2024.2.1 ]                          ',
+        '                         [ RifyVim version 2024.2.3 ]                          ',
         '                                                                               ',
         '                                                                               ',
         '                                                                               ',
@@ -40,7 +40,7 @@ function M.setup()
           key = 'l',
           keymap = 'leader s p',
           key_hl = 'Number',
-          action = 'cd /wsp/ | NvimTreeOpen',
+          action = 'Telescope neovim-project discover theme=dropdown',
         },
         {
           icon = '📌  ',
@@ -50,7 +50,7 @@ function M.setup()
           key = 'p',
           keymap = 'leader s h',
           key_hl = 'Number',
-          action = 'Telescope projects theme=dropdown',
+          action = 'Telescope neovim-project history theme=dropdown',
         },
         {
           icon = '📜  ',

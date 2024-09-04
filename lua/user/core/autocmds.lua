@@ -6,7 +6,7 @@ autocmd('BufWritePost', {
   group = autoGroup,
   callback = function()
     local current_file = vim.fn.expand('%')
-    local config_folder = vim.fn.expand('lua/user/config/')
+    local config_folder = vim.fn.expand('lua/user/plugins/')
     if vim.fn.stridx(current_file, config_folder) == 0 then
       vim.cmd('Lazy sync')
     end
@@ -40,7 +40,7 @@ autocmd('FileType', {
   group = autoGroup,
   pattern = '*',
   callback = function()
-    require('user.plugins.tree-sitter').parser_bootstrap()
+    require('user.configs.tree-sitter').parser_bootstrap()
   end,
 })
 

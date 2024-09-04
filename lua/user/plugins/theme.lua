@@ -1,4 +1,4 @@
-local colorscheme = require('user.plugins.colorscheme')
+local colorscheme = require('user.configs.colorscheme')
 
 return {
   {
