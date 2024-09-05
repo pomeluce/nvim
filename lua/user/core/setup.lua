@@ -7,6 +7,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local opts = {
+  spec = { { import = 'user.plugins' } },
   install = { colorscheme = { 'one_monokai' } },
   ui = {
     border = 'rounded',
@@ -53,4 +54,4 @@ local opts = {
   },
 }
 
-require('lazy').setup('user.plugins', opts)
+require('lazy').setup(opts)
