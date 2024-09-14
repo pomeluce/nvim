@@ -1,5 +1,3 @@
-local lspsaga = require('user.configs.lspsaga')
-
 return {
   'neovim/nvim-lspconfig',
   event = 'BufRead',
@@ -10,8 +8,9 @@ return {
     { 'folke/neoconf.nvim', opts = {} },
     { 'folke/neodev.nvim', opts = {} },
     -- { 'j-hui/fidget.nvim', tag = 'legacy', event = 'LspAttach', opts = {} },
-    { 'nvimdev/lspsaga.nvim', opts = lspsaga.setup() },
+    { 'nvimdev/lspsaga.nvim', opts = require('user.configs.lspsaga').setup() },
   },
+  init = require('user.lsp.handlers').sign_define,
   config = function()
     -- 加载 mason
     require('user.lsp.mason')

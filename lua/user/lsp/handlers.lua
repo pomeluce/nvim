@@ -1,6 +1,6 @@
 local M = {}
 
-M.setup = function()
+M.sign_define = function()
   -- 设置高亮标签
   local signs = {
     { name = 'DiagnosticSignError', text = '' },
@@ -13,6 +13,9 @@ M.setup = function()
   for _, sign in ipairs(signs) do
     vim.fn.sign_define(sign.name, { text = sign.text, texthl = sign.name, numhl = '' })
   end
+end
+
+M.setup = function()
   -- lspinfo 添加边框
   require('lspconfig.ui.windows').default_options.border = 'rounded'
 end

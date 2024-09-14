@@ -18,7 +18,7 @@ function M.setup()
       -- 使用 lsp 进行代码检查
       diagnostics = 'lsp',
       -- 设置分隔符
-      separator_style = { '', '' },
+      separator_style = { '', '' },
       -- 设置鼠标悬停显示关闭按钮
       hover = {
         enabled = true,

@@ -1,32 +1,25 @@
-local bufferline = require('user.configs.bufferline')
-local lualine = require('user.configs.lualine')
-local gitsigns = require('user.configs.gitsigns')
-local dashboard = require('user.configs.dashboard')
-local nvimtree = require('user.configs.nvim-tree')
-local noice = require('user.configs.noice')
-local hlchunk = require('user.configs.hlchunk')
-local colorPreview = require('user.configs.color-preview')
-
 return {
+  -- 图标
+  'nvim-tree/nvim-web-devicons',
   -- buffer 标签
   {
     'akinsho/bufferline.nvim',
     event = 'BufWinEnter',
-    opts = bufferline.setup(),
+    opts = require('user.configs.bufferline').setup(),
   },
   -- 状态栏插件
   {
-    'nvim-lualine/lualine.nvim',
+    'rebelot/heirline.nvim',
     event = 'BufWinEnter',
-    dependencies = {
-      'nvim-tree/nvim-web-devicons',
-    },
-    opts = lualine.setup(),
+    config = function()
+      local heirline = require('user.configs.heirline')
+      require('heirline').setup(heirline.setup())
+    end,
   },
   {
     'shellRaining/hlchunk.nvim',
     event = { 'UIEnter' },
-    opts = hlchunk.setup(),
+    opts = require('user.configs.hlchunk').setup(),
   },
   -- 面包屑
   {
@@ -43,19 +36,19 @@ return {
   {
     'lewis6991/gitsigns.nvim',
     event = 'VeryLazy',
-    opts = gitsigns.setup(),
+    opts = require('user.configs.gitsigns').setup(),
   },
   -- 启动面板
   {
     'glepnir/dashboard-nvim',
-    opts = dashboard.setup(),
+    opts = require('user.configs.dashboard').setup(),
   },
   -- 文件树
   {
     'nvim-tree/nvim-tree.lua',
     event = 'VeryLazy',
     cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle', 'NvimTreeOpen' },
-    opts = nvimtree.setup(),
+    opts = require('user.configs.nvim-tree').setup(),
   },
   -- noice
   {
@@ -65,7 +58,7 @@ return {
       'MunifTanjim/nui.nvim',
       { 'rcarriga/nvim-notify', opts = { background_colour = '#000000' } },
     },
-    opts = noice.setup(),
+    opts = require('user.configs.noice').setup(),
   },
   --- 浮动终端
   { 'voldikss/vim-floaterm', event = 'VeryLazy' },
@@ -81,6 +74,6 @@ return {
   {
     'brenoprata10/nvim-highlight-colors',
     event = 'VeryLazy',
-    opts = colorPreview.setup(),
+    opts = require('user.configs.color-preview').setup(),
   },
 }
