@@ -24,7 +24,7 @@ function M.setup()
         '              ╚═╝  ╚═╝╚═╝╚═╝        ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝              ',
         '                                                                               ',
         '                                                                               ',
-        '                         [ RifyVim version 2024.2.3 ]                          ',
+        '                         [ RifyVim version 2024.3.1 ]                          ',
         '                                                                               ',
         '                                                                               ',
         '                                                                               ',
@@ -80,7 +80,7 @@ function M.setup()
           key = 'm',
           keymap = 'leader e k',
           key_hl = 'Number',
-          action = 'edit $HOME/.config/nvim/lua/user/core/keymap.lua',
+          action = 'edit $HOME/.config/nvim/lua/user/core/keymaps.lua',
         },
         {
           icon = '🛠  ',

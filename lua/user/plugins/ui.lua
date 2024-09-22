@@ -2,11 +2,11 @@ return {
   -- 图标
   'nvim-tree/nvim-web-devicons',
   -- buffer 标签
-  {
-    'akinsho/bufferline.nvim',
-    event = 'BufWinEnter',
-    opts = require('user.configs.bufferline').setup(),
-  },
+  -- {
+  --   'akinsho/bufferline.nvim',
+  --   event = 'BufWinEnter',
+  --   opts = require('user.configs.bufferline').setup(),
+  -- },
   -- 状态栏插件
   {
     'rebelot/heirline.nvim',

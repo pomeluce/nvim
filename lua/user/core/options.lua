@@ -2,6 +2,8 @@ local opt = vim.opt
 local o = vim.o
 local is_wsl = vim.fn.has('wsl') == 1
 
+-- tab 栏全局显示
+o.showtabline = 3
 -- 状态栏全局显示
 o.laststatus = 3
 -- 光标行高亮

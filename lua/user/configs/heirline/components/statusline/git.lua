@@ -12,8 +12,6 @@ return {
 
   hl = { fg = colors.white, bg = colors.one_bg2 },
 
-  update = { 'BufWritePost' },
-
   -- git branch name
   {
     provider = function(self)

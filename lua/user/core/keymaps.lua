@@ -162,9 +162,8 @@ keymap(
 )
 
 -- TODO: dashboard 封面快捷键
-keymap('n', '<leader>sp', ':cd  /wsp/code/web | NvimTreeOpen<cr>', { desc = 'show workspace list', noremap = true, silent = true })
 keymap('n', '<leader>es', ':edit $MYVIMRC<cr>', { desc = 'edit vim config', noremap = true, silent = true })
-keymap('n', '<leader>ek', ':edit $HOME/.config/nvim/lua/user/core/keymap.lua<cr>', { desc = 'edito vim keymap', noremap = true, silent = true })
+keymap('n', '<leader>ek', ':edit $HOME/.config/nvim/lua/user/core/keymaps.lua<cr>', { desc = 'edito vim keymap', noremap = true, silent = true })
 
 -- TODO: 文档注释
 keymap('n', '<leader>d/', ':lua require("neogen").generate()<cr>', { desc = 'doc comment', noremap = true, silent = true })

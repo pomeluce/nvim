@@ -1,21 +1,10 @@
+local utils = require('user.configs.heirline.utils')
 local colors = require('user.configs.heirline.colors')
 local conditions = require('heirline.conditions')
 
 return {
   -- icon
-  {
-    init = function(self)
-      local filename = self.filename
-      local extension = vim.fn.fnamemodify(filename, ':e')
-      self.icon, self.icon_color = require('nvim-web-devicons').get_icon_color(filename, extension, { default = true })
-    end,
-    provider = function(self)
-      return self.icon and (' ' .. self.icon .. ' ')
-    end,
-    hl = function(self)
-      return { fg = self.icon_color }
-    end,
-  },
+  utils.file_icon,
   -- name
   {
     -- modified
