@@ -31,7 +31,30 @@ return {
   {
     provider = function(self)
       local filename = self.filename
-      return (filename == '' and '[No Name]' or vim.fn.fnamemodify(filename, ':t'))
+
+      -- 新文件
+      if filename == '' then
+        return '[No Name]'
+      end
+
+      local name = vim.fn.fnamemodify(filename, ':t')
+
+      -- 获取所有 buffer
+      local buffers = vim.api.nvim_list_bufs()
+      for _, buf in ipairs(buffers) do
+        local buf_name = vim.api.nvim_buf_get_name(buf)
+        if vim.fn.fnamemodify(buf_name, ':t') == name and buf_name ~= filename then
+          local input_parts = vim.split(vim.fn.fnamemodify(filename, ':h'), '/')
+          local buf_parts = vim.split(vim.fn.fnamemodify(buf_name, ':h'), '/')
+
+          for i = #input_parts, 1, -1 do
+            if input_parts[i] ~= buf_parts[#buf_parts + #input_parts - i] then
+              return table.concat(input_parts, '/', i, #input_parts) .. '/' .. name
+            end
+          end
+        end
+      end
+      return name
     end,
     hl = function(self)
       return { bold = self.is_active or self.is_visible }

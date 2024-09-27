@@ -93,4 +93,29 @@ M.fmt = {
 
 M.separators = { left = '', right = '' }
 
+M.close_current_tab_buffer = function()
+  -- 获取当前 tab 页的所有 buffer
+  local buffers = vim.api.nvim_list_bufs()
+  for _, buf in ipairs(buffers) do
+    -- 确保 buffer 是在当前 tab 中的，并且是有效 buffer
+    if vim.api.nvim_buf_is_loaded(buf) and vim.fn.bufwinnr(buf) ~= -1 then
+      -- 关闭 buffer (不保存更改)
+      vim.cmd('bdelete! ' .. buf)
+    end
+  end
+end
+
+M.get_tabnr_from_bufnr = function(bufnr)
+  -- 获取当前窗口的编号
+  local winid = vim.fn.bufwinid(bufnr)
+
+  -- 检查 buffer 是否在任何窗口中
+  if winid == -1 then
+    return nil -- 如果 buffer 没有打开，返回 nil
+  end
+
+  -- 获取窗口所在的 tab 页编号
+  return vim.api.nvim_tabpage_get_number(vim.api.nvim_win_get_tabpage(winid))
+end
+
 return M
