@@ -45,10 +45,16 @@ return {
   },
   -- 文件树
   {
-    'nvim-tree/nvim-tree.lua',
+    'antosha417/nvim-lsp-file-operations',
     event = 'VeryLazy',
-    cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle', 'NvimTreeOpen' },
-    opts = require('user.configs.nvim-tree').setup(),
+    dependencies = {
+      'nvim-tree/nvim-tree.lua',
+      cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle', 'NvimTreeOpen' },
+      opts = require('user.configs.nvim-tree').setup(),
+    },
+    config = function()
+      require('lsp-file-operations').setup()
+    end,
   },
   -- noice
   {
