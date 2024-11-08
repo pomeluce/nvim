@@ -6,11 +6,7 @@ return {
   condition = conditions.lsp_attached,
   update = { 'LspAttach', 'LspDetach' },
   provider = function()
-    for _, client in ipairs(vim.lsp.get_clients()) do
-      if client.attached_buffers[utils.stbufnr()] then
-        return (vim.o.columns > 100 and ' LSP ~ ' .. client.name) or '  LSP'
-      end
-    end
+    return ' LSP ~ ' .. string.lower(vim.bo.filetype)
   end,
   hl = { fg = colors.nord_blue, bold = true },
   utils.space(2),

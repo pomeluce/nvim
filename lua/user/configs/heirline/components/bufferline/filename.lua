@@ -43,7 +43,8 @@ return {
       local buffers = vim.api.nvim_list_bufs()
       for _, buf in ipairs(buffers) do
         local buf_name = vim.api.nvim_buf_get_name(buf)
-        if vim.fn.fnamemodify(buf_name, ':t') == name and buf_name ~= filename then
+        local is_load = vim.api.nvim_buf_is_loaded(buf)
+        if vim.fn.fnamemodify(buf_name, ':t') == name and buf_name ~= filename and is_load then
           local input_parts = vim.split(vim.fn.fnamemodify(filename, ':h'), '/')
           local buf_parts = vim.split(vim.fn.fnamemodify(buf_name, ':h'), '/')
 

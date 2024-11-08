@@ -6,7 +6,6 @@ local autopairs = require('user.configs.autopairs')
 local flash = require('user.configs.flash')
 local picker = require('user.configs.window-picker')
 local whickkey = require('user.configs.whichkey')
-local tabout = require('user.configs.tabout')
 local autotag = require('user.configs.autotag')
 
 return {
@@ -134,12 +133,6 @@ return {
   {
     'voldikss/vim-translator',
     event = 'VeryLazy',
-  },
-  -- tabout
-  {
-    'abecodes/tabout.nvim',
-    event = 'InsertEnter',
-    opts = tabout.setup(),
   },
   -- 标签闭合
   {

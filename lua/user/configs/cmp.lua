@@ -60,7 +60,6 @@ function M.setup(cmp, types)
     -- 键盘映射
     mapping = cmp.mapping.preset.insert {
       -- 出现补全菜单
-      -- ['<c-space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
       ['<c-space>'] = cmp.mapping(function()
         if cmp.visible() then
           cmp.close()
@@ -97,7 +96,7 @@ function M.setup(cmp, types)
     },
     -- 补全来源
     sources = cmp.config.sources {
-      { name = 'nvim_lsp' },
+      source('nvim_lsp', types),
       source('luasnip', types),
       source('path', types),
       source('buffer', types),
