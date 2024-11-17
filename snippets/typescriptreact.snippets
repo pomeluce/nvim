@@ -4,3 +4,11 @@ snippet rtemp "react function component template"
 	};
 
 	export default ${1};
+
+
+snippet vtemp "vue jsx/tsx component template"
+  export default defineComponent({
+    setup() {
+      return () => <main>${1}</main>
+    }
+  })

@@ -26,6 +26,7 @@ local M = {
     '/wsp/nvim',
     '/wsp/dzs',
     '/wsp/dotfiles',
+    '/wsp/dotfiles/ags',
     '/wsp/code/web/*',
     '/wsp/code/rust/*',
     '/wsp/code/sql/*',

@@ -1,5 +1,12 @@
 local M = {}
 
+local lsp_handler_config = {
+  border = 'rounded',
+  style = 'minimal',
+}
+vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, lsp_handler_config)
+vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, lsp_handler_config)
+
 M.sign_define = function()
   -- 设置高亮标签
   local signs = {
@@ -44,8 +51,8 @@ M.lsp_highlight_document = function(client)
   end
 end
 
-M.on_attach = function(client, buffer)
-  require('user.core.keymaps').lsp_keymaps(buffer)
+M.on_attach = function(client, bufnr)
+  require('user.core.keymaps').lsp_keymaps(bufnr)
   M.lsp_highlight_document(client)
 end
 
