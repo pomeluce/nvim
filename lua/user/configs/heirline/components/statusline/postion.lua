@@ -13,5 +13,5 @@ return {
     end
   end,
 
-  hl = { fg = colors.nord_blue },
+  hl = { fg = colors.sun },
 }

@@ -8,5 +8,5 @@ return {
     local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc
     return ' ' .. utils.fmt[fmt] .. ' %2(' .. enc .. '%) '
   end,
-  hl = { fg = colors.sun },
+  hl = { fg = colors.orange },
 }
