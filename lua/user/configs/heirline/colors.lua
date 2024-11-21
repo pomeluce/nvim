@@ -21,7 +21,7 @@ return {
   yellow = '#e7c787',
   sun = '#EBCB8B',
   purple = '#de98fd',
-  dark_purple = '#c882e7',
+  dark_purple = '#d678ff',
   teal = '#519ABA',
   orange = '#fca2aa',
   cyan = '#a3b8ef',

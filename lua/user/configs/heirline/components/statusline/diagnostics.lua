@@ -1,5 +1,4 @@
 local conditions = require('heirline.conditions')
-local utils = require('user.configs.heirline.utils')
 
 return {
   condition = conditions.has_diagnostics,
@@ -38,9 +37,8 @@ return {
   },
   {
     provider = function(self)
-      return self.hints > 0 and (self.hint_icon .. self.hints)
+      return self.hints > 0 and (self.hint_icon .. self.hints .. ' ')
     end,
     hl = { fg = 'diag_hint' },
   },
-  utils.space(2),
 }

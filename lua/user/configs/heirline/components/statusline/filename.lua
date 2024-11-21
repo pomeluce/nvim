@@ -11,13 +11,13 @@ return {
     hl = function()
       if vim.bo.modified then
         -- use `force` because we need to override the child's hl foreground
-        return { fg = colors.cyan, bold = true, force = true }
+        return { fg = colors.cyan, force = true }
       end
     end,
     {
       provider = function(self)
         -- see :h filename-modifers
-        local filename = vim.fn.fnamemodify(self.filename, ':.')
+        local filename = vim.fn.fnamemodify(self.filename, ':t')
         if filename == '' then
           return '[No Name]'
         end
@@ -44,6 +44,4 @@ return {
       provider = ' 󰌾',
     },
   },
-  -- this means that the statusline is cut here when there's not enough space
-  { provider = '%<' },
 }
