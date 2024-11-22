@@ -1,5 +1,7 @@
 return {
-  condition = vim.bo.filetype ~= '',
+  condition = function()
+    return vim.bo.filetype ~= ''
+  end,
   {
     init = function(self)
       local filename = self.filename
@@ -17,7 +19,7 @@ return {
 
   {
     provider = function()
-      return vim.bo.filetype ~= '' and ' %2(' .. string.lower(vim.bo.filetype) .. '%) '
+      return ' %2(' .. string.lower(vim.bo.filetype) .. '%) '
     end,
   },
 }
