@@ -1,22 +1,23 @@
 local utils = require('heirline.utils')
 local _utils = require('user.configs.heirline.utils')
 
-local mode = require('user.configs.heirline.components.statusline.mode')
-local git_branch = require('user.configs.heirline.components.statusline.git-branch')
-local git_diff = require('user.configs.heirline.components.statusline.git-diff')
-local filename = require('user.configs.heirline.components.statusline.filename')
-local diagnostics = require('user.configs.heirline.components.statusline.diagnostics')
-local filetype = require('user.configs.heirline.components.statusline.filetype')
-local cursor = require('user.configs.heirline.components.statusline.cursor')
-local encoding = require('user.configs.heirline.components.statusline.encoding')
-local postion = require('user.configs.heirline.components.statusline.postion')
-
 return {
-  utils.insert({
-    init = function(self)
-      self.mode = vim.fn.mode(1)
-      self.filename = vim.api.nvim_buf_get_name(0)
-    end,
-    hl = { bg = 'NONE' },
-  }, mode, git_branch, filename, git_diff, _utils.align, diagnostics, cursor, filetype, encoding, postion),
+  utils.insert(
+    {
+      init = function(self)
+        self.mode = vim.fn.mode(1)
+        self.filename = vim.api.nvim_buf_get_name(0)
+      end,
+      hl = { bg = 'NONE' },
+    },
+    require('user.configs.heirline.components.statusline.mode'),
+    require('user.configs.heirline.components.statusline.git-branch'),
+    require('user.configs.heirline.components.statusline.filename'),
+    _utils.align,
+    require('user.configs.heirline.components.statusline.diagnostics'),
+    require('user.configs.heirline.components.statusline.encoding'),
+    require('user.configs.heirline.components.statusline.filetype'),
+    require('user.configs.heirline.components.statusline.postion'),
+    require('user.configs.heirline.components.statusline.cursor')
+  ),
 }

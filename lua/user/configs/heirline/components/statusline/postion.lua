@@ -12,6 +12,5 @@ return {
       return '  %2(' .. string.format('%2d%%%% ', math.floor(cur / total * 100)) .. '%)'
     end
   end,
-
-  hl = { fg = colors.sun },
+  hl = { fg = colors.yellow },
 }

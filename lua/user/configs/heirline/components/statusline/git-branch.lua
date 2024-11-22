@@ -13,7 +13,7 @@ return {
   -- git branch name
   {
     provider = function(self)
-      return '  %2(' .. self.status_dict.head .. '%) '
+      return '  %2(' .. self.status_dict.head .. '%) '
     end,
   },
 }

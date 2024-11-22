@@ -87,11 +87,11 @@ M.align = { provider = '%=' }
 
 M.fmt = {
   unix = '', -- e712
-  dos = '', -- e70f
+  dos = '', -- e70f
   mac = '', -- e711
 }
 
-M.separators = { left = '', right = '' }
+M.separators = { left = '', right = '' }
 
 M.close_current_tab_buffer = function()
   -- 获取当前 tab 页的所有 buffer
