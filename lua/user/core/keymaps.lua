@@ -7,7 +7,7 @@ local keymap = vim.keymap.set
 keymap('n', 's', '<nop>', {})
 keymap({ 'n', 'v' }, ';', ':', { desc = 'into cmd mode' })
 -- keymap('i', 'jk', '<esc>', { desc = 'Esc', noremap = true, silent = true })
-keymap('n', 'S', ':RifySave<cr>', { desc = 'save file', noremap = true, silent = true })
+keymap('n', 'S', ':FlxSave<cr>', { desc = 'save file', noremap = true, silent = true })
 keymap('n', 'Q', ':q!<cr>', { desc = 'confrim exit', noremap = true, silent = true })
 -- keymap('n', 'j', '<Plug>(accelerated_jk_gj)', { noremap = true })
 -- keymap('n', 'k', '<Plug>(accelerated_jk_gk)', { noremap = true })
@@ -24,7 +24,7 @@ keymap('v', '<c-s>', ':s/\\v//gc<left><left><left><left>', { desc = 'global repa
 -- 取消搜索高亮
 keymap('n', '<leader>nh', ':nohlsearch<cr>', { desc = 'unhighlight', noremap = true, silent = true })
 -- space 行首行尾跳转
-keymap('n', '<space>', ':RifyJump<cr>', { desc = 'jump line start to end', noremap = true, silent = true })
+keymap('n', '<space>', ':FlxJump<cr>', { desc = 'jump line start to end', noremap = true, silent = true })
 keymap('n', '0', '%', { noremap = true })
 keymap('v', '0', '%', { noremap = true })
 
