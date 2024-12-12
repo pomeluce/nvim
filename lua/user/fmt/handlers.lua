@@ -1,7 +1,9 @@
+local util = require('formatter.util')
+
 local function prettier(parser)
   local common_args = {
     '--stdin-filepath',
-    vim.fn.shellescape(vim.api.nvim_buf_get_name(0), true),
+    util.escape_path(util.get_current_buffer_file_path()),
     '--config',
     vim.fn.expand('~/.config/nvim/.prettierrc.json'),
   }
@@ -27,6 +29,8 @@ require('formatter').setup {
         return {
           exe = 'stylua',
           args = {
+            '--stdin-filepath',
+            util.escape_path(util.get_current_buffer_file_path()),
             '--config-path',
             vim.fn.expand('~/.config/nvim/.stylua.toml'),
             '--',
@@ -62,6 +66,8 @@ require('formatter').setup {
           exe = 'taplo',
           args = {
             'fmt',
+            '--stdin-filepath',
+            util.escape_path(util.get_current_buffer_file_path()),
             '-',
             '--config',
             vim.fn.expand('~/.config/nvim/.taplo.toml'),

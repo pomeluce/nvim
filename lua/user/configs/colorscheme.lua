@@ -5,10 +5,8 @@ function M.config()
 end
 
 function M.setup()
-  -- 配置主题
   return {
     transparent_background = true,
-    -- devicons = true,
     filter = 'machine',
     inc_search = 'background',
     background_clear = {
@@ -18,6 +16,12 @@ function M.setup()
       'toggleterm',
       'which-key',
     },
+    override = function()
+      return {
+        -- unused variable link to comment color
+        DiagnosticUnnecessary = { link = 'Comment' },
+      }
+    end,
   }
 end
 
