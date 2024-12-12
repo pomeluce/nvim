@@ -1,8 +1,10 @@
-local colorscheme = require('user.configs.colorscheme')
-
 return {
   {
-    'cpea2506/one_monokai.nvim',
-    opts = colorscheme.setup(),
+    'loctvl842/monokai-pro.nvim',
+    config = function()
+      local monokai = require('monokai-pro')
+      monokai.setup(require('user.configs.colorscheme').setup())
+      monokai.load()
+    end,
   },
 }

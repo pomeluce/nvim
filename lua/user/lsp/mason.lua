@@ -34,7 +34,7 @@ local dap_servers = { 'js' }
 -- mason 设置
 local settings = {
   ui = {
-    border = 'rounded',
+    -- border = 'rounded',
     -- 设置安装图标
     icons = {
       package_installed = '✓',

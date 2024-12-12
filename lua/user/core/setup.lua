@@ -8,9 +8,9 @@ vim.opt.rtp:prepend(lazypath)
 
 local opts = {
   spec = { { import = 'user.plugins' } },
-  install = { colorscheme = { 'one_monokai' } },
+  install = { colorscheme = { 'monokai-pro' } },
   ui = {
-    border = 'rounded',
+    -- border = 'rounded',
     icons = {
       ft = '',
       lazy = '󰂠 ',
