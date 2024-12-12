@@ -16,7 +16,6 @@ function M.parser_bootstrap()
   local util = require('user.core.funcutil')
   util.hl {
     ['@comment'] = { fg = '#868e96', italic = true },
-    -- ['@variable'] = { fg = '#a891e0' },
   }
   util.hl {
     Todo = { fg = '#ffd8a8', bg = '#f76707', bold = true },
@@ -24,10 +23,10 @@ function M.parser_bootstrap()
     Note = { fg = '#fcc2d7', bg = '#f06595', bold = true },
     NoteText = { fg = '#ff6b6b', bg = 'NONE', bold = true },
   }
-  command([[call matchadd('Todo', 'TODO:\{0,1\}')]])
-  command([[call matchadd('TodoText', 'TODO:\{0,1\}\zs.*')]])
-  command([[call matchadd('Note', 'NOTE:\{0,1\}')]])
-  command([[call matchadd('NoteText', 'NOTE:\{0,1\}\zs.*')]])
+  command([[call matchadd('Todo', '\cTODO:\{0,1\}')]])
+  command([[call matchadd('TodoText', '\cTODO:\{0,1\}\zs.*')]])
+  command([[call matchadd('Note', '\cNOTE:\{0,1\}')]])
+  command([[call matchadd('NoteText', '\cNOTE:\{0,1\}\zs.*')]])
 end
 
 function M.setup()
