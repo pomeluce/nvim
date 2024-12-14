@@ -71,9 +71,9 @@ M.space = setmetatable({ provider = ' ' }, {
 
 M.file_icon = {
   init = function(self)
-    local filename = self.filename
+    local filename = vim.fn.fnamemodify(self.filename, ':t')
     local extension = vim.fn.fnamemodify(filename, ':e')
-    self.icon, self.icon_color = require('nvim-web-devicons').get_icon_color(filename, extension, { default = true })
+    self.icon, self.icon_color = require('nvim-web-devicons').get_icon_color(filename, extension, { default = true, strict = true })
   end,
   provider = function(self)
     return self.icon and (' ' .. self.icon .. ' ')
