@@ -10,7 +10,6 @@ local opts = {
   spec = { { import = 'user.plugins' } },
   install = { colorscheme = { 'monokai-pro' } },
   ui = {
-    -- border = 'rounded',
     icons = {
       ft = '',
       lazy = '󰂠 ',
