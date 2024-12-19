@@ -1,6 +1,4 @@
 local cfg = require('user.configs.cmp')
--- local copilot = require('user.configs.copilot')
-local codeium = require('user.configs.codeium')
 
 return {
   'hrsh7th/nvim-cmp',
@@ -20,12 +18,12 @@ return {
       main = 'copilot',
       cmd = 'Copilot',
       event = 'InsertEnter',
-      -- opts = copilot.setup,
+      opts = require('user.configs.copilot').setup(),
     },
     --- codeium 智能提示
     {
       'jcdickinson/codeium.nvim',
-      opts = codeium.setup(),
+      opts = require('user.configs.codeium').setup(),
     },
     {
       'saadparwaiz1/cmp_luasnip',
@@ -46,7 +44,7 @@ return {
     local cmp = require('cmp')
     cmp.setup(cfg.setup(cmp, require('cmp.types')))
     cfg.cmp_cmdline(cmp)
-    vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = '#6CC644' })
+    vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = '#4CCD99' })
     vim.api.nvim_set_hl(0, 'CmpItemKindCodeium', { fg = '#6CC644' })
   end,
 }
