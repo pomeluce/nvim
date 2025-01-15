@@ -10,6 +10,7 @@ local lsp_servers = {
   'kotlin_language_server',
   'lua_ls',
   'marksman',
+  'nil_ls',
   'rust_analyzer',
   'sqlls',
   'tailwindcss',
