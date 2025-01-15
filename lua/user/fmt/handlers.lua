@@ -45,6 +45,7 @@ require('formatter').setup {
     json = { prettier },
     jsonc = { prettier },
     markdown = { prettier('markdown') },
+    nix = { require('formatter.filetypes.nix').nixfmt },
     rust = {
       -- rules: https://rust-lang.github.io/rustfmt
       function()

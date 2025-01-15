@@ -26,6 +26,7 @@ local dap_servers = { 'js' }
 -- formmater 列表
 --[[ local formmater_servers = {
   'beautysh',
+  'nixfmt', -- custom install
   'prettier',
   'rustfmt', -- should installed rustup
   'shfmt',
