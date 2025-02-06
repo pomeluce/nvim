@@ -10,16 +10,16 @@ return {
     'hrsh7th/cmp-cmdline',
     'onsails/lspkind.nvim',
     -- copilot 智能提示
-    {
-      'zbirenbaum/copilot.lua',
-      dependencies = {
-        { 'zbirenbaum/copilot-cmp', main = 'copilot_cmp', opts = {} },
-      },
-      main = 'copilot',
-      cmd = 'Copilot',
-      event = 'InsertEnter',
-      opts = require('user.configs.copilot').setup(),
-    },
+    -- {
+    --   'zbirenbaum/copilot.lua',
+    --   dependencies = {
+    --     { 'zbirenbaum/copilot-cmp', main = 'copilot_cmp', opts = {} },
+    --   },
+    --   main = 'copilot',
+    --   cmd = 'Copilot',
+    --   event = 'InsertEnter',
+    --   opts = require('user.configs.copilot').setup(),
+    -- },
     --- codeium 智能提示
     {
       'jcdickinson/codeium.nvim',

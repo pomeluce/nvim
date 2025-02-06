@@ -1,4 +1,4 @@
-## flxvim IDE
+## akirvim IDE
 
 <!-- markdown-toc GFM -->
 
@@ -25,7 +25,7 @@ rm -rf ~/.local/share/nvim/
 yay -S python-pynvim the_silver_searcher fd bat ripgrep unzip luarocks
 ```
 
-3. 拉取 flxvim 配置
+3. 拉取 akirvim 配置
 
 ```shell
 cd ~/.config/ && git clone https://github.com/pomeluce/nvim.git

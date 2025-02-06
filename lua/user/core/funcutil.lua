@@ -10,7 +10,7 @@ function M.save()
   vim.cmd('w')
 end
 
-vim.cmd('com! FlxSave lua require("user.core.funcutil").save()')
+vim.cmd('com! AkirSave lua require("user.core.funcutil").save()')
 
 -- 重设tab长度
 function M.switchTab(tab_len)
@@ -64,7 +64,7 @@ function M.fold()
   return funcs[empty <= 2 and empty or -1](empty) .. ' folded ' .. folded .. ' lines '
 end
 
-vim.cmd('com! FlxFold lua require("user.core.funcutil").fold()')
+vim.cmd('com! AkirFold lua require("user.core.funcutil").fold()')
 
 -- space 行首行尾跳转
 function M.jump()
@@ -77,7 +77,7 @@ function M.jump()
   end
 end
 
-vim.cmd('com! FlxJump lua require("user.core.funcutil").jump()')
+vim.cmd('com! AkirJump lua require("user.core.funcutil").jump()')
 
 -- 设置高亮
 function M.hl(hls)

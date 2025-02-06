@@ -23,10 +23,10 @@ local M = {
 
   -- 项目列表
   projects = {
+    '/wsp/akir-shell',
+    '/wsp/akir-zimfw',
     '/wsp/nvim',
-    '/wsp/dzs',
     '/wsp/dotfiles',
-    '/wsp/dotfiles/ags',
     '/wsp/code/web/*',
     '/wsp/code/rust/*',
     '/wsp/code/sql/*',
