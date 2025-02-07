@@ -82,4 +82,10 @@ return {
     event = 'VeryLazy',
     opts = require('user.configs.color-preview').setup(),
   },
+  -- 待办高亮显示
+  {
+    'folke/todo-comments.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = require('user.configs.todo-comments').setup(),
+  },
 }

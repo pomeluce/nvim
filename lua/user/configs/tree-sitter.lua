@@ -17,16 +17,6 @@ function M.parser_bootstrap()
   util.hl {
     ['@comment'] = { fg = '#868e96', italic = true },
   }
-  util.hl {
-    Todo = { fg = '#ffd8a8', bg = '#f76707', bold = true },
-    TodoText = { fg = '#ff922b', bg = 'NONE', bold = true },
-    Note = { fg = '#fcc2d7', bg = '#f06595', bold = true },
-    NoteText = { fg = '#ff6b6b', bg = 'NONE', bold = true },
-  }
-  command([[call matchadd('Todo', '\cTODO:\{0,1\}')]])
-  command([[call matchadd('TodoText', '\cTODO:\{0,1\}\zs.*')]])
-  command([[call matchadd('Note', '\cNOTE:\{0,1\}')]])
-  command([[call matchadd('NoteText', '\cNOTE:\{0,1\}\zs.*')]])
 end
 
 function M.setup()

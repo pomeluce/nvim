@@ -2,7 +2,7 @@ local M = {}
 
 local keymap = vim.keymap.set
 
--- TODO: 基础配置
+--[[ 基础配置 ]]
 -- 基本键位映射
 keymap('n', 's', '<nop>', {})
 keymap({ 'n', 'v' }, ';', ':', { desc = 'into cmd mode' })
@@ -28,7 +28,7 @@ keymap('n', '<space>', ':AkirJump<cr>', { desc = 'jump line start to end', norem
 keymap('n', '0', '%', { noremap = true })
 keymap('v', '0', '%', { noremap = true })
 
--- TODO: 窗口相关设置
+--[[ 窗口相关设置 ]]
 -- 设置水平分屏,并切换到下一个窗口
 keymap('n', 'sv', ':vsp<cr><c-w>w', { desc = 'split horizontal', noremap = true })
 -- 设置垂直分屏,并切换到下一个窗口
@@ -62,7 +62,7 @@ keymap('n', '<leader>c', ':bw<cr>', { desc = 'close current buffer', noremap = t
 keymap({ 'n', 'v', 'i' }, '<m-left>', '<esc>:bp<cr>', { desc = 'toggle front buffer', noremap = true, silent = true })
 keymap({ 'n', 'v', 'i' }, '<m-right>', '<esc>:bn<cr>', { desc = 'toggle later buffer', noremap = true, silent = true })
 
--- TODO: 代码跳转配置
+--[[ 代码跳转配置 ]]
 -- flash 跳转配置
 keymap({ 'n', 'x', 'o' }, 's', function()
   require('flash').jump { search = {
@@ -88,7 +88,7 @@ keymap('n', 'ga', "'.", { desc = 'jump to last edit', noremap = true, silent = t
 -- 行尾添加分号
 keymap('n', 'g;', '$a;<esc>', { desc = 'add semicolon for endline', noremap = true, silent = true })
 
--- TODO: 代码光标移动
+--[[ 代码光标移动 ]]
 -- 插入模式下移动
 keymap('i', '<m-h>', '<left>', { desc = 'insert mode left move', noremap = true })
 keymap('i', '<m-l>', '<right>', { desc = 'insert mode right move', noremap = true })
@@ -105,34 +105,34 @@ keymap('i', '<c-m-K>', '<esc>:m-2<cr>i', { desc = 'move row down', noremap = tru
 keymap('v', '<c-m-K>', ":move '<-2<cr>gv", { desc = 'move row down', noremap = true, silent = true })
 keymap('v', 'K', ":move '<-2<cr>gv", { desc = 'move row down', noremap = true, silent = true })
 
--- TODO: 代码连续缩进
+--[[ 代码连续缩进 ]]
 keymap('v', '<', '<gv', { desc = 'indent left', noremap = true })
 keymap('v', '>', '>gv', { desc = 'indent right', noremap = true })
 keymap('v', '<s-tab>', '<gv', { desc = 'indent left', noremap = true })
 keymap('v', '<tab>', '>gv', { desc = 'indent right', noremap = true })
 
--- TODO: 代码折叠
+--[[ 代码折叠 ]]
 keymap('n', 'zz', "foldlevel('.') > 0 ? 'za' : 'va{zf^'", { desc = 'toggle fold', noremap = true, silent = true, expr = true })
 keymap('v', 'z', 'zf', { desc = 'add fold', noremap = true, silent = true })
 
--- TODO: git 操作
+--[[ git 操作 ]]
 -- 当前行 git 提交历史查看
 keymap('n', 'C', ':lua require("gitsigns").blame_line { full = true }<cr>', { desc = 'check blame line', silent = true, noremap = true })
 -- 切换显示当前行 git 提交历史
 keymap('n', '\\g', ':lua require("gitsigns").toggle_current_line_blame()<cr>', { desc = 'toggle show blame line', silent = true })
 
--- TODO: 文本翻译
+--[[ 文本翻译 ]]
 keymap({ 'n', 'v' }, '<leader>tr', ':TranslateW<CR>', { desc = 'translator text', noremap = true, silent = true })
 
--- TODO: 驼峰转换
+--[[ 驼峰转换 ]]
 keymap('n', 'th', '<cmd>Telescope textcase normal_mode theme=dropdown<CR>', { desc = 'toggle hump', noremap = true, silent = true })
 keymap('v', 'th', '<cmd>Telescope textcase visual_mode theme=dropdown<CR>', { desc = 'toggle hump', noremap = true, silent = true })
 
--- TODO: 浮动终端
+--[[ 浮动终端 ]]
 keymap('n', '<F5>', ':lua require("user.configs.vim-floaterm").runFile()<cr>', { desc = 'run file', noremap = true, silent = true })
 keymap('i', '<F5>', '<esc>:lua require("user.configs.vim-floaterm").runFile()<cr>', { desc = 'run file', noremap = true, silent = true })
 
--- TODO: telescope 配置
+--[[ telescope 配置 ]]
 -- 全局文本搜索(yay -S the_silver_searcher fd bat)
 keymap('n', '<leader>ft', ':Telescope live_grep<cr>', { desc = 'global search text', noremap = true, silent = true })
 -- 文件列表查找
@@ -146,13 +146,13 @@ keymap('n', '<leader>fg', ':Telescope git_status<cr>', { desc = 'search git stat
 -- 查看历史文件
 keymap('n', '<leader>fh', ':Telescope oldfiles<cr>', { desc = 'search history file', noremap = true, silent = true })
 
--- TODO: tree-sitter 语法高亮
+--[[ tree-sitter 语法高亮 ]]
 -- 查看语法高亮
 keymap('n', 'H', ':Inspect<CR>', { desc = 'show sitter info', noremap = true, silent = true })
 -- 刷新语法高亮
 keymap('n', 'R', ':write | edit | TSBufEnable highlight<CR>', { desc = 'reference treesitter', silent = true, noremap = true })
 
--- TODO: nvim-tree
+--[[ nvim-tree ]]
 -- 打开文件树
 keymap(
   'n',
@@ -161,19 +161,22 @@ keymap(
   { desc = 'toggle tree', noremap = true, silent = true, expr = true }
 )
 
--- TODO: dashboard 封面快捷键
+--[[ dashboard 封面快捷键 ]]
 keymap('n', '<leader>es', ':edit $MYVIMRC<cr>', { desc = 'edit vim config', noremap = true, silent = true })
 keymap('n', '<leader>ek', ':edit $HOME/.config/nvim/lua/user/core/keymaps.lua<cr>', { desc = 'edito vim keymap', noremap = true, silent = true })
 
--- TODO: 文档注释
+--[[ 文档注释 ]]
 keymap('n', '<leader>d/', ':lua require("neogen").generate()<cr>', { desc = 'doc comment', noremap = true, silent = true })
 
--- TODO: session 恢复
+--[[ -- session 恢复 ]]
 keymap('n', '<leader>sl', ':NeovimProjectLoadRecent<cr>', { desc = 'load last project session', noremap = true, silent = true })
 keymap('n', '<leader>sp', ':Telescope neovim-project discover theme=dropdown<cr>', { desc = 'select project session', noremap = true, silent = true })
 keymap('n', '<leader>sh', ':Telescope neovim-project history theme=dropdown<cr>', { desc = 'select project session for history', noremap = true, silent = true })
 
--- TODO: Dap 快捷键配置
+--[[ todo 待办标签 ]]
+keymap('n', '<leader>td', ':TodoTelescope theme=dropdown<cr>', { desc = 'todo list', noremap = true, silent = true })
+
+--[[ Dap 快捷键配置 ]]
 keymap('n', '<F2>', function()
   require('telescope').extensions.dap.configurations {}
 end, { desc = 'start breakpoint debug' })
@@ -216,7 +219,7 @@ keymap('n', '<Leader>ds', function()
   widgets.centered_float(widgets.scopes)
 end, { desc = 'float show debug scopes' })
 
--- TODO: lsp 快捷键设置
+--[[ lsp 快捷键设置 ]]
 M.lsp_keymaps = function(buffer)
   -- 重命名
   keymap('n', '<leader>rn', '<cmd>Lspsaga rename ++project<cr>', { desc = 'rename variable', buffer = buffer, noremap = true, silent = true })

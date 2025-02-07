@@ -39,7 +39,7 @@ function M.setup()
         input = {}, -- Used by input()
       },
     },
-    -- NOTE: 如果打开 messages, cmdline 会被自动开启
+    -- TIP: 如果打开 messages, cmdline 会被自动开启
     messages = {
       enabled = true,
       view = 'mini', -- default view for messages
