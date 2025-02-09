@@ -55,6 +55,11 @@ function M.setup()
         exec = '<tab>',
       },
     },
+    rename = {
+      keymap = {
+        quit = 'q',
+      },
+    },
   }
 end
 
