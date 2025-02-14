@@ -9,9 +9,13 @@ snippet rtemp "react function component template"
 snippet vtemp "vue jsx/tsx component template"
   export default defineComponent({
     setup() {
-      return {};
+      return () => <main>${1}</main>
     },
-    render() {
-      return <main>${1}</main>;
-    }
-  })
+  });
+
+snippet vtemp-macros "vue jsx/tsx component template for vue macros"
+	const ${1}: SetupFC = () => {
+		return <main>${2}</main>;
+	};
+
+	export default ${1};
