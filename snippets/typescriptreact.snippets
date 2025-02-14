@@ -12,10 +12,3 @@ snippet vtemp "vue jsx/tsx component template"
       return () => <main>${1}</main>
     },
   });
-
-snippet vtemp-macros "vue jsx/tsx component template for vue macros"
-	const ${1}: SetupFC = () => {
-		defineRender(<main>${2}</main>);
-	};
-
-	export default ${1};
