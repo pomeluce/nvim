@@ -1,21 +1,5 @@
 return {
   cmd = { 'tailwindcss-language-server', '--stdio' },
-  root_dir = require('lspconfig.util').root_pattern(
-    'tailwind.config.js',
-    'tailwind.config.cjs',
-    'tailwind.config.mjs',
-    'tailwind.config.ts',
-    'postcss.config.js',
-    'postcss.config.cjs',
-    'postcss.config.mjs',
-    'postcss.config.ts',
-    'package.json',
-    'node_modules',
-    '.git'
-  ),
-  init_options = {
-    userLanguages = nil,
-  },
   settings = {
     -- config params: https://github.com/tailwindlabs/tailwindcss-intellisense#extension-settings
     tailwindCSS = {
@@ -23,6 +7,7 @@ return {
       includeLanguages = {
         eelixir = 'html-eex',
         eruby = 'erb',
+        htmlangular = 'html',
         templ = 'html',
       },
       lint = {
