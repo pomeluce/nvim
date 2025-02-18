@@ -20,6 +20,9 @@ return {
         recommendedVariantOrder = 'warning',
       },
       validate = true,
+      experimental = {
+        configFile = 'src/styles/tailwind.css',
+      },
     },
   },
 }
