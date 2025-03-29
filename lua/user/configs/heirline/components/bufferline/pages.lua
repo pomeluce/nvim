@@ -7,17 +7,17 @@ return {
     condition = function()
       return #vim.api.nvim_list_tabpages() >= 2
     end,
-    {
-      provider = '  ',
-      hl = { bg = colors.grey },
-      on_click = {
-        callback = function()
-          vim.cmd('tabnew')
-        end,
-        name = 'heirline_tabline_add_tab_callback',
-      },
-    },
-    { provider = ' TABS ', hl = { bg = colors.white, fg = colors.black2 } },
+    -- {
+    --   provider = '  ',
+    --   hl = { bg = colors.grey },
+    --   on_click = {
+    --     callback = function()
+    --       vim.cmd('tabnew')
+    --     end,
+    --     name = 'heirline_tabline_add_tab_callback',
+    --   },
+    -- },
+    -- { provider = ' TABS ', hl = { bg = colors.white, fg = colors.black2 } },
     require('heirline.utils').make_tablist {
       provider = function(self)
         return '%' .. self.tabnr .. 'T ' .. self.tabnr .. ' %T'
@@ -42,9 +42,9 @@ return {
         },
       },
     },
-    {
-      provider = '%999X  %X',
-      hl = { bg = colors.red, fg = colors.black2 },
-    },
+    -- {
+    --   provider = '%999X  %X',
+    --   hl = { bg = colors.red, fg = colors.black2 },
+    -- },
   },
 }

@@ -9,7 +9,7 @@ local lsp_servers = {
   'jsonls',
   'kotlin_language_server',
   'lua_ls',
-  'marksman',
+  -- 'marksman',
   'nil_ls',
   'rust_analyzer',
   'sqlls',

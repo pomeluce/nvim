@@ -6,10 +6,11 @@ end
 
 function M.setup()
   return {
-    transparent_background = true,
+    -- transparent_background = true,
     filter = 'machine',
     inc_search = 'background',
     background_clear = {
+      'bufferline',
       'float_win',
       'nvim-tree',
       'telescope',

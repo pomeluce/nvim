@@ -23,14 +23,12 @@ return {
   },
   -- 面包屑
   {
-    'utilyre/barbecue.nvim',
-    name = 'barbecue',
-    version = '*',
-    event = 'VeryLazy',
+    'Bekaboo/dropbar.nvim',
     dependencies = {
-      'SmiteshP/nvim-navic',
+      'nvim-telescope/telescope-fzf-native.nvim',
+      build = 'make',
     },
-    opts = {},
+    opts = require('user.configs.dropbar').setup(),
   },
   -- git 状态管理
   {
