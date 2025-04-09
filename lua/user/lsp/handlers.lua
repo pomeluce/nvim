@@ -1,25 +1,21 @@
+local icons = require('user.icons')
+
 local M = {}
 
-local lsp_handler_config = {
-  border = 'rounded',
-  style = 'minimal',
-}
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, lsp_handler_config)
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, lsp_handler_config)
-
 M.sign_define = function()
-  -- 设置高亮标签
-  local signs = {
-    { name = 'DiagnosticSignError', text = '' },
-    { name = 'DiagnosticSignWarn', text = '' },
-    { name = 'DiagnosticSignHint', text = '' },
-    { name = 'DiagnosticSignInfo', text = '' },
-  }
+  local diagnostic_icons = icons.diagnostic_icons
 
-  -- 设置标签
-  for _, sign in ipairs(signs) do
-    vim.fn.sign_define(sign.name, { text = sign.text, texthl = sign.name, numhl = '' })
-  end
+  -- 设置高亮标签
+  vim.diagnostic.config {
+    signs = {
+      text = {
+        [vim.diagnostic.severity.ERROR] = diagnostic_icons.error,
+        [vim.diagnostic.severity.WARN] = diagnostic_icons.warn,
+        [vim.diagnostic.severity.INFO] = diagnostic_icons.info,
+        [vim.diagnostic.severity.HINT] = diagnostic_icons.hint,
+      },
+    },
+  }
 end
 
 M.setup = function()

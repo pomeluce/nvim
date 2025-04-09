@@ -4,7 +4,7 @@ local dap_breakpoint_color = {
     fg = '#f03e3e',
     bg = '#31353f',
   },
-  logpoing = {
+  logpoint = {
     ctermbg = 0,
     fg = '#61afef',
     bg = '#31353f',
@@ -17,7 +17,7 @@ local dap_breakpoint_color = {
 }
 
 vim.api.nvim_set_hl(0, 'DapBreakpoint', dap_breakpoint_color.breakpoint)
-vim.api.nvim_set_hl(0, 'DapLogPoint', dap_breakpoint_color.logpoing)
+vim.api.nvim_set_hl(0, 'DapLogPoint', dap_breakpoint_color.logpoint)
 vim.api.nvim_set_hl(0, 'DapStopped', dap_breakpoint_color.stopped)
 
 local dap_breakpoint = {
@@ -29,7 +29,7 @@ local dap_breakpoint = {
   },
   rejected = {
     text = '󰃤',
-    texthl = 'DapBreakpint',
+    texthl = 'DapBreakpoint',
     linehl = 'DapBreakpoint',
     numhl = 'DapBreakpoint',
   },
