@@ -1,21 +1,4 @@
 return {
-  -- 图标
-  'nvim-tree/nvim-web-devicons',
-  -- buffer 标签
-  -- {
-  --   'akinsho/bufferline.nvim',
-  --   event = 'BufWinEnter',
-  --   opts = require('user.configs.bufferline').setup(),
-  -- },
-  -- 状态栏插件
-  {
-    'rebelot/heirline.nvim',
-    event = 'BufWinEnter',
-    config = function()
-      local heirline = require('user.configs.heirline')
-      require('heirline').setup(heirline.setup())
-    end,
-  },
   {
     'shellRaining/hlchunk.nvim',
     event = { 'UIEnter' },
@@ -24,6 +7,7 @@ return {
   -- 面包屑
   {
     'Bekaboo/dropbar.nvim',
+    event = 'User FilePost',
     dependencies = {
       'nvim-telescope/telescope-fzf-native.nvim',
       build = 'make',
@@ -33,21 +17,15 @@ return {
   -- git 状态管理
   {
     'lewis6991/gitsigns.nvim',
-    event = 'VeryLazy',
+    event = 'User FilePost',
     opts = require('user.configs.gitsigns').setup(),
-  },
-  -- 启动面板
-  {
-    'glepnir/dashboard-nvim',
-    opts = require('user.configs.dashboard').setup(),
   },
   -- 文件树
   {
     'antosha417/nvim-lsp-file-operations',
-    event = 'VeryLazy',
     dependencies = {
       'nvim-tree/nvim-tree.lua',
-      cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle', 'NvimTreeOpen' },
+      cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle', 'NvimTreeOpen', 'NvimTreeFocus' },
       opts = require('user.configs.nvim-tree').setup(),
     },
     config = function()

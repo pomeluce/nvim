@@ -6,6 +6,8 @@ end
 
 function M.setup()
   return {
+    fast_wrap = {},
+    disable_filetype = { 'TelescopePrompt', 'vim' },
     check_ts = true,
     ts_config = {
       -- 不在该节点添加 autopairs

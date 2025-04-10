@@ -5,6 +5,8 @@ function M.config()
 end
 
 function M.setup()
+  dofile(vim.g.base46_cache .. 'whichkey')
+
   return {
     win = {
       border = 'rounded', -- none, single, double, shadow

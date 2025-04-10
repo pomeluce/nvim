@@ -1,8 +1,6 @@
 local telescope = require('user.configs.telescope')
 local comment = require('user.configs.comment')
--- local project = require('user.configs.project')
 local session = require('user.configs.session')
-local autopairs = require('user.configs.autopairs')
 local flash = require('user.configs.flash')
 local picker = require('user.configs.window-picker')
 local whickkey = require('user.configs.whichkey')
@@ -17,19 +15,13 @@ return {
   -- 全局文件搜索
   {
     'nvim-telescope/telescope.nvim',
-    event = 'VeryLazy',
-    branch = '0.1.x',
+    lazy = false,
+    cmd = 'Telescope',
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope-media-files.nvim',
       'nvim-telescope/telescope-ui-select.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-      -- 项目管理
-      -- {
-      --   'ahmedkhalf/project.nvim',
-      --   main = 'project_nvim',
-      --   opts = project.setup(),
-      -- },
       -- camelcase 命名转换
       { 'johmsalas/text-case.nvim', opts = {} },
     },
@@ -101,12 +93,6 @@ return {
     'tpope/vim-surround',
     event = 'VeryLazy',
   },
-  -- auot-pairs
-  {
-    'windwp/nvim-autopairs',
-    event = 'InsertEnter',
-    opts = autopairs.setup(),
-  },
   -- 快速跳转
   {
     'folke/flash.nvim',
@@ -118,7 +104,6 @@ return {
     'folke/which-key.nvim',
     keys = { '<leader>', '"', "'", '`', 'c', 'v', 'g' },
     cmd = 'WhichKey',
-    event = 'VeryLazy',
     opts = whickkey.setup(),
   },
   -- window picker 快速切换窗口

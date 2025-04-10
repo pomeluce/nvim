@@ -7,8 +7,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local opts = {
-  spec = { { import = 'user.plugins' } },
-  install = { colorscheme = { 'monokai-pro' } },
+  defaults = { lazy = true },
+  install = { colorscheme = { 'nvchad' } },
   ui = {
     icons = {
       ft = '',
@@ -53,4 +53,4 @@ local opts = {
   },
 }
 
-require('lazy').setup(opts)
+require('lazy').setup({ require('user.nvchad'), { import = 'user.plugins' } }, opts)

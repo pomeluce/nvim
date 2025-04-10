@@ -1,44 +1,5 @@
 local M = {}
 
--- 有时候进入到依赖文件内，此时想在依赖文件所在目录查看文件 nvim-tree 并没有一个很好的方法，所以写了这个func
-local inner_cwd = ''
-local outer_cwd = ''
-function M.magicCd()
-  local api = require('nvim-tree.api')
-  local core = require('nvim-tree.core')
-
-  local file_path = vim.fn.expand('#:p:h')
-  local tree_cwd = core.get_cwd()
-
-  if inner_cwd == '' then
-    inner_cwd = tree_cwd
-  end
-
-  -- 树在内部目录 且 当前文件为外部文件 则切换到外部目录
-  if tree_cwd == inner_cwd and string.find(file_path, '^' .. inner_cwd) == nil then
-    inner_cwd = tree_cwd
-    outer_cwd = file_path
-    return api.tree.change_root(file_path)
-  end
-
-  -- 树在内部目录 且 当前文件为内部文件 则切换到外部目录（如果有的话）
-  if tree_cwd == inner_cwd and string.find(file_path, '^' .. inner_cwd) ~= nil then
-    if outer_cwd ~= '' then
-      return api.tree.change_root(outer_cwd)
-    end
-  end
-
-  -- 树在外部目录 且 当前文件为外部文件 则切换到内部目录
-  if tree_cwd ~= inner_cwd and string.find(file_path, '^' .. outer_cwd) ~= nil then
-    return api.tree.change_root(inner_cwd)
-  end
-
-  -- 树在外部目录 且 当前文件为内部文件 则切换到内部目录
-  if tree_cwd ~= inner_cwd and string.find(file_path, '^' .. inner_cwd) ~= nil then
-    return api.tree.change_root(inner_cwd)
-  end
-end
-
 -- 快捷键配置
 function M.on_attach(bufnr)
   local api = require('nvim-tree.api')
@@ -123,8 +84,6 @@ function M.on_attach(bufnr)
   keymap('n', 'N', api.node.navigate.sibling.prev, opts('Previous Sibling'))
   -- 帮助手册
   keymap('n', '?', api.tree.toggle_help, opts('Help'))
-  -- 快速切换
-  keymap('n', 'C', M.magicCd, opts('MagicCd'))
 end
 
 function M.config()
@@ -135,6 +94,8 @@ function M.config()
 end
 
 function M.setup()
+  dofile(vim.g.base46_cache .. 'nvimtree')
+
   return {
     sort_by = 'case_sensitive',
     -- 在多个窗口下打开 buffer 时, 默认使用最近窗口
@@ -145,19 +106,21 @@ function M.setup()
     },
     on_attach = M.on_attach,
     view = {
+      width = 30,
+      preserve_window_proportions = true,
       -- 浮动设置
-      float = {
-        enable = true,
-        open_win_config = function()
-          local columns = vim.o.columns
-          local lines = vim.o.lines
-          local width = math.max(math.floor(lines * 0.36), 30)
-          local height = math.max(math.floor(lines * 0.6), 20)
-          local left = math.ceil((columns - width) * 1)
-          local top = math.ceil((lines - height) * 0.1 - 2)
-          return { relative = 'editor', border = 'rounded', width = width, height = height, row = top, col = left }
-        end,
-      },
+      -- float = {
+      --   enable = true,
+      --   open_win_config = function()
+      --     local columns = vim.o.columns
+      --     local lines = vim.o.lines
+      --     local width = math.max(math.floor(lines * 0.36), 30)
+      --     local height = math.max(math.floor(lines * 0.6), 20)
+      --     local left = math.ceil((columns - width) * 1)
+      --     local top = math.ceil((lines - height) * 0.1 - 2)
+      --     return { relative = 'editor', border = 'rounded', width = width, height = height, row = top, col = left }
+      --   end,
+      -- },
     },
     update_focused_file = {
       enable = true,
@@ -165,12 +128,22 @@ function M.setup()
       ignore_list = {},
     },
     renderer = {
+      root_folder_label = false,
+      highlight_git = true,
       group_empty = true,
       indent_markers = { enable = true },
       icons = {
         git_placement = 'after',
         webdev_colors = true,
         glyphs = {
+          default = '󰈚',
+          folder = {
+            default = '',
+            empty = '',
+            empty_open = '',
+            open = '',
+            symlink = '',
+          },
           git = {
             unstaged = '~',
             staged = '✓',
@@ -190,6 +163,8 @@ function M.setup()
       debounce_delay = 50,
       icons = { hint = '', info = '', warning = '', error = '' },
     },
+    disable_netrw = true,
+    hijack_cursor = true,
     sync_root_with_cwd = true,
     respect_buf_cwd = true,
   }

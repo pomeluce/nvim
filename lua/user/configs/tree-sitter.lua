@@ -20,6 +20,11 @@ function M.parser_bootstrap()
 end
 
 function M.setup()
+  pcall(function()
+    dofile(vim.g.base46_cache .. 'syntax')
+    dofile(vim.g.base46_cache .. 'treesitter')
+  end)
+
   return {
     -- 安装常用解析器
     ensure_installed = {

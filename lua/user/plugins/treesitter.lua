@@ -3,7 +3,7 @@ local treesitter = require('user.configs.tree-sitter')
 -- 语法高亮
 return {
   'nvim-treesitter/nvim-treesitter',
-  event = 'VeryLazy',
+  event = { 'BufReadPost', 'BufNewFile' },
   dependencies = {
     'nvim-treesitter/nvim-treesitter-textobjects',
     'nvim-treesitter/nvim-treesitter-context',

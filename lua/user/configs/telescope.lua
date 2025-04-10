@@ -5,9 +5,11 @@ function M.config()
 end
 
 function M.setup(actions)
+  dofile(vim.g.base46_cache .. 'telescope')
+
   return {
     defaults = {
-      prompt_prefix = '🔍 ',
+      prompt_prefix = ' ',
       selection_caret = ' ',
       path_display = { 'smart' },
       vimgrep_arguments = vim.list_extend(

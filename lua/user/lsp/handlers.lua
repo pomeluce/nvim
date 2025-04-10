@@ -1,26 +1,23 @@
-local icons = require('user.icons')
-
 local M = {}
 
 M.sign_define = function()
-  local diagnostic_icons = icons.diagnostic_icons
+  local x = vim.diagnostic.severity
 
-  -- 设置高亮标签
   vim.diagnostic.config {
-    signs = {
-      text = {
-        [vim.diagnostic.severity.ERROR] = diagnostic_icons.error,
-        [vim.diagnostic.severity.WARN] = diagnostic_icons.warn,
-        [vim.diagnostic.severity.INFO] = diagnostic_icons.info,
-        [vim.diagnostic.severity.HINT] = diagnostic_icons.hint,
-      },
-    },
+    virtual_text = { prefix = '' },
+    signs = { text = { [x.ERROR] = '󰅙', [x.WARN] = '', [x.INFO] = '󰋼', [x.HINT] = '󰌵' } },
+    underline = true,
+    float = { border = 'single' },
   }
-end
 
-M.setup = function()
-  -- lspinfo 添加边框
-  require('lspconfig.ui.windows').default_options.border = 'rounded'
+  -- Default border style
+  local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+  ---@diagnostic disable-next-line: duplicate-set-field
+  function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = 'rounded'
+    return orig_util_open_floating_preview(contents, syntax, opts, ...)
+  end
 end
 
 M.lsp_highlight_document = function(client)
@@ -47,19 +44,52 @@ M.lsp_highlight_document = function(client)
   end
 end
 
+-- disable semanticTokens
+M.on_init = function(client, _)
+  if client.supports_method('textDocument/semanticTokens') then
+    client.server_capabilities.semanticTokensProvider = nil
+  end
+end
 M.on_attach = function(client, bufnr)
   require('user.core.keymaps').lsp_keymaps(bufnr)
   M.lsp_highlight_document(client)
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+M.capabilities = vim.lsp.protocol.make_client_capabilities()
+M.capabilities.textDocument.completion.completionItem = {
+  documentationFormat = { 'markdown', 'plaintext' },
+  snippetSupport = true,
+  preselectSupport = true,
+  insertReplaceSupport = true,
+  labelDetailsSupport = true,
+  deprecatedSupport = true,
+  commitCharactersSupport = true,
+  tagSupport = { valueSet = { 1 } },
+  resolveSupport = {
+    properties = {
+      'documentation',
+      'detail',
+      'additionalTextEdits',
+    },
+  },
+}
 
-local status_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
-if not status_ok then
-  vim.notify('cmp_nvim_lsp 未找到')
-  return
+M.setup = function()
+  dofile(vim.g.base46_cache .. 'lsp')
+  local mason = require('user.lsp.mason')
+
+  -- lsp 配置
+  for _, server in pairs(mason.lsp_servers) do
+    local opt = {
+      on_attach = M.on_attach,
+      capabilities = M.capabilities,
+      on_init = M.on_init,
+    }
+    local result, config = pcall(require, 'user.lsp.config.' .. server)
+    if result then
+      require('lspconfig')[server].setup(vim.tbl_deep_extend('keep', opt, config))
+    end
+  end
 end
-
-M.capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
 return M

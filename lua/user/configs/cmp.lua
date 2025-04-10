@@ -5,10 +5,7 @@ local source = function(name, types)
     name = name,
     entry_filter = function(entry, _)
       local kind = types.lsp.CompletionItemKind[entry:get_kind()]
-      if kind == 'Text' then
-        return false
-      end
-      return true
+      return kind ~= 'Text'
     end,
   }
 end
@@ -17,45 +14,35 @@ function M.config()
   -- do nothing
 end
 
-function M.cmp_cmdline(cmp)
-  -- 根据文件类型设置补全来源
-  cmp.setup.filetype('gitcommit', {
-    sources = cmp.config.sources {
-      { name = 'buffer' },
-    },
-  })
-  -- 命令模式下输入 `/`, `?` 启用补全
-  cmp.setup.cmdline({ '/', '?' }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-      { name = 'buffer' },
-    },
-  })
-  -- 命令模式下输入 `:` 启用补全
-  cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-      { name = 'path' },
-    }, {
-      { name = 'cmdline' },
-    }),
+function M.luasnip()
+  -- 预定义代码片段
+  require('luasnip.loaders.from_vscode').lazy_load { exclude = vim.g.vscode_snippets_exclude or {} }
+  require('luasnip.loaders.from_vscode').lazy_load { paths = vim.g.vscode_snippets_path or '' }
+
+  require('luasnip.loaders.from_snipmate').load()
+  require('luasnip.loaders.from_snipmate').lazy_load { paths = vim.g.snipmate_snippets_path or { './snippets' } }
+
+  vim.api.nvim_create_autocmd('InsertLeave', {
+    callback = function()
+      if require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()] and not require('luasnip').session.jump_active then
+        require('luasnip').unlink_current()
+      end
+    end,
   })
 end
 
 function M.setup(cmp, types)
-  local lspkind = require('lspkind')
+  dofile(vim.g.base46_cache .. 'cmp')
   local luasnip = require('luasnip')
-  return {
+
+  local options = {
+    completion = { completeopt = 'menu,menuone' },
+
     -- 设置代码片段引擎，用于根据代码片段补全
     snippet = {
       expand = function(args)
         require('luasnip').lsp_expand(args.body)
       end,
-    },
-    -- 显示边框
-    window = {
-      completion = cmp.config.window.bordered(),
-      documentation = cmp.config.window.bordered(),
     },
     -- 键盘映射
     mapping = cmp.mapping.preset.insert {
@@ -102,53 +89,28 @@ function M.setup(cmp, types)
       source('buffer', types),
       { name = 'copilot' },
       { name = 'codeium' },
-      -- { name = 'nvim_lua' },
-    },
-    -- 设置补全显示的格式
-    formatting = {
-      format = lspkind.cmp_format {
-        -- 显示的最大字符
-        maxwidth = 50,
-        -- 超过最大字符后显示的字符
-        ellipsis_char = '...',
-        -- 显示的图标
-        symbol_map = {
-          Text = '󰉿',
-          Method = '󰆧',
-          Function = '󰊕',
-          Constructor = '',
-          Field = '󰜢',
-          Variable = '󰀫',
-          Class = '󰠱',
-          Interface = '',
-          Module = '󰕳',
-          Property = '󰓻',
-          Unit = '󰚯',
-          Value = '󰎠',
-          Enum = '',
-          Keyword = '󰌋',
-          Snippet = '',
-          Color = '󰏘',
-          File = '󰈙',
-          Reference = '󰈇',
-          Folder = '󰉋',
-          EnumMember = '',
-          Constant = '󰏿',
-          Struct = '󰙅',
-          Event = '',
-          Operator = '󰆕',
-          TypeParameter = '󰊄',
-          Copilot = '',
-          Codeium = '',
-        },
-        -- 设置补全项的前缀
-        before = function(entry, vim_item)
-          vim_item.menu = '[' .. string.upper(entry.source.name) .. ']'
-          return vim_item
-        end,
-      },
+      { name = 'nvim_lua' },
     },
   }
+
+  return vim.tbl_deep_extend('force', options, require('nvchad.cmp'))
+end
+
+function M.cmp_cmdline(cmp)
+  -- 根据文件类型设置补全来源
+  cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources { { name = 'buffer' } },
+  })
+  -- 命令模式下输入 `/`, `?` 启用补全
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = { { name = 'buffer' } },
+  })
+  -- 命令模式下输入 `:` 启用补全
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({ { name = 'path' } }, { { name = 'cmdline' } }),
+  })
 end
 
 return M

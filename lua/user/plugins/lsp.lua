@@ -1,20 +1,28 @@
 return {
-  'neovim/nvim-lspconfig',
-  event = 'BufRead',
-  dependencies = {
+  {
     'williamboman/mason.nvim',
-    'williamboman/mason-lspconfig.nvim',
-    'jay-babu/mason-nvim-dap.nvim',
-    { 'folke/neoconf.nvim', opts = {} },
-    { 'folke/neodev.nvim', opts = {} },
-    -- { 'j-hui/fidget.nvim', tag = 'legacy', event = 'LspAttach', opts = {} },
-    { 'nvimdev/lspsaga.nvim', opts = require('user.configs.lspsaga').setup() },
+    cmd = { 'Mason', 'MasonInstall', 'MasonUpdate' },
+    dependencies = {
+      'williamboman/mason-lspconfig.nvim',
+      'jay-babu/mason-nvim-dap.nvim',
+    },
+    config = function()
+      require('user.lsp.mason').setup()
+    end,
   },
-  init = require('user.lsp.handlers').sign_define,
-  config = function()
-    -- 加载 mason
-    require('user.lsp.mason')
-    -- 加载 lsp handlers
-    require('user.lsp.handlers').setup()
-  end,
+
+  {
+    'neovim/nvim-lspconfig',
+    event = 'User FilePost',
+    dependencies = {
+      { 'folke/neoconf.nvim', opts = {} },
+      { 'folke/neodev.nvim', opts = {} },
+      { 'nvimdev/lspsaga.nvim', opts = require('user.configs.lspsaga').setup() },
+    },
+    init = require('user.lsp.handlers').sign_define,
+    config = function()
+      -- 加载 lsp handlers
+      require('user.lsp.handlers').setup()
+    end,
+  },
 }
