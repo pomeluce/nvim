@@ -9,7 +9,7 @@ function M.setup()
     menu = {
       preview = false,
       win_configs = {
-        border = 'rounded',
+        border = require('akirc').ui.borderStyle,
       },
       scrollbar = {
         enable = true,

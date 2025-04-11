@@ -9,10 +9,15 @@ M.base46 = {
   theme = 'onedark',
   transparency = true,
 
-  -- hl_override = {
-  --     Comment = { italic = true },
-  --     ["@comment"] = { italic = true },
-  -- },
+  hl_override = {
+    CmpBorder = { link = 'FloatBorder' },
+    CmpDocBorder = { link = 'FloatBorder' },
+    TelescopeBorder = { link = 'FloatBorder' },
+    TelescopePromptBorder = { link = 'FloatBorder' },
+    WinSeparator = require('akirc').hl.winSeparator,
+    NvimTreeWinSeparator = require('akirc').hl.winSeparator,
+    ['@comment'] = { fg = '#868e96', italic = true },
+  },
 }
 
 M.nvdash = {
@@ -34,7 +39,7 @@ M.nvdash = {
     { txt = ' Recently Opend Project', keys = 'p', cmd = 'Telescope neovim-project history theme=dropdown' },
     { txt = ' Recently Opend Files', keys = 'h', cmd = 'Telescope oldfiles' },
     { txt = ' Find Files', keys = 'f', cmd = 'Telescope find_files' },
-    { txt = ' Keymap Setting', keys = 'm', cmd = 'edit $HOME/.config/nvim/lua/user/core/keymaps.lua' },
+    { txt = ' Keymap Setting', keys = 'm', cmd = 'NvCheatsheet' },
 
     { txt = ' ', hl = 'NvDashFooter', no_gap = true, rep = true },
 
@@ -52,10 +57,6 @@ M.nvdash = {
   },
 }
 
--- M.ui = {
---  tabufline = {
---     lazyload = false
--- }
--- }
+M.ui = {}
 
 return M

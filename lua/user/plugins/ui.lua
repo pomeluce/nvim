@@ -1,8 +1,17 @@
 return {
   {
-    'shellRaining/hlchunk.nvim',
-    event = { 'UIEnter' },
-    opts = require('user.configs.hlchunk').setup(),
+    'lukas-reineke/indent-blankline.nvim',
+    event = 'User FilePost',
+    opts = require('user.configs.blankline').setup(),
+    config = function(_, opts)
+      dofile(vim.g.base46_cache .. 'blankline')
+
+      local hooks = require('ibl.hooks')
+      hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+      require('ibl').setup(opts)
+
+      dofile(vim.g.base46_cache .. 'blankline')
+    end,
   },
   -- 面包屑
   {
@@ -22,12 +31,14 @@ return {
   },
   -- 文件树
   {
+    'nvim-tree/nvim-tree.lua',
+    cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle', 'NvimTreeOpen', 'NvimTreeFocus' },
+    opts = require('user.configs.nvim-tree').setup(),
+  },
+  {
     'antosha417/nvim-lsp-file-operations',
-    dependencies = {
-      'nvim-tree/nvim-tree.lua',
-      cmd = { 'NvimTreeToggle', 'NvimTreeFindFileToggle', 'NvimTreeOpen', 'NvimTreeFocus' },
-      opts = require('user.configs.nvim-tree').setup(),
-    },
+    lazy = false,
+    dependencies = { 'nvim-tree/nvim-tree.lua' },
     config = function()
       require('lsp-file-operations').setup()
     end,
@@ -35,7 +46,7 @@ return {
   -- noice
   {
     'folke/noice.nvim',
-    event = 'VeryLazy',
+    event = 'User FilePost',
     dependencies = {
       'MunifTanjim/nui.nvim',
       { 'rcarriga/nvim-notify', opts = { background_colour = '#000000' } },
@@ -55,8 +66,8 @@ return {
   -- 颜色显示
   {
     'brenoprata10/nvim-highlight-colors',
-    event = 'VeryLazy',
-    opts = require('user.configs.color-preview').setup(),
+    event = 'User FilePost',
+    opts = require('user.configs.hlcolor').setup(),
   },
   -- 待办高亮显示
   {

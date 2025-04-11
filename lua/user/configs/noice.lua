@@ -53,6 +53,11 @@ function M.setup()
       backend = 'cmp',
     },
     notify = { enabled = false, view = 'notify' },
+    lsp = {
+      progress = {
+        enabled = false,
+      },
+    },
   }
 end
 

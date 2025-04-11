@@ -36,7 +36,17 @@ function M.setup(cmp, types)
   local luasnip = require('luasnip')
 
   local options = {
-    completion = { completeopt = 'menu,menuone' },
+    completion = { completeopt = 'menu,menuone,noselect' },
+
+    window = {
+      completion = {
+        border = require('akirc').ui.borderStyle,
+      },
+
+      documentation = {
+        border = require('akirc').ui.borderStyle,
+      },
+    },
 
     -- 设置代码片段引擎，用于根据代码片段补全
     snippet = {
@@ -93,7 +103,7 @@ function M.setup(cmp, types)
     },
   }
 
-  return vim.tbl_deep_extend('force', options, require('nvchad.cmp'))
+  return vim.tbl_deep_extend('force', require('nvchad.cmp'), options)
 end
 
 function M.cmp_cmdline(cmp)

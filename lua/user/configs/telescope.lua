@@ -14,7 +14,7 @@ function M.setup(actions)
       path_display = { 'smart' },
       vimgrep_arguments = vim.list_extend(
         { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '--hidden' },
-        require('user-config').grep_args
+        require('akirc').grep_args
       ),
       layout_config = {
         horizontal = {

@@ -44,20 +44,22 @@ nvim
 ├──colors
 ├──lua
 │   ├──user
-│   │   ├──config
+│   │   ├──configs
 │   │   ├──core
 │   │   ├──dap
 │   │   ├──fmt
 │   │   ├──lsp
+│   │   ├──nvchad
 │   │   ├──plugins
-│   │   └──setup.lua
-│   └──user-config.lua # 用户自定义配置
+│   │   └──init.lua
+│   │──akirc.lua # 用户自定义配置
+│   └──chadrc.lua # nvchad ui 配置
+├──snippets
+├──LICENSE
+├──README.md
 ├──init.lua
 ├──lazy-lock.json
-├──LICENSE
 ├──neoconf.json
-├──README.md
-├──snippets
 ├──.gitignore
 ├──.prettierrc.json
 ├──.rustfmt.toml

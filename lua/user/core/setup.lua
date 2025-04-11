@@ -16,6 +16,7 @@ local opts = {
       loaded = '',
       not_loaded = '',
     },
+    border = require('akirc').ui.borderStyle,
   },
 
   performance = {

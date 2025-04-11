@@ -5,7 +5,7 @@ function M.config()
 end
 
 function M.setup()
-  local user_config = require('user-config')
+  local user_config = require('akirc')
   return {
     projects = vim.list_extend({}, user_config.projects),
     datapath = vim.fn.stdpath('data'),

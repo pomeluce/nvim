@@ -10,7 +10,7 @@ function M.setup()
       -- 主题
       theme = 'round',
       -- 圆角边框
-      border = 'rounded',
+      border = require('akirc').ui.borderStyle,
       -- 是否使用 nvim-web-devicons
       devicon = true,
       -- 是否显示标题

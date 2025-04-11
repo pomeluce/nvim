@@ -9,7 +9,7 @@ function M.setup()
 
   return {
     win = {
-      border = 'rounded', -- none, single, double, shadow
+      border = require('akirc').ui.borderStyle, -- none, single, double, shadow
       padding = { 1, 2, 1, 2 }, -- extra window padding [top, right, bottom, left]
     },
     layout = {

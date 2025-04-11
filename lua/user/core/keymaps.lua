@@ -34,6 +34,9 @@ map('n', '<space>', ':AkirJump<cr>', { desc = 'jump line start to end', noremap 
 map('n', '0', '%', { noremap = true })
 map('v', '0', '%', { noremap = true })
 
+-- 切换主题
+map('n', '<leader>tt', ':lua require("nvchad.themes").open()<cr>', { desc = 'toggle theme', noremap = true, silent = true })
+
 --[[ 窗口相关设置 ]]
 
 -- 设置水平分屏,并切换到下一个窗口

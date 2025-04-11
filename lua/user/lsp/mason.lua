@@ -11,7 +11,7 @@ M.lsp_servers = {
   'jsonls',
   'kotlin_language_server',
   'lua_ls',
-  -- 'marksman',
+  'marksman',
   'nil_ls',
   'rust_analyzer',
   'sqlls',
@@ -39,7 +39,7 @@ M.dap_servers = { 'js' }
 M.setup = function()
   dofile(vim.g.base46_cache .. 'mason')
 
-  require('mason').setup({
+  require('mason').setup {
     ui = {
       -- 设置安装图标
       icons = {
@@ -47,12 +47,13 @@ M.setup = function()
         package_installed = ' ',
         package_uninstalled = ' ',
       },
+      border = require('akirc').ui.borderStyle,
     },
     -- log 等级
     log_level = vim.log.levels.INFO,
     -- 最大并发安装数量
     max_concurrent_installers = 10,
-  })
+  }
   -- 加载 mason-lspconfig
   require('mason-lspconfig').setup {
     -- 自动安装列表
