@@ -14,8 +14,9 @@ function M.setup(actions)
       path_display = { 'smart' },
       vimgrep_arguments = vim.list_extend(
         { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '--hidden' },
-        require('akirc').grep_args
+        require('akirc').file.search.grep_args
       ),
+      sorting_strategy = 'ascending',
       layout_config = {
         horizontal = {
           prompt_position = 'top',
@@ -25,8 +26,8 @@ function M.setup(actions)
         vertical = {
           mirror = false,
         },
-        width = 0.8,
-        height = 0.80,
+        width = 0.7,
+        height = 0.65,
         preview_cutoff = 120,
       },
       mappings = {
@@ -89,22 +90,9 @@ function M.setup(actions)
       },
     },
     pickers = {
-      find_files = {
-        theme = 'dropdown',
-        hidden = true,
-      },
-      current_buffer_fuzzy_find = {
-        theme = 'dropdown',
-      },
-      live_grep = {
-        theme = 'dropdown',
-      },
-      oldfiles = {
-        theme = 'dropdown',
-      },
-      git_status = {
-        theme = 'dropdown',
-      },
+      find_files = { hidden = true },
+      oldfiles = { theme = 'dropdown' },
+      git_status = { theme = 'dropdown' },
     },
     extensions = {
       media_files = {

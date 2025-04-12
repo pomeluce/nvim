@@ -1,3 +1,4 @@
+local akirc = require('akirc')
 -- This file needs to have same structure as nvconfig.lua
 -- https://github.com/NvChad/ui/blob/v3.0/lua/nvconfig.lua
 -- Please read that file to know all available options :(
@@ -14,25 +15,27 @@ M.base46 = {
     CmpDocBorder = { link = 'FloatBorder' },
     TelescopeBorder = { link = 'FloatBorder' },
     TelescopePromptBorder = { link = 'FloatBorder' },
-    WinSeparator = require('akirc').hl.winSeparator,
-    NvimTreeWinSeparator = require('akirc').hl.winSeparator,
+    WinSeparator = akirc.hl.winSeparator,
+    NvimTreeWinSeparator = akirc.hl.winSeparator,
     ['@comment'] = { fg = '#868e96', italic = true },
   },
 }
 
+M.ui = {}
+
 M.nvdash = {
   load_on_startup = true,
   header = {
-    '   █████╗ ██╗  ██╗██╗██████╗   ',
-    '  ██╔══██╗██║ ██╔╝██║██╔══██╗  ',
-    '  ███████║█████╔╝ ██║██████╔╝  ',
-    '  ██╔══██║██╔═██╗ ██║██╔══██╗  ',
-    '  ██║  ██║██║  ██╗██║██║  ██║  ',
-    '  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝  ',
-    '                               ',
-    '     [ akirvim v2025.1.3 ]     ',
-    '                               ',
-    '                               ',
+    '   █████╗   ██╗  ██╗  ██╗  ██████╗   ',
+    '  ██╔══██╗  ██║ ██╔╝  ██║  ██╔══██╗  ',
+    '  ███████║  █████╔╝   ██║  ██████╔╝  ',
+    '  ██╔══██║  ██╔═██╗   ██║  ██╔══██╗  ',
+    '  ██║  ██║  ██║  ██╗  ██║  ██║  ██║  ',
+    '  ╚═╝  ╚═╝  ╚═╝  ╚═╝  ╚═╝  ╚═╝  ╚═╝  ',
+    '                                     ',
+    '       [  akirvim v2025.1.3 ]       ',
+    '                                     ',
+    '                                     ',
   },
   buttons = {
     { txt = ' Project List', keys = 'l', cmd = 'Telescope neovim-project discover theme=dropdown' },
@@ -57,6 +60,11 @@ M.nvdash = {
   },
 }
 
-M.ui = {}
+M.term = {
+  float = {
+    border = akirc.ui.borderStyle,
+  },
+}
+M.lsp = { signature = false }
 
 return M

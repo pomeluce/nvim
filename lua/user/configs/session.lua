@@ -5,9 +5,9 @@ function M.config()
 end
 
 function M.setup()
-  local user_config = require('akirc')
+  local akirc = require('akirc')
   return {
-    projects = vim.list_extend({}, user_config.projects),
+    projects = vim.list_extend({}, akirc.session.projects),
     datapath = vim.fn.stdpath('data'),
     -- 非项目目录加载最后一次会话
     last_session_on_startup = false,
@@ -24,7 +24,7 @@ function M.setup()
         'gitrebase',
       },
       -- 不会自动保存会话的目录列表
-      autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, user_config.ignore_session_dir),
+      autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, akirc.session.ignore_dir),
     },
   }
 end

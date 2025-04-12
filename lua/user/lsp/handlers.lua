@@ -1,21 +1,22 @@
 local M = {}
 
-M.sign_define = function()
+local akirc = require('akirc')
+
+M.lsp_initialize = function()
   local x = vim.diagnostic.severity
 
   vim.diagnostic.config {
     virtual_text = { prefix = '' },
     signs = { text = { [x.ERROR] = '󰅙', [x.WARN] = '', [x.INFO] = '󰋼', [x.HINT] = '󰌵' } },
     underline = true,
-    float = { border = 'single' },
+    float = { border = akirc.ui.borderStyle },
   }
 
   -- Default border style
   local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-  ---@diagnostic disable-next-line: duplicate-set-field
   function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     opts = opts or {}
-    opts.border = require('akirc').ui.borderStyle
+    opts.border = akirc.ui.borderStyle
     return orig_util_open_floating_preview(contents, syntax, opts, ...)
   end
 end
@@ -51,7 +52,7 @@ M.on_init = function(client, _)
   end
 end
 M.on_attach = function(client, bufnr)
-  require('user.core.keymaps').lsp_keymaps(bufnr)
+  require('user.core.mappings').lsp_keymaps(bufnr)
   M.lsp_highlight_document(client)
 end
 

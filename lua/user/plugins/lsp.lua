@@ -19,7 +19,7 @@ return {
       { 'folke/neodev.nvim', opts = {} },
       { 'nvimdev/lspsaga.nvim', opts = require('user.configs.lspsaga').setup() },
     },
-    init = require('user.lsp.handlers').sign_define,
+    init = require('user.lsp.handlers').lsp_initialize,
     config = function()
       -- 加载 lsp handlers
       require('user.lsp.handlers').setup()

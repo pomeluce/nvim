@@ -53,8 +53,12 @@ return {
     },
     opts = require('user.configs.noice').setup(),
   },
-  --- 浮动终端
-  { 'voldikss/vim-floaterm', event = 'VeryLazy' },
+  --- 终端
+  {
+    'akinsho/toggleterm.nvim',
+    event = 'VeryLazy',
+    opts = require('user.configs.toggleterm').setup(),
+  },
   -- 高亮光标所在单词
   {
     'RRethy/vim-illuminate',
@@ -72,6 +76,7 @@ return {
   -- 待办高亮显示
   {
     'folke/todo-comments.nvim',
+    event = 'VeryLazy',
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = require('user.configs.todo-comments').setup(),
   },
