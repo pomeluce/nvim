@@ -23,10 +23,11 @@ return {
       'nvim-telescope/telescope-ui-select.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
       -- camelcase 命名转换
-      { 'johmsalas/text-case.nvim', opts = {} },
+      { 'johmsalas/text-case.nvim' },
     },
     config = function()
       local actions = require('telescope.actions')
+      require('textcase').setup {}
       require('telescope').setup(telescope.setup(actions))
       require('telescope').load_extension('media_files')
       require('telescope').load_extension('ui-select')

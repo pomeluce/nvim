@@ -9,7 +9,7 @@ M.map = map
 --[[ 基础配置 ]]
 -- 基本键位映射
 map('n', 's', '<nop>', {})
-map({ 'n', 'v' }, ';', ':', { desc = 'into cmd mode' })
+map({ 'n', 'v' }, ';', ':', { desc = 'into cmd mode', silent = false })
 map('n', 'S', ':AkirSave<cr>', { desc = 'save file' })
 map('n', 'Q', ':q!<cr>', { desc = 'confrim exit' })
 
@@ -24,8 +24,8 @@ map('n', '<m-a>', 'ggVG', { desc = 'select all text' })
 map('n', '<m-s>', 'vi{', { desc = 'select brackets text' })
 
 -- 全局替换 c-s = :%s/
-map('n', '<c-s>', ':%s/\\v//gc<left><left><left><left>', { desc = 'global repalce' })
-map('v', '<c-s>', ':s/\\v//gc<left><left><left><left>', { desc = 'global repalce' })
+map('n', '<c-s>', ':%s/\\v//gc<left><left><left><left>', { desc = 'global repalce', silent = false })
+map('v', '<c-s>', ':s/\\v//gc<left><left><left><left>', { desc = 'global repalce', silent = false })
 
 -- 取消搜索高亮
 map('n', '<leader>nh', ':nohlsearch<cr>', { desc = 'unhighlight' })
