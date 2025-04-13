@@ -74,6 +74,9 @@ end
 function M.setup()
   return {
     direction = 'float',
+    highlights = {
+      FloatBorder = { link = 'FloatBorder' },
+    },
     float_opts = {
       border = require('akirc').ui.borderStyle,
       width = 120,
