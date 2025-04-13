@@ -69,25 +69,9 @@ return {
   {
     'coffebar/neovim-project',
     dependencies = 'Shatur/neovim-session-manager',
-    cond = function()
-      local argv = vim.v.argv
-      for _, arg in ipairs(argv) do
-        if arg == '+CALLDB' then
-          return false
-        end
-      end
-      return true
-    end,
     opts = session.setup(),
     event = 'VeryLazy',
     priority = 100,
-  },
-  -- 数据库管理
-  {
-    'kristijanhusak/vim-dadbod-ui',
-    dependencies = {
-      { 'tpope/vim-dadbod', cmd = { 'DBUI' } },
-    },
   },
   -- 字符环绕
   {

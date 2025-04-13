@@ -63,7 +63,6 @@ function M.runFile()
 end
 
 function M.config()
-  M.setToggleKey('<C-b>', 'DBUI', 'nvim +CALLDB')
   M.setToggleKey('<C-t>', 'TERM', '')
   M.setToggleKey('<C-p>', 'RANGER', 'ranger')
 end

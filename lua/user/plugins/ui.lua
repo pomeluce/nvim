@@ -16,7 +16,7 @@ return {
   -- 面包屑
   {
     'Bekaboo/dropbar.nvim',
-    event = 'User FilePost',
+    event = 'VeryLazy',
     dependencies = {
       'nvim-telescope/telescope-fzf-native.nvim',
       build = 'make',
