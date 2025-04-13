@@ -3,7 +3,7 @@ local M = {}
 local map = require('user.core.mappings').map
 local terminals = {}
 
-function M.run(name, cmd, close)
+function M.floaterm(name, cmd, close)
   local Terminal = require('toggleterm.terminal').Terminal
   if not terminals[name] then
     terminals[name] = Terminal:new {
@@ -18,11 +18,15 @@ function M.run(name, cmd, close)
     }
   end
 
+  if name == 'TERM' then
+    terminals[name].dir = vim.fn.getcwd()
+  end
+
   terminals[name]:toggle()
 end
 
 function M.setToggleKey(key, name, cmd)
-  map('n', key, string.format(":lua require('user.configs.toggleterm').run('%s', '%s', %s)<cr>", name, cmd, true), { desc = 'toggle floaterm' })
+  map('n', key, string.format(":lua require('user.configs.toggleterm').floaterm('%s', '%s', %s)<cr>", name, cmd, true), { desc = 'toggle floaterm' })
   map('t', key, function()
     local term = terminals[name]
     if term and term:is_open() then
@@ -50,15 +54,15 @@ function M.runFile()
   }, require('akirc').file.run_cmd or {})
 
   if run_cmd[ft] then
-    M.run('RUN', string.format('%s %s', run_cmd[ft], file))
+    M.floaterm('RUN', string.format('%s %s', run_cmd[ft], file))
   elseif ft == 'markdown' then
     vim.cmd('MarkdownPreview')
   elseif ft == 'java' then
-    M.run('RUN', string.format('javac %s && java %s', file, file_root))
+    M.floaterm('RUN', string.format('javac %s && java %s', file, file_root))
   elseif ft == 'c' then
-    M.run('RUN', string.format('gcc %s -o %s && ./%s && rm %s', file, file_root, file_root, file_root))
+    M.floaterm('RUN', string.format('gcc %s -o %s && ./%s && rm %s', file, file_root, file_root, file_root))
   elseif ft == 'rust' then
-    M.run('RUN', string.format('rustc % -o %s && ./%s && rm %s', file, file_root, file_root, file_root))
+    M.floaterm('RUN', string.format('rustc % -o %s && ./%s && rm %s', file, file_root, file_root, file_root))
   end
 end
 
