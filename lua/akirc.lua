@@ -8,12 +8,17 @@ M.hl = {
   winSeparator = { fg = '#676b6e' },
 }
 
+M.mason = {
+  enable = false,
+}
+
 M.session = {
   ignore_dir = { '~/Downloads' },
   projects = {
     '/wsp/akir-shell',
     '/wsp/akir-zimfw',
     '/wsp/nvim',
+    '/wsp/nixos',
     '/wsp/dotfiles',
     '/wsp/code/web/*',
     '/wsp/code/rust/*',

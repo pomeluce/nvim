@@ -64,6 +64,7 @@ M.setup = function()
   -- 加载 mason-nvim-dap
   require('mason-nvim-dap').setup {
     ensure_installed = M.dap_servers,
+    automatic_installation = true,
   }
 end
 
