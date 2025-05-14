@@ -15,8 +15,9 @@ return {
     -- },
     --- codeium 智能提示
     {
-      'jcdickinson/codeium.nvim',
-      opts = require('user.configs.codeium').setup(),
+      'Exafunction/windsurf.nvim',
+      name = 'codeium',
+      opts = require('user.configs.windsurf').setup(),
     },
     {
       'L3MON4D3/LuaSnip',

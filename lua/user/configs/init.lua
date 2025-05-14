@@ -1,7 +1,7 @@
 require('user.configs.autopairs').config()
 require('user.configs.autotag').config()
 require('user.configs.cmp').config()
-require('user.configs.codeium').config()
+require('user.configs.windsurf').config()
 require('user.configs.hlcolor').config()
 require('user.configs.comment').config()
 require('user.configs.copilot').config()
