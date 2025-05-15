@@ -36,6 +36,7 @@ M.file = {
   search = {
     grep_args = {},
   },
+  db_workspace = '/wsp/code/sql',
 }
 
 return M

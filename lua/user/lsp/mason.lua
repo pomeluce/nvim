@@ -33,6 +33,7 @@ M.dap_servers = { 'js' }
   'rustfmt', -- should installed rustup
   'shfmt',
   'stylua',
+  'sqlfluff',
 } ]]
 
 -- mason 设置

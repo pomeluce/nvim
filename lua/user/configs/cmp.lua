@@ -100,6 +100,7 @@ function M.setup(cmp, types)
       { name = 'copilot' },
       { name = 'codeium' },
       { name = 'nvim_lua' },
+      { name = 'cmp-dbee' },
     },
   }
 

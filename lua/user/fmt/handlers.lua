@@ -61,6 +61,22 @@ require('formatter').setup {
     },
     scss = { prettier('scss') },
     sh = { require('formatter.filetypes.sh').shfmt },
+    sql = {
+      function()
+        return {
+          exe = 'sqlfluff',
+          args = {
+            'format',
+            '--disable-progress-bar',
+            '--config',
+            vim.fn.expand('~/.config/nvim/.sqlfluff'),
+            '-',
+          },
+          stdin = true,
+          ignore_exitcode = false,
+        }
+      end,
+    },
     toml = {
       function()
         return {

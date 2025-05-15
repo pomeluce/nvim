@@ -41,6 +41,16 @@ return {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-cmdline',
       'saadparwaiz1/cmp_luasnip',
+      {
+        {
+          'MattiasMTS/cmp-dbee',
+          dependencies = {
+            { 'kndndrj/nvim-dbee' },
+          },
+          ft = 'sql', -- optional but good to have
+          opts = {}, -- needed
+        },
+      },
     },
   },
   config = function()
