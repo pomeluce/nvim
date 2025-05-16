@@ -278,7 +278,7 @@ M.lsp_keymaps = function(bufnr)
   -- code action 代码修复
   map({ 'n', 'v' }, '<m-cr>', '<cmd>Lspsaga code_action<cr>', { desc = 'code action', buffer = bufnr })
   -- 格式化命令
-  map('n', '<leader>fm', '<cmd>Format<cr>', { desc = 'format for code', buffer = bufnr })
+  map('n', '<leader>fm', ':lua require("conform").format({ async = true })<cr>', { desc = 'format for code', buffer = bufnr })
 end
 
 return M

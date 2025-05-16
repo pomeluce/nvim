@@ -1,104 +1,148 @@
-local util = require('formatter.util')
+require('conform').setup {
+  formatters_by_ft = {
+    lua = { 'stylua' },
+    css = { 'prettier' },
+    html = { 'prettier' },
+    javascript = { 'prettier' },
+    javascriptreact = { 'prettier' },
+    json = { 'prettier' },
+    jsonc = { 'prettier' },
+    markdown = { 'prettier' },
+    nix = { 'nixfmt' },
+    rust = { 'rustfmt' },
+    scss = { 'prettier' },
+    sh = { 'shfmt' },
+    sql = { 'sqlfluff' },
+    toml = { 'taplo' },
+    typescript = { 'prettier' },
+    typescriptreact = { 'prettier' },
+    vue = { 'prettier' },
+    yaml = { 'prettier' },
+    zsh = { 'beautysh' },
+  },
 
-local function prettier(parser)
-  local common_args = {
-    '--stdin-filepath',
-    util.escape_path(util.get_current_buffer_file_path()),
-    '--config',
-    vim.fn.expand('~/.config/nvim/.prettierrc.json'),
-  }
-
-  local args = parser and vim.list_extend(common_args, { '--parser', parser }) or common_args
-
-  return {
-    exe = 'prettier',
-    args = args,
-    stdin = true,
-    try_node_modules = true,
-  }
-end
-
-require('formatter').setup {
-  logging = true,
-  log_level = vim.log.levels.WARN,
-  filetype = {
-    css = { prettier('css') },
-    html = { prettier },
-    lua = {
-      function()
-        return {
-          exe = 'stylua',
-          args = {
-            '--stdin-filepath',
-            util.escape_path(util.get_current_buffer_file_path()),
-            '--config-path',
-            vim.fn.expand('~/.config/nvim/.stylua.toml'),
-            '--',
-            '-',
-          },
-          stdin = true,
+  formatters = {
+    prettier = {
+      command = 'prettier',
+      args = function(ctx)
+        local args = {
+          '--stdin-filepath',
+          '$FILENAME',
+          '--config',
+          vim.fn.expand('~/.config/nvim/.prettierrc.json'),
         }
+
+        -- 根据文件类型设置 parser(可选)
+        local parser_map = {
+          css = 'css',
+          markdown = 'markdown',
+          scss = 'scss',
+          typescript = 'typescript',
+          typescriptreact = 'typescript',
+          yaml = 'yaml',
+          vue = 'vue',
+        }
+        local parser = parser_map[ctx.filetype]
+        if parser then
+          table.insert(args, '--parser')
+          table.insert(args, parser)
+        end
+        return args
       end,
+      stdin = true,
+      cwd = require('conform.util').root_file { '.prettierrc', 'package.json', '.git' },
     },
-    javascript = { prettier },
-    javascriptreact = { prettier },
-    json = { prettier },
-    jsonc = { prettier },
-    markdown = { prettier('markdown') },
-    nix = { require('formatter.filetypes.nix').nixfmt },
-    rust = {
+
+    stylua = {
+      command = 'stylua',
+      args = {
+        '--stdin-filepath',
+        '$FILENAME',
+        '--config-path',
+        vim.fn.expand('~/.config/nvim/.stylua.toml'),
+        '--',
+        '-',
+      },
+      stdin = true,
+    },
+
+    nixfmt = {
+      command = 'nixfmt',
+      args = {},
+      stdin = true,
+    },
+
+    rustfmt = {
       -- rules: https://rust-lang.github.io/rustfmt
-      function()
+      command = 'rustfmt',
+      args = {
+        '--config-path',
+        vim.fn.expand('~/.config/nvim/.rustfmt.toml'),
+      },
+      stdin = true,
+    },
+
+    shfmt = {
+      command = 'shfmt',
+      args = function()
+        local shiftwidth = vim.opt.shiftwidth:get()
+        local expandtab = vim.opt.expandtab:get()
+
+        if not expandtab then
+          shiftwidth = 0
+        end
+
         return {
-          exe = 'rustfmt',
-          args = {
-            '--config-path',
-            vim.fn.expand('~/.config/nvim/.rustfmt.toml'),
-          },
-          stdin = true,
+          '-i',
+          shiftwidth,
         }
       end,
+      stdin = true,
     },
-    scss = { prettier('scss') },
-    sh = { require('formatter.filetypes.sh').shfmt },
-    sql = {
-      function()
+
+    sqlfluff = {
+      command = 'sqlfluff',
+      args = {
+        'format',
+        '--config',
+        vim.fn.expand('~/.config/nvim/.sqlfluff.cfg'),
+        '--disable_progress_bar',
+        '--nocolor',
+        '-',
+      },
+      stdin = true,
+      require_cwd = false,
+    },
+
+    taplo = {
+      command = 'taplo',
+      args = {
+        'fmt',
+        '--stdin-filepath',
+        '$FILENAME',
+        '-',
+        '--config',
+        vim.fn.expand('~/.config/nvim/.taplo.toml'),
+      },
+      stdin = true,
+    },
+
+    beautysh = {
+      command = 'beautysh',
+      args = function()
+        local shiftwidth = vim.opt.shiftwidth:get()
+        local expandtab = vim.opt.expandtab:get()
+        if not expandtab then
+          shiftwidth = 0
+        end
+
         return {
-          exe = 'sqlfluff',
-          args = {
-            'format',
-            '--disable-progress-bar',
-            '--config',
-            vim.fn.expand('~/.config/nvim/.sqlfluff'),
-            '-',
-          },
-          stdin = true,
-          ignore_exitcode = false,
+          '-i',
+          shiftwidth,
+          '$FILENAME',
         }
       end,
+      stdin = false,
     },
-    toml = {
-      function()
-        return {
-          exe = 'taplo',
-          args = {
-            'fmt',
-            '--stdin-filepath',
-            util.escape_path(util.get_current_buffer_file_path()),
-            '-',
-            '--config',
-            vim.fn.expand('~/.config/nvim/.taplo.toml'),
-          },
-          stdin = true,
-          try_node_modules = true,
-        }
-      end,
-    },
-    typescript = { prettier('typescript') },
-    typescriptreact = { prettier('typescript') },
-    yaml = { prettier('yaml') },
-    vue = { prettier('vue') },
-    zsh = { require('formatter.filetypes.zsh').beautysh },
-    ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
   },
 }
