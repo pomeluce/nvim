@@ -3,7 +3,7 @@ local M = {}
 local map = require('user.core.mappings').map
 local terminals = {}
 
-function M.floaterm(name, cmd, close)
+function M.floaterm(name, cmd, close, opts)
   local Terminal = require('toggleterm.terminal').Terminal
   if not terminals[name] then
     terminals[name] = Terminal:new {
@@ -11,6 +11,7 @@ function M.floaterm(name, cmd, close)
       display_name = name,
       dir = 'git_dir',
       close_on_exit = close or false,
+      float_opts = opts,
       hidden = true,
       on_open = function(_)
         vim.cmd('startinsert!')
@@ -25,8 +26,10 @@ function M.floaterm(name, cmd, close)
   terminals[name]:toggle()
 end
 
-function M.setToggleKey(key, name, cmd)
-  map('n', key, string.format(":lua require('user.configs.toggleterm').floaterm('%s', '%s', %s)<cr>", name, cmd, true), { desc = 'toggle floaterm' })
+function M.setToggleKey(key, name, cmd, opts)
+  map('n', key, function()
+    require('user.configs.toggleterm').floaterm(name, cmd, true, opts)
+  end, { desc = 'toggle floaterm' })
   map('t', key, function()
     local term = terminals[name]
     if term and term:is_open() then
@@ -67,8 +70,9 @@ function M.runFile()
 end
 
 function M.config()
-  M.setToggleKey('<C-t>', 'TERM', '')
-  M.setToggleKey('<C-p>', 'RANGER', 'ranger')
+  M.setToggleKey('<C-t>', 'TERM', '', nil)
+  M.setToggleKey('<C-b>', 'DBUI', 'nvim +CALLDB', { width = 140, height = 45 })
+  M.setToggleKey('<C-p>', 'RANGER', 'ranger', nil)
 end
 
 function M.setup()

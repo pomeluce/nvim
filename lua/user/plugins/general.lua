@@ -1,6 +1,5 @@
 local telescope = require('user.configs.telescope')
 local comment = require('user.configs.comment')
-local session = require('user.configs.session')
 local flash = require('user.configs.flash')
 local picker = require('user.configs.window-picker')
 local whickkey = require('user.configs.whichkey')
@@ -69,9 +68,9 @@ return {
   {
     'coffebar/neovim-project',
     dependencies = 'Shatur/neovim-session-manager',
-    opts = session.setup(),
-    event = 'VeryLazy',
+    lazy = require('akirc').session.lazy_load,
     priority = 100,
+    opts = require('user.configs.session').setup(),
   },
   -- 字符环绕
   {

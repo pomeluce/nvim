@@ -14,26 +14,12 @@ function M.config()
   -- do nothing
 end
 
-function M.luasnip()
-  -- 预定义代码片段
-  require('luasnip.loaders.from_vscode').lazy_load { exclude = vim.g.vscode_snippets_exclude or {} }
-  require('luasnip.loaders.from_vscode').lazy_load { paths = vim.g.vscode_snippets_path or '' }
-
-  require('luasnip.loaders.from_snipmate').load()
-  require('luasnip.loaders.from_snipmate').lazy_load { paths = vim.g.snipmate_snippets_path or { './snippets' } }
-
-  vim.api.nvim_create_autocmd('InsertLeave', {
-    callback = function()
-      if require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()] and not require('luasnip').session.jump_active then
-        require('luasnip').unlink_current()
-      end
-    end,
-  })
-end
-
-function M.setup(cmp, types)
+function M.setup()
   dofile(vim.g.base46_cache .. 'cmp')
   local luasnip = require('luasnip')
+
+  local cmp = require('cmp')
+  local types = require('cmp.types')
 
   local options = {
     completion = { completeopt = 'menu,menuone,noselect' },
@@ -107,7 +93,26 @@ function M.setup(cmp, types)
   return vim.tbl_deep_extend('force', require('nvchad.cmp'), options)
 end
 
-function M.cmp_cmdline(cmp)
+function M.load_luasnip()
+  -- 预定义代码片段
+  require('luasnip.loaders.from_vscode').lazy_load { exclude = vim.g.vscode_snippets_exclude or {} }
+  require('luasnip.loaders.from_vscode').lazy_load { paths = vim.g.vscode_snippets_path or '' }
+
+  require('luasnip.loaders.from_snipmate').load()
+  require('luasnip.loaders.from_snipmate').lazy_load { paths = vim.g.snipmate_snippets_path or { './snippets' } }
+
+  vim.api.nvim_create_autocmd('InsertLeave', {
+    callback = function()
+      if require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()] and not require('luasnip').session.jump_active then
+        require('luasnip').unlink_current()
+      end
+    end,
+  })
+end
+
+function M.handler()
+  local cmp = require('cmp')
+
   -- 根据文件类型设置补全来源
   cmp.setup.filetype('gitcommit', {
     sources = cmp.config.sources { { name = 'buffer' } },
@@ -122,6 +127,9 @@ function M.cmp_cmdline(cmp)
     mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources({ { name = 'path' } }, { { name = 'cmdline' } }),
   })
+
+  vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = '#4CCD99' })
+  vim.api.nvim_set_hl(0, 'CmpItemKindCodeium', { fg = '#6CC644' })
 end
 
 return M

@@ -54,12 +54,9 @@ return {
     },
   },
   config = function()
-    local cmp = require('cmp')
-    local cfg = require('user.configs.cmp')
-    cfg.luasnip()
-    cmp.setup(cfg.setup(cmp, require('cmp.types')))
-    cfg.cmp_cmdline(cmp)
-    vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = '#4CCD99' })
-    vim.api.nvim_set_hl(0, 'CmpItemKindCodeium', { fg = '#6CC644' })
+    local cmp = require('user.configs.cmp')
+    cmp.load_luasnip()
+    require('cmp').setup(cmp.setup())
+    cmp.handler()
   end,
 }

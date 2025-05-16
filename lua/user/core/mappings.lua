@@ -255,11 +255,6 @@ map('n', '<Leader>ds', function()
   widgets.centered_float(widgets.scopes)
 end, { desc = 'float show debug scopes' })
 
---[[ dbee 数据库配置 ]]
-map('n', '<c-b>', ':lua require("dbee").toggle()<cr>', { desc = 'toggle database explorer' })
-map('n', '<leader>bo', ':lua require("dbee").open()<cr>', { desc = 'open database explorer' })
-map('n', '<leader>bc', ':lua require("dbee").close()<cr>', { desc = 'close database explorer' })
-
 --[[ lsp 快捷键设置 ]]
 M.lsp_keymaps = function(bufnr)
   -- 重命名

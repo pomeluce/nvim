@@ -2,8 +2,13 @@ local M = {}
 
 local akirc = require('akirc')
 
+function M.DBUI()
+  vim.cmd('exec "Dbee"')
+end
+
 function M.config()
   -- do nothing
+  vim.cmd('com! CALLDB lua require("user.configs.dbee").DBUI()')
 end
 
 function M.setup()
@@ -23,6 +28,10 @@ function M.setup()
         -- run the whole file on the active connection
         { key = '<c-cr>', mode = 'n', action = 'run_file' },
       },
+    },
+    window_layout = require('dbee.layouts').Default:new {
+      call_log_height = 15,
+      result_height = 15,
     },
   }
 end

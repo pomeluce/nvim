@@ -26,6 +26,15 @@ M.session = {
     '/wsp/code/java/*',
     '/wsp/code/cpp/*',
   },
+  lazy_load = function()
+    local argv = vim.v.argv
+    for _, arg in ipairs(argv) do
+      if arg == '+CALLDB' then
+        return true
+      end
+    end
+    return false
+  end,
 }
 
 M.file = {
