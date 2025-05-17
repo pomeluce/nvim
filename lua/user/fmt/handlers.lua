@@ -106,8 +106,6 @@ require('conform').setup {
         'format',
         '--config',
         vim.fn.expand('~/.config/nvim/.sqlfluff.cfg'),
-        '--disable_progress_bar',
-        '--nocolor',
         '-',
       },
       stdin = true,

@@ -1,26 +1,27 @@
 local autoGroup = vim.api.nvim_create_augroup('autoGroup', { clear = true })
 local autocmd = vim.api.nvim_create_autocmd
+local usercmd = vim.api.nvim_create_user_command
 
 -- user event that loads after UIEnter + only if file buf is there
-autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
-  group = vim.api.nvim_create_augroup("NvFilePost", { clear = true }),
+autocmd({ 'UIEnter', 'BufReadPost', 'BufNewFile' }, {
+  group = vim.api.nvim_create_augroup('NvFilePost', { clear = true }),
   callback = function(args)
     local file = vim.api.nvim_buf_get_name(args.buf)
-    local buftype = vim.api.nvim_get_option_value("buftype", { buf = args.buf })
+    local buftype = vim.api.nvim_get_option_value('buftype', { buf = args.buf })
 
-    if not vim.g.ui_entered and args.event == "UIEnter" then
+    if not vim.g.ui_entered and args.event == 'UIEnter' then
       vim.g.ui_entered = true
     end
 
-    if file ~= "" and buftype ~= "nofile" and vim.g.ui_entered then
-      vim.api.nvim_exec_autocmds("User", { pattern = "FilePost", modeline = false })
-      vim.api.nvim_del_augroup_by_name "NvFilePost"
+    if file ~= '' and buftype ~= 'nofile' and vim.g.ui_entered then
+      vim.api.nvim_exec_autocmds('User', { pattern = 'FilePost', modeline = false })
+      vim.api.nvim_del_augroup_by_name('NvFilePost')
 
       vim.schedule(function()
-        vim.api.nvim_exec_autocmds("FileType", {})
+        vim.api.nvim_exec_autocmds('FileType', {})
 
         if vim.g.editorconfig then
-          require("editorconfig").config(args.buf)
+          require('editorconfig').config(args.buf)
         end
       end)
     end
@@ -95,5 +96,38 @@ autocmd('BufReadPost', {
     vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#43a047' })
     vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#fbc02d' })
     vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#f44336' })
+  end,
+})
+
+-- 添加 sql 方言设置指令
+usercmd('SqlDialect', function(opts)
+  local dialect = opts.args
+  if dialect == '' then
+    vim.notify('Please specify a dialect, e.g. :SqlDialect postgres', vim.log.levels.ERROR)
+    return
+  end
+
+  local clients = vim.lsp.get_clients { bufnr = vim.api.nvim_get_current_buf() }
+
+  for _, client in ipairs(clients) do
+    if client.name == 'sqlls' then
+      local root_dir = client.config.root_dir or vim.fn.getcwd()
+      vim.g.sql_dialect_override[root_dir] = dialect
+
+      client.config.settings.sql = client.config.settings.sql or {}
+      ---@diagnostic disable-next-line: inject-field
+      client.config.settings.sql.dialect = dialect
+      client:notify('workspace/didChangeConfiguration', { settings = client.config.settings })
+
+      vim.notify("SQL dialect set to '" .. dialect .. "'", vim.log.levels.INFO)
+      return
+    end
+  end
+
+  vim.notify('SQL LSP is not active for this buffer.', vim.log.levels.WARN)
+end, {
+  nargs = 1,
+  complete = function(_, _, _)
+    return { 'ansi', 'postgres', 'mysql', 'sqlite', 'bigquery', 'snowflake', 'tsql' }
   end,
 })

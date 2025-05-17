@@ -11,3 +11,6 @@ vim.g.loaded_node_provider = 0
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
+
+-- 全局变量用于保存 root_dir -> dialect 的映射
+vim.g.sql_dialect_override = {}

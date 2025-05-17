@@ -184,6 +184,9 @@ map('n', '<leader>fg', ':Telescope git_status<cr>', { desc = 'search git status 
 -- 查看历史文件
 map('n', '<leader>fh', ':Telescope oldfiles<cr>', { desc = 'search history file' })
 
+--[[ 格式化命令 ]]
+map('n', '<leader>fm', ':lua require("conform").format({ async = true })<cr>', { desc = 'format for code' })
+
 --[[ tree-sitter 语法高亮 ]]
 
 -- 查看语法高亮
@@ -277,8 +280,6 @@ M.lsp_keymaps = function(bufnr)
   map('n', 'K', '<cmd>Lspsaga hover_doc<cr>', { desc = 'hover documents', buffer = bufnr })
   -- code action 代码修复
   map({ 'n', 'v' }, '<m-cr>', '<cmd>Lspsaga code_action<cr>', { desc = 'code action', buffer = bufnr })
-  -- 格式化命令
-  map('n', '<leader>fm', ':lua require("conform").format({ async = true })<cr>', { desc = 'format for code', buffer = bufnr })
 end
 
 return M
