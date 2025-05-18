@@ -154,7 +154,7 @@ map('n', 'C', ':lua require("gitsigns").blame_line { full = true }<cr>', { desc 
 map('n', '\\g', ':lua require("gitsigns").toggle_current_line_blame()<cr>', { desc = 'toggle show blame line' })
 
 --[[ 文本翻译 ]]
-map({ 'n', 'v' }, '<leader>tr', ':TranslateW<CR>', { desc = 'translator text' })
+map({ 'n', 'v' }, '<leader>tr', ':Translate ZH<CR>', { desc = 'translator text' })
 
 --[[ 驼峰转换 ]]
 map('n', 'th', '<cmd>Telescope textcase normal_mode theme=dropdown<CR>', { desc = 'toggle hump' })

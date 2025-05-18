@@ -101,7 +101,7 @@ return {
   },
   -- 翻译插件
   {
-    'voldikss/vim-translator',
+    'uga-rosa/translate.nvim',
     event = 'VeryLazy',
   },
   -- 标签闭合
