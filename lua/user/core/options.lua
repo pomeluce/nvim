@@ -177,4 +177,6 @@ if is_wsl then
     },
     cache_enabled = 0,
   }
+else
+  vim.g.clipboard = 'osc52'
 end
