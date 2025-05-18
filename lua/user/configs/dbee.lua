@@ -16,6 +16,9 @@ function M.setup()
     float_options = {
       border = akirc.ui.borderStyle,
     },
+    drawer = {
+      disable_help = true,
+    },
     editor = {
       directory = akirc.file.db_workspace,
       window_options = {

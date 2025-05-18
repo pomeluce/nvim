@@ -184,6 +184,9 @@ map('n', '<leader>fg', ':Telescope git_status<cr>', { desc = 'search git status 
 -- 查看历史文件
 map('n', '<leader>fh', ':Telescope oldfiles<cr>', { desc = 'search history file' })
 
+-- 显示 structure 列表
+map('n', '<leader>ss', '<cmd>Telescope aerial<cr>', { desc = 'structure list' })
+
 --[[ 格式化命令 ]]
 map('n', '<leader>fm', ':lua require("conform").format({ async = true })<cr>', { desc = 'format for code' })
 
@@ -274,8 +277,6 @@ M.lsp_keymaps = function(bufnr)
   map('n', 'gr', '<cmd>Telescope lsp_references theme=dropdown<cr>', { desc = 'goto reference', buffer = bufnr })
   -- 跳转到错误
   map('n', 'ge', '<cmd>Lspsaga diagnostic_jump_next<cr>', { desc = 'goto error', buffer = bufnr })
-  -- 显示 structure 列表
-  map('n', '<leader>ss', '<cmd>Lspsaga outline<cr>', { desc = 'structure list', buffer = bufnr })
   -- 显示文档
   map('n', 'K', '<cmd>Lspsaga hover_doc<cr>', { desc = 'hover documents', buffer = bufnr })
   -- code action 代码修复

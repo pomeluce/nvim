@@ -26,4 +26,10 @@ return {
       require('user.lsp.handlers').setup()
     end,
   },
+
+  {
+    'stevearc/aerial.nvim',
+    event = 'VeryLazy',
+    opts = require('user.configs.aerial').setup(),
+  },
 }

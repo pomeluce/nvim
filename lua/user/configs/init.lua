@@ -1,3 +1,4 @@
+require('user.configs.aerial').config()
 require('user.configs.autopairs').config()
 require('user.configs.autotag').config()
 require('user.configs.blankline').config()
