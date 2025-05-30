@@ -19,7 +19,7 @@ M.lsp_servers = {
   'taplo',
   'ts_ls',
   'unocss',
-  'volar',
+  'vue_ls',
 }
 
 -- dap 列表
@@ -40,6 +40,8 @@ M.dap_servers = { 'js' }
 M.setup = function()
   dofile(vim.g.base46_cache .. 'mason')
 
+  local isEnable = require('akirc').mason.enable
+
   require('mason').setup {
     ui = {
       -- 设置安装图标
@@ -58,14 +60,14 @@ M.setup = function()
   -- 加载 mason-lspconfig
   require('mason-lspconfig').setup {
     -- 自动安装列表
-    ensure_installed = M.lsp_servers,
+    ensure_installed = isEnable and M.lsp_servers or {},
     -- 自动安装
-    automatic_installation = true,
+    automatic_installation = isEnable,
   }
   -- 加载 mason-nvim-dap
   require('mason-nvim-dap').setup {
-    ensure_installed = M.dap_servers,
-    automatic_installation = true,
+    ensure_installed = isEnable and M.dap_servers or {},
+    automatic_installation = isEnable,
   }
 end
 

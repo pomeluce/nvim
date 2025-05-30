@@ -1,5 +1,15 @@
-local mason_registry = require('mason-registry')
-local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
+local vue_ls_path = vim.fn.expand('$MASON/packages') .. '/vue-language-server'
+
+local handle = io.popen('which vue-language-server')
+if handle then
+  local result = handle:read('*a')
+  handle:close()
+  if result and result ~= '' then
+    vue_ls_path = result:gsub('/bin/vue%-language%-server', '/lib/node_modules/@vue/language-server'):gsub('\n', '')
+  end
+end
+
+local typescript_plugin_path = vue_ls_path .. '/node_modules/@vue/language-server'
 
 return {
   filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx', 'vue' },
@@ -8,7 +18,7 @@ return {
     plugins = {
       {
         name = '@vue/typescript-plugin',
-        location = vue_language_server_path,
+        location = typescript_plugin_path,
         languages = { 'vue' },
       },
     },

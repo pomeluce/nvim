@@ -2,7 +2,6 @@ return {
   {
     'williamboman/mason.nvim',
     cmd = { 'Mason', 'MasonInstall', 'MasonUpdate' },
-    enabled = require('akirc').mason.enable,
     dependencies = {
       'williamboman/mason-lspconfig.nvim',
       'jay-babu/mason-nvim-dap.nvim',
