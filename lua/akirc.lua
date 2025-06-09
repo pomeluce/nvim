@@ -15,16 +15,16 @@ M.mason = {
 M.session = {
   ignore_dir = { '~/Downloads' },
   projects = {
-    '/wsp/akir-shell',
-    '/wsp/akir-zimfw',
-    '/wsp/nvim',
-    '/wsp/nixos',
-    '/wsp/dotfiles',
-    '/wsp/code/web/*',
-    '/wsp/code/rust/*',
-    '/wsp/code/sql/*',
-    '/wsp/code/java/*',
-    '/wsp/code/cpp/*',
+    '$DEVROOT/wsp/akir-shell',
+    '$DEVROOT/wsp/akir-zimfw',
+    '$DEVROOT/wsp/nvim',
+    '$DEVROOT/wsp/nixos',
+    '$DEVROOT/wsp/dotfiles',
+    '$DEVROOT/wsp/code/web/*',
+    '$DEVROOT/wsp/code/rust/*',
+    '$DEVROOT/wsp/code/sql/*',
+    '$DEVROOT/wsp/code/java/*',
+    '$DEVROOT/wsp/code/cpp/*',
   },
   lazy_load = function()
     local argv = vim.v.argv
@@ -45,7 +45,7 @@ M.file = {
   search = {
     grep_args = {},
   },
-  db_workspace = '/wsp/code/sql',
+  db_workspace = '$DEVROOT/wsp/code/sql',
 }
 
 return M
