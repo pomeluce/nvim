@@ -20,11 +20,11 @@ M.session = {
     '$DEVROOT/wsp/nvim',
     '$DEVROOT/wsp/nixos',
     '$DEVROOT/wsp/dotfiles',
-    '$DEVROOT/wsp/code/web/*',
-    '$DEVROOT/wsp/code/rust/*',
-    '$DEVROOT/wsp/code/sql/*',
-    '$DEVROOT/wsp/code/java/*',
-    '$DEVROOT/wsp/code/cpp/*',
+    '$DEVROOT/code/web/*',
+    '$DEVROOT/code/rust/*',
+    '$DEVROOT/code/sql/*',
+    '$DEVROOT/code/java/*',
+    '$DEVROOT/code/cpp/*',
   },
   lazy_load = function()
     local argv = vim.v.argv
