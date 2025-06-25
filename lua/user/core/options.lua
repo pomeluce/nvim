@@ -1,6 +1,5 @@
 local opt = vim.opt
 local o = vim.o
-local is_wsl = vim.fn.has('wsl') == 1
 
 -- 状态栏全局显示
 o.laststatus = 3
@@ -162,19 +161,3 @@ vim.cmd([[
     let &t_SI.="\e[5 q"
     let &t_EI.="\e[1 q"
 ]])
-
--- wsl 剪切板
-if is_wsl then
-  vim.g.clipboard = {
-    name = 'WslClipboard',
-    copy = {
-      ['+'] = 'clip.exe',
-      ['*'] = 'clip.exe',
-    },
-    paste = {
-      ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw -Format UnicodeText).tostring().replace("`r", ""))',
-      ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw -Format UnicodeText).tostring().replace("`r", ""))',
-    },
-    cache_enabled = 0,
-  }
-end
