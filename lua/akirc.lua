@@ -20,6 +20,7 @@ M.session = {
     '$DEVROOT/wsp/nvim',
     '$DEVROOT/wsp/nixos',
     '$DEVROOT/wsp/dotfiles',
+    '$DEVROOT/wsp/wallpapers',
     '$DEVROOT/code/web/*',
     '$DEVROOT/code/rust/*',
     '$DEVROOT/code/sql/*',
