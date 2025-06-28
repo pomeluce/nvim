@@ -99,7 +99,7 @@ opt.autoread = false
 -- 持久化撤销
 opt.undofile = true
 ---@diagnostic disable-next-line: assign-type-mismatch
-opt.undodir = os.getenv('HOME') .. '/.config/nvim/cache/undodir'
+opt.undodir = os.getenv('HOME') .. '/.cache/nvim/undodir'
 
 -- vim 保存 1000 条文件记录
 opt.viminfo = "!,'10000,<50,s10,h"
@@ -110,7 +110,7 @@ opt.foldenable = true
 -- 手动建立折叠
 opt.foldmethod = 'manual'
 ---@diagnostic disable-next-line: assign-type-mismatch
-opt.viewdir = os.getenv('HOME') .. '/.config/nvim/cache/viewdir'
+opt.viewdir = os.getenv('HOME') .. '/.cache/nvim/viewdir'
 opt.foldtext = 'v:lua.vim.cmd("AkirFold")'
 
 -- 设置命令行高度
