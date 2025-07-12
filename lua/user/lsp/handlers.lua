@@ -87,6 +87,7 @@ M.setup = function()
       on_init = M.on_init,
     }
     local result, config = pcall(require, 'user.lsp.config.' .. server)
+    server = (server == 'vue_ls') and 'volar' or server
     if result then
       require('lspconfig')[server].setup(vim.tbl_deep_extend('keep', opt, config))
     end

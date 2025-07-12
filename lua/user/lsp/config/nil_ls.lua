@@ -1,1 +1,9 @@
-return {}
+return {
+  settings = {
+    ['nil'] = {
+      flake = {
+        autoArchive = true,
+      },
+    },
+  },
+}
