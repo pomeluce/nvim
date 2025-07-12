@@ -46,7 +46,7 @@ M.file = {
   search = {
     grep_args = {},
   },
-  db_workspace = '$DEVROOT/wsp/code/sql',
+  db_workspace = os.getenv('DEVROOT') .. '/wsp/code/sql',
 }
 
 return M
