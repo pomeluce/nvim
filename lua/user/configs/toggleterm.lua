@@ -84,7 +84,7 @@ function M.setup()
     float_opts = {
       border = require('akirc').ui.borderStyle,
       width = 120,
-      height = 40,
+      height = 35,
       title_pos = 'center',
     },
   }
