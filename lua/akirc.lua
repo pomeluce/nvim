@@ -20,6 +20,7 @@ M.session = {
     '$DEVROOT/wsp/nvim',
     '$DEVROOT/wsp/nixos',
     '$DEVROOT/wsp/dotfiles',
+    '$DEVROOT/wsp/datastore',
     '$DEVROOT/wsp/wallpapers',
     '$DEVROOT/code/web/*',
     '$DEVROOT/code/rust/*',
@@ -46,7 +47,7 @@ M.file = {
   search = {
     grep_args = {},
   },
-  db_workspace = os.getenv('DEVROOT') .. '/wsp/code/sql',
+  db_workspace = os.getenv('DEVROOT') .. '/code/sql',
 }
 
 return M
