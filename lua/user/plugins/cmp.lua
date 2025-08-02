@@ -3,22 +3,22 @@ return {
   event = 'InsertEnter',
   dependencies = {
     -- copilot 智能提示
-    -- {
-    --   'zbirenbaum/copilot.lua',
-    --   dependencies = {
-    --     { 'zbirenbaum/copilot-cmp', main = 'copilot_cmp', opts = {} },
-    --   },
-    --   main = 'copilot',
-    --   cmd = 'Copilot',
-    --   event = 'InsertEnter',
-    --   opts = require('user.configs.copilot').setup(),
-    -- },
-    --- codeium 智能提示
     {
-      'Exafunction/windsurf.nvim',
-      name = 'codeium',
-      opts = require('user.configs.windsurf').setup(),
+      'zbirenbaum/copilot.lua',
+      dependencies = {
+        { 'zbirenbaum/copilot-cmp', main = 'copilot_cmp', opts = {} },
+      },
+      main = 'copilot',
+      cmd = 'Copilot',
+      event = 'InsertEnter',
+      opts = require('user.configs.copilot').setup(),
     },
+    -- codeium 智能提示
+    -- {
+    --   'Exafunction/windsurf.nvim',
+    --   name = 'codeium',
+    --   opts = require('user.configs.windsurf').setup(),
+    -- },
     {
       'L3MON4D3/LuaSnip',
       dependencies = { 'rafamadriz/friendly-snippets' },
@@ -44,10 +44,5 @@ return {
       { 'MattiasMTS/cmp-dbee', dependencies = { { 'kndndrj/nvim-dbee' } }, ft = 'sql', opts = {} },
     },
   },
-  config = function()
-    local cmp = require('user.configs.cmp')
-    cmp.load_luasnip()
-    require('cmp').setup(cmp.setup())
-    cmp.handler()
-  end,
+  config = require('user.configs.cmp').setup(),
 }

@@ -6,9 +6,7 @@ return {
       'williamboman/mason-lspconfig.nvim',
       'jay-babu/mason-nvim-dap.nvim',
     },
-    config = function()
-      require('user.lsp.mason').setup()
-    end,
+    config = require('user.lsp.mason').setup(),
   },
 
   {
@@ -19,11 +17,8 @@ return {
       { 'folke/neodev.nvim', opts = {} },
       { 'nvimdev/lspsaga.nvim', opts = require('user.configs.lspsaga').setup() },
     },
-    init = require('user.lsp.handlers').lsp_initialize,
-    config = function()
-      -- 加载 lsp handlers
-      require('user.lsp.handlers').setup()
-    end,
+    init = require('user.lsp.handlers').init(),
+    config = require('user.lsp.handlers').setup(),
   },
 
   {

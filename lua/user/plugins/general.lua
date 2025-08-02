@@ -44,6 +44,11 @@ return {
     cmd = 'MarkdownPreview',
     ft = 'markdown',
   },
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    event = 'VeryLazy',
+    ft = { 'markdown', 'codecompanion' },
+  },
   -- 代码注释
   {
     'numToStr/Comment.nvim',

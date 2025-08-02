@@ -218,6 +218,10 @@ map('n', '<leader>sh', ':Telescope neovim-project history theme=dropdown<cr>', {
 --[[ todo 待办标签 ]]
 map('n', '<leader>td', ':TodoTelescope theme=dropdown<cr>', { desc = 'todo list' })
 
+--[[ codecompanion AI 代码助手 ]]
+map({ 'n', 'v', 'x' }, '<leader>tc', ':lua require("codecompanion").toggle()<cr>', { desc = 'codecompanion chat' })
+map({ 'n', 'v', 'x' }, '<leader>ac', ':CodeCompanionActions<cr>', { desc = 'codecompanion actions' })
+
 --[[ Dap 快捷键配置 ]]
 map('n', '<F2>', function()
   require('telescope').extensions.dap.configurations {}
@@ -262,7 +266,7 @@ map('n', '<Leader>ds', function()
 end, { desc = 'float show debug scopes' })
 
 --[[ lsp 快捷键设置 ]]
-M.lsp_keymaps = function(bufnr)
+M.lsp = function(bufnr)
   -- 重命名
   map('n', '<leader>rn', '<cmd>Lspsaga rename ++project<cr>', { desc = 'rename variable', buffer = bufnr })
   -- 跳转到定义

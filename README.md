@@ -139,15 +139,15 @@ nvim
 | n       | leader + e + k   | 编辑快捷键                   |
 | n       | leader + d + /   | 文档注释                     |
 | n       | leader + r + s   | 恢复项目会话                 |
-| n       | F2               | start breakpoint debug       |
-| n       | F10              | step over breakpoint debug   |
-| n       | F11              | step into breakpoint debug   |
-| n       | F12              | step out breakpoint debug    |
-| n       | leader + d + b   | toggle breakpoint debug      |
-| n       | leader + B       | set breakpoint debug         |
-| n       | leader + d + m   | log point breakpoint debug   |
+| n       | F2               | 启动断点调试                 |
+| n       | F10              | 跳过断点调试                 |
+| n       | F11              | 步入断点调试                 |
+| n       | F12              | 步出断点调试                 |
+| n       | leader + d + b   | 添加/删除断点                |
+| n       | leader + B       | 在当前行添加断点             |
+| n       | leader + d + m   | 添加断点输出日志             |
 | n       | leader + d + r   | open debug repl              |
-| n       | leader + d + l   | run last debug               |
+| n       | leader + d + l   | 运行上一次调试               |
 | n, v    | leader + d + h   | debug hover                  |
 | n, v    | leader + d + p   | debug preview                |
 | n       | leader + d + f   | float show debug frames      |
@@ -160,9 +160,11 @@ nvim
 | n       | g + t            | 跳转到类型定义               |
 | n       | g + r            | 跳转到引用                   |
 | n       | leader + s + s   | structure 列表               |
-| n       | K                | hover documents              |
-| n, v    | alt + return     | code action                  |
+| n       | K                | 悬停文档                     |
+| n, v    | alt + return     | 代码操作提示                 |
 | n       | leader + f + m   | 代码格式化                   |
+| n, v, x | leader + t + c   | 切换 ai 助手窗口             |
+| n, v, x | leader + a + c   | 显示 ai 助手操作             |
 
 ### 插件快捷键
 

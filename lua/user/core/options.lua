@@ -152,7 +152,7 @@ opt.fillchars = {
 }
 
 -- 将 mason.nvim 安装的二进制文件添加到路径中
-local is_windows = vim.fn.has('win32') ~= 0
+local is_windows = require('utils').is_windows
 local sep = is_windows and '\\' or '/'
 local delim = is_windows and ';' or ':'
 vim.env.PATH = table.concat({ vim.fn.stdpath('data'), 'mason', 'bin' }, sep) .. delim .. vim.env.PATH
