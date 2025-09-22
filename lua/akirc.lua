@@ -21,7 +21,6 @@ M.session = {
     '$DEVROOT/wsp/nixos',
     '$DEVROOT/wsp/dotfiles',
     '$DEVROOT/wsp/datastore',
-    '$DEVROOT/wsp/wallpapers',
     '$DEVROOT/code/web/*',
     '$DEVROOT/code/rust/*',
     '$DEVROOT/code/sql/*',
