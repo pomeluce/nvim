@@ -98,4 +98,13 @@ function M.hl(hls)
   end
 end
 
+-- 替代 lspconfig.util.root_pattern
+function M.root_pattern(...)
+  local patterns = { ... }
+  return function(fname)
+    local path = vim.fs.find(patterns, { upward = true, path = fname })[1]
+    return path and vim.fs.dirname(path) or nil
+  end
+end
+
 return M

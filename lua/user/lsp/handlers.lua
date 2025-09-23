@@ -27,33 +27,44 @@ M.setup = function()
   return function()
     dofile(vim.g.base46_cache .. 'lsp')
     local mason = require('user.lsp.mason')
+    local autocmd = vim.api.nvim_create_autocmd
+
+    autocmd('LspAttach', {
+      callback = function(args)
+        local bufnr = args.buf
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if not client then
+          return
+        end
+
+        require('user.core.mappings').lsp(bufnr)
+        -- 以 server_capabilities 设置自动命令
+        if client.server_capabilities.documentHighlight then
+          -- 清除当前缓冲区中的所有高亮命名空间
+          vim.api.nvim_buf_clear_namespace(0, vim.fn.bufnr(), 0, -1)
+          local lsp_highlight_document = vim.api.nvim_create_augroup('lsp_highlight_document', { clear = false })
+          autocmd('CursorHold', {
+            group = lsp_highlight_document,
+            pattern = '*',
+            callback = function()
+              vim.lsp.buf.document_highlight()
+            end,
+          })
+
+          autocmd('CursorHold', {
+            group = lsp_highlight_document,
+            pattern = '*',
+            callback = function()
+              vim.lsp.buf.clear_references()
+            end,
+          })
+        end
+      end,
+    })
+
     -- lsp 配置
     for _, server in pairs(mason.lsp_servers) do
       local opt = {
-        on_attach = function(client, bufnr)
-          require('user.core.mappings').lsp(bufnr)
-          -- 以 server_capabilities 设置自动命令
-          if client.server_capabilities.documentHighlight then
-            -- 清除当前缓冲区中的所有高亮命名空间
-            vim.api.nvim_buf_clear_namespace(0, vim.fn.bufnr(), 0, -1)
-            local lsp_highlight_document = vim.api.nvim_create_augroup('lsp_highlight_document', { clear = false })
-            vim.api.nvim_create_autocmd('CursorHold', {
-              group = lsp_highlight_document,
-              pattern = '*',
-              callback = function()
-                vim.lsp.buf.document_highlight()
-              end,
-            })
-
-            vim.api.nvim_create_autocmd('CursorHold', {
-              group = lsp_highlight_document,
-              pattern = '*',
-              callback = function()
-                vim.lsp.buf.clear_references()
-              end,
-            })
-          end
-        end,
         capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), {
           textDocument = {
             completion = {
@@ -84,10 +95,10 @@ M.setup = function()
           end
         end,
       }
-      local result, config = pcall(require, 'user.lsp.config.' .. server)
-      server = (server == 'vue_ls') and 'volar' or server
-      if result then
-        require('lspconfig')[server].setup(vim.tbl_deep_extend('keep', opt, config))
+      local ok, config = pcall(require, 'user.lsp.config.' .. server)
+      if ok then
+        vim.lsp.config(server, vim.tbl_deep_extend('keep', opt, config))
+        vim.lsp.enable(server)
       end
     end
   end

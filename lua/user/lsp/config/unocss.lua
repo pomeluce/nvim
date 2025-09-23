@@ -51,5 +51,5 @@ return {
     'svelte',
     'templ',
   },
-  root_dir = require('lspconfig.util').root_pattern('unocss.config.js', 'unocss.config.ts', 'uno.config.js', 'uno.config.ts'),
+  root_dir = require('user.core.funcutil').root_pattern('unocss.config.js', 'unocss.config.ts', 'uno.config.js', 'uno.config.ts'),
 }

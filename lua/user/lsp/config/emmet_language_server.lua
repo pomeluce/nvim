@@ -1,7 +1,7 @@
 return {
   cmd = { 'emmet-language-server', '--stdio' },
   filetypes = { 'astro', 'css', 'eruby', 'html', 'htmldjango', 'javascriptreact', 'less', 'pug', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue' },
-  root_dir = require('lspconfig.util').root_pattern('package.json', '.git'),
+  root_dir = require('user.core.funcutil').root_pattern('package.json', '.git'),
   single_file_support = true,
   init_options = {
     html = {
