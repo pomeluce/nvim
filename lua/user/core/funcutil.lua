@@ -100,10 +100,97 @@ end
 
 -- 替代 lspconfig.util.root_pattern
 function M.root_pattern(...)
-  local patterns = { ... }
-  return function(fname)
-    local path = vim.fs.find(patterns, { upward = true, path = fname })[1]
-    return path and vim.fs.dirname(path) or nil
+  -- 内部 helper: 递归扁平化参数列表
+  local function tbl_flatten(t)
+    local out = {}
+    local function _f(v)
+      if type(v) == 'table' then
+        for _, x in ipairs(v) do
+          _f(x)
+        end
+      else
+        out[#out + 1] = v
+      end
+    end
+    _f(t)
+    return out
+  end
+
+  -- 内部 helper: strip zip/tar archive subpath
+  local function strip_archive_subpath(path)
+    if not path or path == '' then
+      return path
+    end
+    path = vim.fn.substitute(path, 'zipfile://\\(.\\{-}\\)::[^\\\\].*$', '\\1', '')
+    path = vim.fn.substitute(path, 'tarfile:\\(.\\{-}\\)::.*$', '\\1', '')
+    return path
+  end
+
+  -- 扁平化并构造 patterns 列表
+  local patterns = tbl_flatten { ... }
+
+  -- 归一化 startpath: nil / buffer id / file:// URI / file -> dirname / fallback cwd
+  local function normalize_startpath(sp)
+    sp = strip_archive_subpath(sp)
+
+    if not sp or sp == '' then
+      sp = vim.api.nvim_buf_get_name(0)
+    end
+
+    if type(sp) == 'number' then
+      sp = vim.api.nvim_buf_get_name(sp)
+    end
+
+    if type(sp) == 'string' and sp:match('^file://') then
+      if vim.uri_to_fname then
+        local ok, p = pcall(vim.uri_to_fname, sp)
+        if ok and p then
+          sp = p
+        else
+          sp = sp:gsub('^file://', '')
+        end
+      else
+        sp = sp:gsub('^file://', '')
+      end
+    end
+
+    local stat = nil
+    if type(sp) == 'string' or sp ~= '' then
+      stat = vim.loop.fs_stat(sp)
+    end
+
+    -- 如果是文件则使用所在目录
+    if stat and stat.type == 'file' then
+      if vim.fs and type(vim.fs.dirname) == 'function' then
+        sp = vim.fs.dirname(sp)
+      else
+        sp = vim.fn.fnamemodify(sp, ':h')
+      end
+    end
+
+    return sp
+  end
+
+  -- 主返回函数, 行为与 lspconfig.util.root_pattern 一致: 返回 root dir 或 nil
+  return function(startpath)
+    local sp = normalize_startpath(startpath)
+    if vim.fs and type(vim.fs.find) == 'function' then
+      for _, pat in ipairs(patterns) do
+        local ok, found = pcall(vim.fs.find, pat, { path = sp, upward = true, limit = 1 })
+        if ok and found and found[1] then
+          local dir
+          if vim.fs and type(vim.fs.dirname) == 'function' then
+            dir = vim.fs.dirname(found[1])
+          else
+            dir = vim.fn.fnamemodify(found[1], ':h')
+          end
+          local real = vim.loop.fs_realpath(dir)
+          return real or dir
+        end
+      end
+      return nil
+    end
+    return nil
   end
 end
 
