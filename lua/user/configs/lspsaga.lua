@@ -14,7 +14,7 @@ function M.setup()
       -- 是否使用 nvim-web-devicons
       devicon = true,
       -- 是否显示标题
-      title = true,
+      title = false,
       winblend = 0,
       -- 展开图标
       expand = '',

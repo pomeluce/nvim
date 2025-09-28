@@ -39,24 +39,20 @@ M.setup = function()
 
         require('user.core.mappings').lsp(bufnr)
         -- 以 server_capabilities 设置自动命令
-        if client.server_capabilities.documentHighlight then
+        if client.server_capabilities.documentHighlightProvider then
           -- 清除当前缓冲区中的所有高亮命名空间
           vim.api.nvim_buf_clear_namespace(0, vim.fn.bufnr(), 0, -1)
           local lsp_highlight_document = vim.api.nvim_create_augroup('lsp_highlight_document', { clear = false })
           autocmd('CursorHold', {
             group = lsp_highlight_document,
             pattern = '*',
-            callback = function()
-              vim.lsp.buf.document_highlight()
-            end,
+            callback = vim.lsp.buf.document_highlight,
           })
 
-          autocmd('CursorHold', {
+          autocmd({ 'CursorMoved', 'InsertEnter' }, {
             group = lsp_highlight_document,
             pattern = '*',
-            callback = function()
-              vim.lsp.buf.clear_references()
-            end,
+            callback = vim.lsp.buf.clear_references,
           })
         end
       end,
@@ -97,7 +93,7 @@ M.setup = function()
       }
       local ok, config = pcall(require, 'user.lsp.config.' .. server)
       if ok then
-        vim.lsp.config(server, vim.tbl_deep_extend('keep', opt, config))
+        vim.lsp.config(server, vim.tbl_deep_extend('force', opt, config))
         vim.lsp.enable(server)
       end
     end

@@ -16,7 +16,7 @@ function M.config()
 end
 
 function M.setup()
-  -- do nothing
+  return { code = { language_icon = true } }
 end
 
 return M
