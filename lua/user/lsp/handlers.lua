@@ -41,14 +41,15 @@ M.setup = function()
         -- 以 server_capabilities 设置自动命令
         if client.server_capabilities.documentHighlightProvider then
           -- 清除当前缓冲区中的所有高亮命名空间
-          local ns = vim.api.nvim_create_augroup('lsp_highlight_document_' .. bufnr, { clear = false })
+          local group = vim.api.nvim_create_augroup('lsp_highlight_document_' .. bufnr, { clear = true })
           autocmd('CursorHold', {
+            group = group,
             buffer = bufnr,
             callback = function()
               local clients = vim.lsp.get_clients { bufnr = bufnr }
               for _, c in pairs(clients) do
                 if c.server_capabilities.documentHighlightProvider then
-                  vim.lsp.buf.document_highlight(ns)
+                  vim.lsp.buf.document_highlight()
                   break
                 end
               end
@@ -56,16 +57,9 @@ M.setup = function()
           })
 
           autocmd({ 'CursorMoved', 'InsertEnter' }, {
+            group = group,
             buffer = bufnr,
-            callback = function()
-              local clients = vim.lsp.get_clients { bufnr = bufnr }
-              for _, c in pairs(clients) do
-                if c.server_capabilities.documentHighlightProvider then
-                  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-                  break
-                end
-              end
-            end,
+            callback = vim.lsp.buf.clear_references,
           })
         end
       end,

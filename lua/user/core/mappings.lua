@@ -12,6 +12,7 @@ map('n', 's', '<nop>', {})
 map({ 'n', 'v' }, ';', ':', { desc = 'into cmd mode', silent = false })
 map('n', 'S', ':AkirSave<cr>', { desc = 'save file' })
 map('n', 'Q', ':q!<cr>', { desc = 'confrim exit' })
+map('t', '<esc>', '<c-\\><c-n>', { desc = 'change terminal to normal mode' })
 
 -- 设置删除后不复制删除后的文本
 map('v', 'c', '"_c', {})
