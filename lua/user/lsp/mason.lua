@@ -2,6 +2,7 @@ local M = {}
 
 -- lsp 列表
 M.lsp_servers = {
+  'basedpyright',
   'bashls',
   'clangd',
   'cmake',
@@ -42,6 +43,7 @@ M.setup = function()
     dofile(vim.g.base46_cache .. 'mason')
 
     local is_enable = require('akirc').mason.enable
+    ---@diagnostic disable-next-line: redundant-parameter
     require('mason').setup {
       ui = {
         -- 设置安装图标
