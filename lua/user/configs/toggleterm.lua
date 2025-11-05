@@ -76,7 +76,7 @@ function M.config()
 end
 
 function M.setup()
-  return {
+  local opts = {
     direction = 'float',
     highlights = {
       FloatBorder = { link = 'FloatBorder' },
@@ -88,6 +88,12 @@ function M.setup()
       title_pos = 'center',
     },
   }
+
+  if require('utils').is_windows then
+    opts.shell = 'pwsh.exe --noLog'
+  end
+
+  return opts
 end
 
 return M
