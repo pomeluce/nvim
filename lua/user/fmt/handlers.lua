@@ -30,7 +30,7 @@ require('conform').setup {
           '--stdin-filepath',
           '$FILENAME',
           '--config',
-          vim.fn.expand('~/.config/nvim/.prettierrc.json'),
+          vim.fn.expand(require('utils').cfg_path .. '/.prettierrc.json'),
         }
 
         -- 根据文件类型设置 parser(可选)
@@ -60,7 +60,7 @@ require('conform').setup {
         '--stdin-filepath',
         '$FILENAME',
         '--config-path',
-        vim.fn.expand('~/.config/nvim/.stylua.toml'),
+        vim.fn.expand(require('utils').cfg_path .. '/.stylua.toml'),
         '--',
         '-',
       },
@@ -78,7 +78,7 @@ require('conform').setup {
       command = 'rustfmt',
       args = {
         '--config-path',
-        vim.fn.expand('~/.config/nvim/.rustfmt.toml'),
+        vim.fn.expand(require('utils').cfg_path .. '/.rustfmt.toml'),
       },
       stdin = true,
     },
@@ -106,7 +106,7 @@ require('conform').setup {
       args = {
         'format',
         '--config',
-        vim.fn.expand('~/.config/nvim/.sqlfluff.cfg'),
+        vim.fn.expand(require('utils').cfg_path .. '/.sqlfluff.cfg'),
         '-',
       },
       stdin = true,
@@ -121,7 +121,7 @@ require('conform').setup {
         '$FILENAME',
         '-',
         '--config',
-        vim.fn.expand('~/.config/nvim/.taplo.toml'),
+        vim.fn.expand(require('utils').cfg_path .. '/.taplo.toml'),
       },
       stdin = true,
     },
