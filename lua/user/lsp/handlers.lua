@@ -99,9 +99,15 @@ M.setup = function()
         end,
       }
       local ok, config = pcall(require, 'user.lsp.config.' .. server)
+      local is_active = false
       if ok then
         vim.lsp.config(server, vim.tbl_deep_extend('force', opt, config))
-        vim.lsp.enable(server)
+        if server ~= 'ts_ls' and server ~= 'vue_ls' then
+          vim.lsp.enable(server)
+        elseif not is_active then
+          is_active = true
+          vim.lsp.enable { 'ts_ls', 'vue_ls' }
+        end
       end
     end
   end

@@ -19,7 +19,7 @@ M.lsp_servers = {
   'tailwindcss',
   'taplo',
   'ts_ls',
-  'unocss',
+  -- 'unocss',
   'vue_ls',
 }
 
