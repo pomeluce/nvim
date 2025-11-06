@@ -77,6 +77,7 @@ function M.setup()
         { name = 'copilot' },
         { name = 'codeium' },
         { name = 'nvim_lua' },
+        { name = 'vim-dadbod-completion' },
         { name = 'cmp-dbee' },
       },
     }

@@ -1,12 +1,9 @@
 return {
-  'kndndrj/nvim-dbee',
+  'kristijanhusak/vim-dadbod-ui',
   event = 'VeryLazy',
   dependencies = {
-    'MunifTanjim/nui.nvim',
+    { 'tpope/vim-dadbod', lazy = true },
+    { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true },
   },
-  cmd = 'Dbee',
-  build = function()
-    require('dbee').install()
-  end,
-  opts = require('user.configs.dbee').setup(),
+  cmd = { 'DBUI' },
 }

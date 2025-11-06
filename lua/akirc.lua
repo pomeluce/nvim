@@ -46,7 +46,7 @@ M.file = {
   search = {
     grep_args = {},
   },
-  db_workspace = os.getenv('DEVROOT') .. '/code/sql',
+  db_workspace = os.getenv('DEVROOT') .. '/code/sql/dadbod-queries',
 }
 
 return M
