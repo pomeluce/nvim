@@ -30,8 +30,7 @@ if exe_real and exe_real ~= '' then
 end
 
 -- Mason 安装方式
-table.insert(candidates, vim.fn.expand('$MASON/packages') .. '/vue-language-server')
-table.insert(candidates, vim.fn.expand('$MASON/packages') .. '/vue-language-server/node_modules/@vue/language-server')
+table.insert(candidates, vim.fn.stdpath('data') .. '/mason/packages/vue-language-server/node_modules/@vue/language-server')
 
 local function exists(path)
   if not path or path == '' then
