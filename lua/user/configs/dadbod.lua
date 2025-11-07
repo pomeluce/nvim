@@ -143,7 +143,7 @@ function M.config()
   vim.g.db_ui_disable_mappings_sql = 1
   local autocmd = vim.api.nvim_create_autocmd
   autocmd('FileType', {
-    pattern = { 'mysql', 'plsql', 'sql' },
+    pattern = { 'mysql', 'plsql', 'redis', 'sql' },
     callback = function()
       vim.keymap.set({ 'n', 'v' }, '<c-cr>', '<Plug>(DBUI_ExecuteQuery)', { buffer = true })
       vim.keymap.set({ 'n', 'v' }, '<m-cr>', '<Plug>(DBUI_ExecuteQuery)', { buffer = true })
