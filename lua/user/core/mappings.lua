@@ -58,7 +58,7 @@ map('n', '<c-h>', '<c-w>h', { desc = 'jump to left window' })
 map('n', '<c-l>', '<c-w>l', { desc = 'jump to right window' })
 map('n', '<c-k>', '<c-w>k', { desc = 'jump to top window' })
 map('n', '<c-j>', '<c-w>j', { desc = 'jump to bottom window' })
-map('n', '<c-Space>', function()
+map('n', '<c-space>', function()
   local window_number = require('window-picker').pick_window()
   if window_number then
     vim.api.nvim_set_current_win(window_number)

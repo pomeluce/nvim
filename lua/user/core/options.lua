@@ -146,7 +146,7 @@ opt.signcolumn = 'yes'
 -- 设置填充字符
 opt.fillchars = {
   fold = '-',
-  stlnc = '',
+  stlnc = '·',
   eob = ' ',
   foldsep = '=',
 }

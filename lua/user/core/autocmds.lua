@@ -1,6 +1,7 @@
 local autoGroup = vim.api.nvim_create_augroup('autoGroup', { clear = true })
 local autocmd = vim.api.nvim_create_autocmd
 local usercmd = vim.api.nvim_create_user_command
+local is_win = require('utils').is_windows
 
 -- user event that loads after UIEnter + only if file buf is there
 autocmd({ 'UIEnter', 'BufReadPost', 'BufNewFile' }, {
@@ -46,7 +47,14 @@ autocmd('InsertLeave', {
   pattern = '*',
   callback = function()
     if vim.api.nvim_get_mode().mode == 'n' then
-      vim.fn.system('busctl call --user org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 SetAsciiMode b 1')
+      if is_win then
+        vim.defer_fn(function()
+          -- 将 WeaselServer.exe 添加到环境变量
+          vim.fn.jobstart('WeaselServer.exe /ascii', { detach = true })
+        end, 1)
+      else
+        vim.fn.system('busctl call --user org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 SetAsciiMode b 1')
+      end
     end
   end,
 })
