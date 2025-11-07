@@ -15,11 +15,9 @@ M.lsp_servers = {
   'marksman',
   'nil_ls',
   'rust_analyzer',
-  'sqlls',
   'tailwindcss',
   'taplo',
   'ts_ls',
-  -- 'unocss',
   'vue_ls',
 }
 
