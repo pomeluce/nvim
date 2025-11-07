@@ -102,6 +102,8 @@ function M.config()
   vim.g.db_ui_use_nerd_fonts = 1
   -- 强制回显通知
   vim.g.db_ui_force_echo_notifications = 1
+  -- 关闭保存自动执行
+  vim.g.db_ui_execute_on_save = 0
   -- 预定义方案
   vim.g.db_ui_table_helpers = {
     mysql = {
@@ -141,9 +143,10 @@ function M.config()
   vim.g.db_ui_disable_mappings_sql = 1
   local autocmd = vim.api.nvim_create_autocmd
   autocmd('FileType', {
-    pattern = 'sql',
+    pattern = { 'mysql', 'plsql', 'sql' },
     callback = function()
       vim.keymap.set({ 'n', 'v' }, '<c-cr>', '<Plug>(DBUI_ExecuteQuery)', { buffer = true })
+      vim.keymap.set({ 'n', 'v' }, '<m-cr>', '<Plug>(DBUI_ExecuteQuery)', { buffer = true })
     end,
   })
 
