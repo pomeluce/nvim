@@ -71,7 +71,7 @@ end
 
 function M.config()
   M.setToggleKey('<C-t>', 'TERM', '', nil)
-  M.setToggleKey('<C-b>', 'DBUI', 'nvim +CALLDB', { width = 140, height = 45 })
+  M.setToggleKey('<C-b>', 'DBUI', 'nvim +CALLDB', { width = 130, height = 35 })
   M.setToggleKey('<C-p>', 'RANGER', 'ranger', nil)
 end
 

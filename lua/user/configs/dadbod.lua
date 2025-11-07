@@ -86,7 +86,8 @@ function M.DBUI()
     signcolumn: 移除标记列
     nofoldenable: 移除折叠
   ]]
-  vim.cmd('set laststatus=0 showtabline=0 nonu signcolumn=no nofoldenable')
+  -- vim.cmd('set laststatus=0 showtabline=0 nonu signcolumn=no nofoldenable')
+  vim.cmd('set nonu signcolumn=no nofoldenable')
   vim.cmd('exec "DBUI"')
 end
 
