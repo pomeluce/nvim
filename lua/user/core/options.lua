@@ -15,6 +15,10 @@ o.splitbelow = true
 -- 新建的垂直分割窗口会出现在当前窗口的右侧
 o.splitright = true
 
+-- 设置文件默认格式
+opt.fileformat = 'unix'
+opt.fileformats = { 'unix', 'dos', 'mac' }
+
 -- 命令提示
 opt.showcmd = true
 opt.encoding = 'utf-8'
