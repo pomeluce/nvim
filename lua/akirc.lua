@@ -13,7 +13,7 @@ M.mason = {
 }
 
 M.session = {
-  ignore_dir = { '~/Downloads' },
+  ignore_dir = { '~/downloads', '~/Downloads' },
   projects = {
     '$DEVROOT/wsp/akir-shell',
     '$DEVROOT/wsp/akir-zimfw',

@@ -79,6 +79,43 @@ end
 
 vim.cmd('com! AkirJump lua require("user.core.funcutil").jump()')
 
+function M.replaceWord(range)
+  -- 输入查找词
+  vim.ui.input({ prompt = 'Replace: ' }, function(pattern)
+    if not pattern or pattern == '' then
+      return
+    end
+
+    -- 输入替换词
+    vim.ui.input({ prompt = 'With: ' }, function(repl)
+      if repl == nil then
+        return
+      end
+
+      -- 询问是否确认每次替换
+      local want_confirm = vim.fn.confirm('Confirm each replacement?', '&Yes\n&No', 2) == 1
+
+      -- 使用 \V (very nomagic) 使 pattern 被视为字面内容, 不需要转义
+      -- 使用 vim.fn.escape 给 pattern/repl 处理分隔符和替换中特殊符号(如 &、/、\ 等)
+      local pat_esc = vim.fn.escape(pattern, '\\/')
+      local repl_esc = vim.fn.escape(repl, '\\/&')
+
+      local flags = 'g'
+      if want_confirm then
+        flags = flags .. 'c'
+      end
+
+      -- 构造并执行命令
+      local cmd = string.format('%s s/\\V%s/%s/%s', range, pat_esc, repl_esc, flags)
+      -- 如果是全缓冲范围, range = '%' -> "% s/..."
+      -- 如果是可视范围, range = "'<,'>" -> "'<,'> s/..."
+      vim.cmd(cmd)
+    end)
+  end)
+end
+
+vim.cmd('command! -nargs=1 ReplaceWord lua require("user.core.funcutil").replaceWord(<q-args>)')
+
 -- 设置高亮
 function M.hl(hls)
   local colormode = vim.o.termguicolors and '' or 'cterm'

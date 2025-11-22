@@ -25,8 +25,10 @@ map('n', '<m-a>', 'ggVG', { desc = 'select all text' })
 map('n', '<m-s>', 'vi{', { desc = 'select brackets text' })
 
 -- 全局替换 c-s = :%s/
-map('n', '<c-s>', ':%s/\\v//gc<left><left><left><left>', { desc = 'global repalce', silent = false })
-map('v', '<c-s>', ':s/\\v//gc<left><left><left><left>', { desc = 'global repalce', silent = false })
+map('n', '<c-s>', ':ReplaceWord %<cr>', { desc = 'buffer literal repalce', silent = false })
+map('v', '<c-s>', "<esc>:ReplaceWord '<,'><cr>", { desc = 'visual literal repalce', silent = false })
+-- map('n', '<c-s>', ':%s/\\v//gc<left><left><left><left>', { desc = 'global repalce', silent = false })
+-- map('v', '<c-s>', ':s/\\v//gc<left><left><left><left>', { desc = 'global repalce', silent = false })
 
 -- 取消搜索高亮
 map('n', '<leader>nh', ':nohlsearch<cr>', { desc = 'unhighlight' })
