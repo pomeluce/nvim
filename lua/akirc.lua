@@ -26,6 +26,7 @@ M.session = {
     '$DEVROOT/code/sql/*',
     '$DEVROOT/code/java/*',
     '$DEVROOT/code/cpp/*',
+    '$DEVROOT/code/scripts/*',
   },
   lazy_load = function()
     local argv = vim.v.argv
