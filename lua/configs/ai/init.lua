@@ -89,6 +89,7 @@ local opts = {
   prompt_library = {
     ['DeepSeek Explain'] = require('configs.ai.prompts.deepseek-explain'),
   },
+  ignore_warnings = true,
 }
 
 codecompanion.setup(opts)
