@@ -15,12 +15,7 @@ M.mason = {
 M.session = {
   ignore_dir = { '~/downloads', '~/Downloads' },
   projects = {
-    '$DEVROOT/wsp/akir-shell',
-    '$DEVROOT/wsp/akir-zimfw',
-    '$DEVROOT/wsp/nvim',
-    '$DEVROOT/wsp/nixos',
-    '$DEVROOT/wsp/dotfiles',
-    '$DEVROOT/wsp/datastore',
+    '$DEVROOT/wsp/*',
     '$DEVROOT/code/web/*',
     '$DEVROOT/code/rust/*',
     '$DEVROOT/code/sql/*',
@@ -31,9 +26,7 @@ M.session = {
   lazy_load = function()
     local argv = vim.v.argv
     for _, arg in ipairs(argv) do
-      if arg == '+CALLDB' then
-        return true
-      end
+      if arg == '+CALLDB' then return true end
     end
     return false
   end,
