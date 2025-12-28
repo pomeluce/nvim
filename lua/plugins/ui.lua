@@ -25,7 +25,7 @@ return {
         indent = { char = '│', highlight = 'IblChar' },
         scope = { char = '│', highlight = highlight },
       })
-      vim.g.rainbow_delimiters = { highlight = highlight }
+      vim.g.rainbow_delimiters = { query = { javascript = 'rainbow-parens', tsx = 'rainbow-parens', html = 'rainbow-parens' }, highlight = highlight }
 
       dofile(vim.g.base46_cache .. 'blankline')
     end,
