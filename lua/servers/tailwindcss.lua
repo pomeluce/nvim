@@ -4,12 +4,7 @@ return {
     -- config params: https://github.com/tailwindlabs/tailwindcss-intellisense#extension-settings
     tailwindCSS = {
       classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass' },
-      includeLanguages = {
-        eelixir = 'html-eex',
-        eruby = 'erb',
-        htmlangular = 'html',
-        templ = 'html',
-      },
+      includeLanguages = { eelixir = 'html-eex', eruby = 'erb', htmlangular = 'html', templ = 'html' },
       lint = {
         cssConflict = 'warning',
         invalidApply = 'error',

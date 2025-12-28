@@ -6,9 +6,7 @@ return {
       'williamboman/mason-lspconfig.nvim',
       'jay-babu/mason-nvim-dap.nvim',
     },
-    config = function()
-      require('configs.mason')
-    end,
+    config = function() require('configs.mason') end,
   },
 
   {
@@ -80,12 +78,12 @@ return {
     init = function()
       local x = vim.diagnostic.severity
       local akirc = require('akirc')
-      vim.diagnostic.config {
+      vim.diagnostic.config({
         virtual_text = { prefix = '' },
         signs = { text = { [x.ERROR] = '󰅙', [x.WARN] = '', [x.INFO] = '󰋼', [x.HINT] = '󰌵' } },
         underline = true,
         float = { border = akirc.ui.borderStyle },
-      }
+      })
 
       -- Default border style
       local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
@@ -96,9 +94,7 @@ return {
         return orig_util_open_floating_preview(contents, syntax, opts, ...)
       end
     end,
-    config = function()
-      require('configs.lsp')
-    end,
+    config = function() require('configs.lsp') end,
   },
 
   {

@@ -1,7 +1,6 @@
 local group = vim.api.nvim_create_augroup('autoGroup', { clear = true })
 local autocmd = vim.api.nvim_create_autocmd
 local usercmd = vim.api.nvim_create_user_command
-local is_win = require('utils').is_windows
 
 -- user event that loads after UIEnter + only if file buf is there
 autocmd({ 'UIEnter', 'BufReadPost', 'BufNewFile' }, {
@@ -10,9 +9,7 @@ autocmd({ 'UIEnter', 'BufReadPost', 'BufNewFile' }, {
     local file = vim.api.nvim_buf_get_name(args.buf)
     local buftype = vim.api.nvim_get_option_value('buftype', { buf = args.buf })
 
-    if not vim.g.ui_entered and args.event == 'UIEnter' then
-      vim.g.ui_entered = true
-    end
+    if not vim.g.ui_entered and args.event == 'UIEnter' then vim.g.ui_entered = true end
 
     if file ~= '' and buftype ~= 'nofile' and vim.g.ui_entered then
       vim.api.nvim_exec_autocmds('User', { pattern = 'FilePost', modeline = false })
@@ -21,9 +18,7 @@ autocmd({ 'UIEnter', 'BufReadPost', 'BufNewFile' }, {
       vim.schedule(function()
         vim.api.nvim_exec_autocmds('FileType', {})
 
-        if vim.g.editorconfig then
-          require('editorconfig').config(args.buf)
-        end
+        if vim.g.editorconfig then require('editorconfig').config(args.buf) end
       end)
     end
   end,
@@ -51,16 +46,7 @@ autocmd('InsertLeave', {
   group = group,
   pattern = '*',
   callback = function()
-    if vim.api.nvim_get_mode().mode == 'n' then
-      if is_win then
-        vim.defer_fn(function()
-          -- 将 WeaselServer.exe 添加到环境变量
-          vim.fn.jobstart('WeaselServer.exe /ascii', { detach = true })
-        end, 1)
-      else
-        vim.fn.system('busctl call --user org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 SetAsciiMode b 1')
-      end
-    end
+    if vim.api.nvim_get_mode().mode == 'n' then vim.fn.system('busctl call --user org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 SetAsciiMode b 1') end
   end,
 })
 
@@ -85,20 +71,16 @@ autocmd('BufEnter', {
 -- })
 
 -- 自动保存折叠信息
-autocmd('FileType', {
-  group = group,
-  pattern = '*',
-  callback = function()
-    vim.cmd([[ silent! loadview ]])
-  end,
-})
-autocmd({ 'BufLeave', 'BufWinEnter' }, {
-  group = group,
-  pattern = '*',
-  callback = function()
-    vim.cmd([[ silent! mkview ]])
-  end,
-})
+-- autocmd('FileType', {
+--   group = group,
+--   pattern = '*',
+--   callback = function() vim.cmd([[ silent! loadview ]]) end,
+-- })
+-- autocmd({ 'BufLeave', 'BufWinEnter' }, {
+--   group = group,
+--   pattern = '*',
+--   callback = function() vim.cmd([[ silent! mkview ]]) end,
+-- })
 
 -- 设置 git 高亮组
 local highlightGroup = vim.api.nvim_create_augroup('custom_theme_highlights', { clear = true })
@@ -120,7 +102,7 @@ usercmd('SqlDialect', function(opts)
     return
   end
 
-  local clients = vim.lsp.get_clients { bufnr = vim.api.nvim_get_current_buf() }
+  local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
 
   for _, client in ipairs(clients) do
     if client.name == 'sqlls' then
@@ -140,7 +122,5 @@ usercmd('SqlDialect', function(opts)
   vim.notify('SQL LSP is not active for this buffer.', vim.log.levels.WARN)
 end, {
   nargs = 1,
-  complete = function(_, _, _)
-    return { 'ansi', 'postgres', 'mysql', 'sqlite', 'bigquery', 'snowflake', 'tsql' }
-  end,
+  complete = function(_, _, _) return { 'ansi', 'postgres', 'mysql', 'sqlite', 'bigquery', 'snowflake', 'tsql' } end,
 })

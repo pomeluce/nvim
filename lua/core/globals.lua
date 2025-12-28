@@ -1,4 +1,4 @@
-function _G.intelli_flod()
+--[[ function _G.intelli_flod()
   local spacetext = ('        '):sub(0, vim.opt.shiftwidth:get())
   local line = vim.fn.getline(vim.v.foldstart):gsub('\t', spacetext)
   local folded = vim.v.foldend - vim.v.foldstart + 1
@@ -27,7 +27,7 @@ function _G.intelli_flod()
     end,
   }
   return funcs[empty <= 2 and empty or -1](empty) .. ' folded ' .. folded .. ' lines '
-end
+end ]]
 
 vim.g.base46_cache = vim.fn.stdpath('data') .. '/base46_cache/'
 

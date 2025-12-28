@@ -112,10 +112,9 @@ opt.viminfo = "!,'10000,<50,s10,h"
 opt.foldenable = true
 
 -- 手动建立折叠
-opt.foldmethod = 'manual'
----@diagnostic disable-next-line: assign-type-mismatch
+-- opt.foldmethod = 'manual'
 opt.viewdir = os.getenv('HOME') .. '/.cache/nvim/viewdir'
-opt.foldtext = 'v:lua.intelli_flod()'
+-- opt.foldtext = 'v:lua.intelli_flod()'
 
 -- 设置命令行高度
 opt.cmdheight = 0
@@ -156,9 +155,9 @@ opt.fillchars = {
 }
 
 -- 将 mason.nvim 安装的二进制文件添加到路径中
-local is_windows = require('utils').is_windows
-local sep = is_windows and '\\' or '/'
-local delim = is_windows and ';' or ':'
+local is_win = require('utils').is_win
+local sep = is_win and '\\' or '/'
+local delim = is_win and ';' or ':'
 vim.env.PATH = table.concat({ vim.fn.stdpath('data'), 'mason', 'bin' }, sep) .. delim .. vim.env.PATH
 
 vim.cmd([[

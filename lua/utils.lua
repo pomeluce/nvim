@@ -1,7 +1,7 @@
 local M = {}
 
-M.cfg_path = vim.fn.stdpath('config')
-
-M.is_windows = vim.fn.has('win32') ~= 0
+M.is_win = vim.fn.has('win32') ~= 0
+M.is_mac = vim.fn.has('macunix') ~= 0
+M.is_unix = vim.fn.has('unix') ~= 0 and not M.is_mac
 
 return M

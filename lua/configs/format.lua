@@ -1,4 +1,7 @@
-require('conform').setup {
+local util = require('conform.util')
+local cfg = vim.fn.stdpath('config')
+
+require('conform').setup({
   formatters_by_ft = {
     lua = { 'stylua' },
     css = { 'prettier' },
@@ -26,12 +29,13 @@ require('conform').setup {
     prettier = {
       command = 'prettier',
       args = function(ctx)
-        local args = {
-          '--stdin-filepath',
-          '$FILENAME',
-          '--config',
-          vim.fn.expand(require('utils').cfg_path .. '/.prettierrc.json'),
-        }
+        local has_root = util.root_file({ '.prettierrc', '.prettierrc.json', '.prettierrc.js', '.prettierrc.cjs' })
+        local args = { '--stdin-filepath', '$FILENAME' }
+
+        if not has_root then
+          table.insert(args, '--config')
+          table.insert(args, vim.fn.expand(cfg .. '/.prettierrc.json'))
+        end
 
         -- 根据文件类型设置 parser(可选)
         local parser_map = {
@@ -51,19 +55,15 @@ require('conform').setup {
         return args
       end,
       stdin = true,
-      cwd = require('conform.util').root_file { '.prettierrc', 'package.json', '.git' },
+      cwd = util.root_file({ '.prettierrc', '.prettierrc.json', 'package.json', '.git' }),
     },
 
     stylua = {
       command = 'stylua',
-      args = {
-        '--stdin-filepath',
-        '$FILENAME',
-        '--config-path',
-        vim.fn.expand(require('utils').cfg_path .. '/.stylua.toml'),
-        '--',
-        '-',
-      },
+      args = function()
+        local has_root = util.root_file({ '.stylua.toml', 'stylua.toml' })
+        return has_root and { '--stdin-filepath', '$FILENAME', '--', '-' } or { '--stdin-filepath', '$FILENAME', '--config-path', vim.fn.expand(cfg .. '/.stylua.toml'), '--', '-' }
+      end,
       stdin = true,
     },
 
@@ -76,10 +76,10 @@ require('conform').setup {
     rustfmt = {
       -- rules: https://rust-lang.github.io/rustfmt
       command = 'rustfmt',
-      args = {
-        '--config-path',
-        vim.fn.expand(require('utils').cfg_path .. '/.rustfmt.toml'),
-      },
+      args = function()
+        local has_root = util.root_file({ '.rustfmt.toml', 'rustfmt.toml' })
+        return has_root and {} or { '--config-path', vim.fn.expand(cfg .. '/.rustfmt.toml') }
+      end,
       stdin = true,
     },
 
@@ -89,40 +89,29 @@ require('conform').setup {
         local shiftwidth = vim.opt.shiftwidth:get()
         local expandtab = vim.opt.expandtab:get()
 
-        if not expandtab then
-          shiftwidth = 0
-        end
+        if not expandtab then shiftwidth = 0 end
 
-        return {
-          '-i',
-          shiftwidth,
-        }
+        return { '-i', shiftwidth }
       end,
       stdin = true,
     },
 
     sqlfluff = {
       command = 'sqlfluff',
-      args = {
-        'format',
-        '--config',
-        vim.fn.expand(require('utils').cfg_path .. '/.sqlfluff.cfg'),
-        '-',
-      },
+      args = function()
+        local has_root = util.root_file({ '.sqlfluff', 'sqlfluff.cfg' })
+        return has_root and { 'format', '-' } or { 'format', '--config', vim.fn.expand(cfg .. '/.sqlfluff.cfg'), '-' }
+      end,
       stdin = true,
       require_cwd = false,
     },
 
     taplo = {
       command = 'taplo',
-      args = {
-        'fmt',
-        '--stdin-filepath',
-        '$FILENAME',
-        '-',
-        '--config',
-        vim.fn.expand(require('utils').cfg_path .. '/.taplo.toml'),
-      },
+      args = function()
+        local has_root = util.root_file({ '.taplo.toml', 'taplo.toml' })
+        return has_root and { 'fmt', '--stdin-filepath', '$FILENAME', '-' } or { 'fmt', '--stdin-filepath', '$FILENAME', '-', '--config', vim.fn.expand(cfg .. '/.taplo.toml') }
+      end,
       stdin = true,
     },
 
@@ -131,17 +120,11 @@ require('conform').setup {
       args = function()
         local shiftwidth = vim.opt.shiftwidth:get()
         local expandtab = vim.opt.expandtab:get()
-        if not expandtab then
-          shiftwidth = 0
-        end
+        if not expandtab then shiftwidth = 0 end
 
-        return {
-          '-i',
-          shiftwidth,
-          '$FILENAME',
-        }
+        return { '-i', shiftwidth, '$FILENAME' }
       end,
       stdin = false,
     },
   },
-}
+})

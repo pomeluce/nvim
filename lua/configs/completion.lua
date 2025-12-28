@@ -105,3 +105,7 @@ cmp.setup.cmdline(':', {
 })
 
 vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = '#4CCD99' })
+
+--[[ autopairs for cmp ]]
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())

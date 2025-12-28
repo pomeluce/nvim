@@ -7,9 +7,7 @@ return {
       vim.cmd('hi! NvimTreeCursorLine cterm=NONE ctermbg=238')
       vim.cmd('hi! link NvimTreeFolderIcon NvimTreeFolderName')
     end,
-    opts = function()
-      return require('configs.nvimtree')
-    end,
+    opts = function() return require('configs.nvimtree') end,
   },
 
   {
@@ -40,9 +38,7 @@ return {
         },
       }
 
-      if require('utils').is_windows then
-        opts.shell = 'pwsh.exe --noLog'
-      end
+      if require('utils').is_win then opts.shell = 'pwsh.exe --noLog' end
 
       return opts
     end,
@@ -61,9 +57,7 @@ return {
       -- camelcase 命名转换
       { 'johmsalas/text-case.nvim' },
     },
-    config = function()
-      require('configs.telescope')
-    end,
+    config = function() require('configs.telescope') end,
   },
 
   -- window picker 快速切换窗口

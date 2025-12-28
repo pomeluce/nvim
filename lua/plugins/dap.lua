@@ -7,7 +7,5 @@ return {
     { 'theHamsta/nvim-dap-virtual-text', opts = {} },
     'nvim-telescope/telescope-dap.nvim',
   },
-  config = function()
-    require('configs.dap')
-  end,
+  config = function() require('configs.dap') end,
 }

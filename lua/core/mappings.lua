@@ -1,8 +1,6 @@
 local M = {}
 
-local map = function(mode, lhs, rhs, opts)
-  vim.keymap.set(mode, lhs, rhs, vim.tbl_extend('force', { silent = true }, opts or {}))
-end
+local map = function(mode, lhs, rhs, opts) vim.keymap.set(mode, lhs, rhs, vim.tbl_extend('force', { silent = true }, opts or {})) end
 
 M.map = map
 
@@ -59,10 +57,8 @@ map('n', '<c-l>', '<c-w>l', { desc = 'jump to right window' })
 map('n', '<c-k>', '<c-w>k', { desc = 'jump to top window' })
 map('n', '<c-j>', '<c-w>j', { desc = 'jump to bottom window' })
 map('n', '<c-space>', function()
-  local window_number = require('window-picker').pick_window()
-  if window_number then
-    vim.api.nvim_set_current_win(window_number)
-  end
+  local window_number = require('window-picker').pick_window({ hint = 'floating-big-letter' })
+  if window_number then vim.api.nvim_set_current_win(window_number) end
 end, { desc = 'order jump all window' })
 
 -- 调整窗口尺寸 winnr() <= winner 判断是否为最后一个窗口
@@ -88,27 +84,19 @@ map({ 'n', 'v', 'i' }, '<m-right>', '<esc>:bn<cr>', { desc = 'buffer goto prev' 
 
 -- flash 跳转配置
 map({ 'n', 'x', 'o' }, 's', function()
-  require('flash').jump { search = {
-    mode = function(str)
-      return '\\<' .. str
-    end,
-  } }
+  require('flash').jump({ search = {
+    mode = function(str) return '\\<' .. str end,
+  } })
 end, { desc = 'flash code jump' })
 
 -- flash 选中配置
-map({ 'n', 'x', 'o' }, 'fs', function()
-  require('flash').treesitter()
-end, { desc = 'flash code select' })
+map({ 'n', 'x', 'o' }, 'fs', function() require('flash').treesitter() end, { desc = 'flash code select' })
 
 -- flash 跳转复制
-map({ 'o' }, 'r', function()
-  require('flash').remote()
-end, { desc = 'flash code jump and copy' })
+map({ 'o' }, 'r', function() require('flash').remote() end, { desc = 'flash code jump and copy' })
 
 -- flash 选择复制
-map({ 'o', 'x' }, 'fr', function()
-  require('flash').treesitter_search()
-end, { desc = 'flash code select and copy' })
+map({ 'o', 'x' }, 'fr', function() require('flash').treesitter_search() end, { desc = 'flash code select and copy' })
 
 -- 跳转到上次编辑位置
 map('n', 'ga', "'.", { desc = 'jump to last edit' })
@@ -143,8 +131,33 @@ map('v', '<s-tab>', '<gv', { desc = 'indent left' })
 map('v', '<tab>', '>gv', { desc = 'indent right' })
 
 --[[ 代码折叠 ]]
-map('n', 'zz', "foldlevel('.') > 0 ? 'za' : 'va{zf^'", { desc = 'toggle fold', expr = true })
-map('v', 'z', 'zf', { desc = 'add fold' })
+map({ 'n', 'v' }, 'zz', 'za', { desc = 'toggle current fold' })
+map('n', 'zr', require('ufo').openAllFolds, { desc = 'open all folds' })
+map('n', 'zm', require('ufo').closeAllFolds, { desc = 'close all folds' })
+map('n', '<leader>zz', function()
+  local winid = vim.api.nvim_get_current_win()
+  local has_open_fold = false
+
+  vim.api.nvim_win_call(winid, function()
+    local lnum = vim.fn.line('w0')
+    local end_lnum = vim.fn.line('w$')
+
+    while lnum <= end_lnum do
+      local fc = vim.fn.foldclosed(lnum)
+      if fc == -1 and vim.fn.foldlevel(lnum) > 0 then
+        has_open_fold = true
+        break
+      end
+      lnum = lnum + 1
+    end
+  end)
+
+  if has_open_fold then
+    require('ufo').closeAllFolds()
+  else
+    require('ufo').openAllFolds()
+  end
+end, { desc = 'Toggle all folds (open/close)' })
 
 --[[ git 操作 ]]
 
@@ -224,39 +237,17 @@ map({ 'n', 'v', 'x' }, '<leader>tc', ':lua require("codecompanion").toggle()<cr>
 map({ 'n', 'v', 'x' }, '<leader>ac', ':CodeCompanionActions<cr>', { desc = 'codecompanion actions' })
 
 --[[ Dap 快捷键配置 ]]
-map('n', '<F2>', function()
-  require('telescope').extensions.dap.configurations {}
-end, { desc = 'start breakpoint debug' })
-map('n', '<F10>', function()
-  require('dap').step_over()
-end, { desc = 'step over breakpoint debug' })
-map('n', '<F11>', function()
-  require('dap').step_into()
-end, { desc = 'step into breakpoint debug' })
-map('n', '<F12>', function()
-  require('dap').step_out()
-end, { desc = 'step out breakpoint debug' })
-map('n', '<Leader>db', function()
-  require('dap').toggle_breakpoint()
-end, { desc = 'toggle breakpoint debug' })
-map('n', '<Leader>B', function()
-  require('dap').set_breakpoint()
-end, { desc = 'set breakpoint debug' })
-map('n', '<Leader>dm', function()
-  require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))
-end, { desc = 'log point breakpoint debug' })
-map('n', '<Leader>dr', function()
-  require('dap').repl.open()
-end, { desc = 'open debug repl' })
-map('n', '<Leader>dl', function()
-  require('dap').run_last()
-end, { desc = 'run last debug' })
-map({ 'n', 'v' }, '<Leader>dh', function()
-  require('dap.ui.widgets').hover()
-end, { desc = 'debug hover' })
-map({ 'n', 'v' }, '<Leader>dp', function()
-  require('dap.ui.widgets').preview()
-end, { desc = 'debug preview' })
+map('n', '<F2>', function() require('telescope').extensions.dap.configurations({}) end, { desc = 'start breakpoint debug' })
+map('n', '<F10>', function() require('dap').step_over() end, { desc = 'step over breakpoint debug' })
+map('n', '<F11>', function() require('dap').step_into() end, { desc = 'step into breakpoint debug' })
+map('n', '<F12>', function() require('dap').step_out() end, { desc = 'step out breakpoint debug' })
+map('n', '<Leader>db', function() require('dap').toggle_breakpoint() end, { desc = 'toggle breakpoint debug' })
+map('n', '<Leader>B', function() require('dap').set_breakpoint() end, { desc = 'set breakpoint debug' })
+map('n', '<Leader>dm', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, { desc = 'log point breakpoint debug' })
+map('n', '<Leader>dr', function() require('dap').repl.open() end, { desc = 'open debug repl' })
+map('n', '<Leader>dl', function() require('dap').run_last() end, { desc = 'run last debug' })
+map({ 'n', 'v' }, '<Leader>dh', function() require('dap.ui.widgets').hover() end, { desc = 'debug hover' })
+map({ 'n', 'v' }, '<Leader>dp', function() require('dap.ui.widgets').preview() end, { desc = 'debug preview' })
 map('n', '<Leader>df', function()
   local widgets = require('dap.ui.widgets')
   widgets.centered_float(widgets.frames)
@@ -291,9 +282,7 @@ end
 M.nvim_tree = function(bufnr)
   local api = require('nvim-tree.api')
   -- BEGIN_DEFAULT_ON_ATTACH
-  local opts = function(desc)
-    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-  end
+  local opts = function(desc) return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true } end
   -- 默认配置
   map('n', '<C-]>', api.tree.change_root_to_node, opts('CD'))
   map('n', '<C-e>', api.node.open.replace_tree_buffer, opts('Open: In Place'))
