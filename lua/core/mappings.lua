@@ -168,7 +168,10 @@ map('n', 'C', ':lua require("gitsigns").blame_line { full = true }<cr>', { desc 
 map('n', '\\g', ':lua require("gitsigns").toggle_current_line_blame()<cr>', { desc = 'toggle show blame line' })
 
 --[[ 文本翻译 ]]
-map({ 'n', 'v' }, '<leader>tr', ':Translate ZH<CR>', { desc = 'translator text' })
+map('n', '<leader>tr', 'viw:Translate ZH -output=replace<CR>', { desc = 'translator text and replace(normal)' })
+map('v', '<leader>tr', ":'<,'>Translate ZH -output=replace<CR>", { desc = 'translator text and repalce(visual)' })
+map('n', '<leader>ts', 'viw:Translate ZH<CR>', { desc = 'translator text in floating(normal)' })
+map('v', '<leader>ts', ":'<,'>:Translate ZH<CR>", { desc = 'translator text in floating(visual)' })
 
 --[[ 驼峰转换 ]]
 map('n', 'th', '<cmd>Telescope textcase normal_mode theme=dropdown<CR>', { desc = 'toggle hump' })
