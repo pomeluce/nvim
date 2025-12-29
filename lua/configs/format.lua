@@ -1,6 +1,18 @@
 local util = require('conform.util')
 local cfg = vim.fn.stdpath('config')
 
+local function root_file(files, bufnr)
+  bufnr = bufnr or 0
+
+  local name = vim.api.nvim_buf_get_name(bufnr)
+  if name == '' then return false end
+
+  local dir = vim.fs.dirname(name)
+  if not dir then return false end
+
+  return vim.fs.root(dir, files) ~= nil
+end
+
 require('conform').setup({
   formatters_by_ft = {
     lua = { 'stylua' },
@@ -29,7 +41,7 @@ require('conform').setup({
     prettier = {
       command = 'prettier',
       args = function(ctx)
-        local has_root = util.root_file({ '.prettierrc', '.prettierrc.json', '.prettierrc.js', '.prettierrc.cjs' })
+        local has_root = root_file({ '.prettierrc', '.prettierrc.json', '.prettierrc.js', '.prettierrc.cjs' })
         local args = { '--stdin-filepath', '$FILENAME' }
 
         if not has_root then
@@ -61,7 +73,7 @@ require('conform').setup({
     stylua = {
       command = 'stylua',
       args = function()
-        local has_root = util.root_file({ '.stylua.toml', 'stylua.toml' })
+        local has_root = root_file({ '.stylua.toml', 'stylua.toml' })
         return has_root and { '--stdin-filepath', '$FILENAME', '--', '-' } or { '--stdin-filepath', '$FILENAME', '--config-path', vim.fn.expand(cfg .. '/.stylua.toml'), '--', '-' }
       end,
       stdin = true,
@@ -77,7 +89,7 @@ require('conform').setup({
       -- rules: https://rust-lang.github.io/rustfmt
       command = 'rustfmt',
       args = function()
-        local has_root = util.root_file({ '.rustfmt.toml', 'rustfmt.toml' })
+        local has_root = root_file({ '.rustfmt.toml', 'rustfmt.toml' })
         return has_root and {} or { '--config-path', vim.fn.expand(cfg .. '/.rustfmt.toml') }
       end,
       stdin = true,
@@ -99,7 +111,7 @@ require('conform').setup({
     sqlfluff = {
       command = 'sqlfluff',
       args = function()
-        local has_root = util.root_file({ '.sqlfluff', 'sqlfluff.cfg' })
+        local has_root = root_file({ '.sqlfluff', 'sqlfluff.cfg' })
         return has_root and { 'format', '-' } or { 'format', '--config', vim.fn.expand(cfg .. '/.sqlfluff.cfg'), '-' }
       end,
       stdin = true,
@@ -109,7 +121,7 @@ require('conform').setup({
     taplo = {
       command = 'taplo',
       args = function()
-        local has_root = util.root_file({ '.taplo.toml', 'taplo.toml' })
+        local has_root = root_file({ '.taplo.toml', 'taplo.toml' })
         return has_root and { 'fmt', '--stdin-filepath', '$FILENAME', '-' } or { 'fmt', '--stdin-filepath', '$FILENAME', '-', '--config', vim.fn.expand(cfg .. '/.taplo.toml') }
       end,
       stdin = true,
