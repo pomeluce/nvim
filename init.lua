@@ -1,10 +1,6 @@
 require('core.globals')
 require('core.options')
-require('core.autocmd')
+require('core.autocmds')
+require('core.mappings')
+require('core.commands')
 require('core.setup')
-require('core.base64')
-require('core.command')
-
-vim.schedule(function()
-  require('core.mappings')
-end)

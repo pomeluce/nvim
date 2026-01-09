@@ -1,19 +1,21 @@
 local opt = vim.opt
-local o = vim.o
+
+-- 启用真彩色支持
+opt.termguicolors = true
 
 -- 状态栏全局显示
-o.laststatus = 3
+opt.laststatus = 3
 -- 光标行高亮
-o.cursorline = true
+opt.cursorline = true
 -- 只高亮行号部分
-o.cursorlineopt = 'number'
+opt.cursorlineopt = 'number'
 
 -- 禁用右下角的标尺显示
-o.ruler = false
+opt.ruler = false
 -- 新建的水平分割窗口会出现在当前窗口的下方。
-o.splitbelow = true
+opt.splitbelow = true
 -- 新建的垂直分割窗口会出现在当前窗口的右侧
-o.splitright = true
+opt.splitright = true
 
 -- 设置文件默认格式
 opt.fileformat = 'unix'
@@ -32,8 +34,17 @@ opt.pumheight = 10
 -- 是否显示可隐藏文本
 opt.conceallevel = 0
 
+-- 设置 neovim 在编辑器中如何显示某些空白字符
+--  See `:help 'list'`
+--  and `:help 'listchars'`
+opt.list = true
+opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+
 -- 共享系统剪切版
-opt.clipboard:append('unnamedplus')
+-- 在 `UiEnter` 之后安排此设置, 因为它可能增加启动时间。
+-- 如果你希望操作系统剪贴板保持独立, 请移除此选项
+--  See `:help 'clipboard'`
+vim.schedule(function() opt.clipboard:append('unnamedplus') end)
 
 -- 搜索高亮
 opt.hlsearch = false
@@ -92,29 +103,27 @@ opt.smarttab = true
 -- 使用空格代替 tab
 opt.expandtab = true
 
--- 不自动备份, 不设置交换文件, 不换行
+-- 不自动备份, 不设置交换文件
 opt.backup = false
 opt.swapfile = false
-opt.wrap = false
+-- 开启换行
+opt.wrap = true
+-- 单词边界换行
+opt.linebreak = true
+-- wrap 换行缩进对齐
+opt.breakindent = true
+-- 换行显示标记
+opt.showbreak = '↪ '
 
 -- 自动读取文件修改结果
 opt.autoread = false
 
 -- 持久化撤销
 opt.undofile = true
----@diagnostic disable-next-line: assign-type-mismatch
-opt.undodir = os.getenv('HOME') .. '/.cache/nvim/undodir'
+opt.undodir = vim.fn.stdpath('cache') .. '/undodir'
 
 -- vim 保存 1000 条文件记录
 opt.viminfo = "!,'10000,<50,s10,h"
-
--- 开启折叠
-opt.foldenable = true
-
--- 手动建立折叠
--- opt.foldmethod = 'manual'
-opt.viewdir = os.getenv('HOME') .. '/.cache/nvim/viewdir'
--- opt.foldtext = 'v:lua.intelli_flod()'
 
 -- 设置命令行高度
 opt.cmdheight = 0
@@ -146,21 +155,8 @@ opt.exrc = true
 
 -- 显示左侧图标指示列
 opt.signcolumn = 'yes'
--- 设置填充字符
-opt.fillchars = {
-  fold = '-',
-  stlnc = '·',
-  eob = ' ',
-  foldsep = '=',
-}
 
--- 将 mason.nvim 安装的二进制文件添加到路径中
-local is_win = require('utils').is_win
-local sep = is_win and '\\' or '/'
-local delim = is_win and ';' or ':'
-vim.env.PATH = table.concat({ vim.fn.stdpath('data'), 'mason', 'bin' }, sep) .. delim .. vim.env.PATH
+-- 设置光标样式
+opt.guicursor = { 'n-v-c:block', 'i-ci-ve:ver25', 'r-cr:hor20', 'o:hor50' }
 
-vim.cmd([[
-    let &t_SI.="\e[5 q"
-    let &t_EI.="\e[1 q"
-]])
+require('configs.folding')

@@ -1,0 +1,102 @@
+vim.pack.add({
+  { src = 'https://github.com/catppuccin/nvim' },
+})
+
+require('catppuccin').setup({
+  flavour = 'auto',
+  -- :h background
+  background = { light = 'latte', dark = 'mocha' },
+  transparent_background = true,
+  float = { transparent = true },
+  term_colors = true,
+  integrations = {
+    aerial = true,
+    diffview = true,
+    mini = { enabled = true, indentscope_color = 'sky' },
+    noice = true,
+    treesitter = true,
+    notify = true,
+    gitsigns = true,
+    flash = true,
+    blink_cmp = true,
+    snacks = true,
+  },
+  highlight_overrides = {
+    all = function(colors)
+      return {
+        winSeparator = { fg = colors.overlay2 },
+        SnacksPickerPrompt = { fg = colors.peach },
+        SnacksPickerDir = { fg = colors.overlay2 },
+        SnacksTitle = { fg = colors.base, bg = colors.red },
+        SnacksPickerToggle = { fg = colors.base, bg = colors.red },
+        SnacksPickerTitle = { fg = colors.base, bg = colors.green },
+        BlinkCmpLabel = { fg = colors.text, style = {} },
+        BlinkCmpLabelMatch = { fg = colors.blue, style = { 'bold' } },
+        BlinkCmpMenuSelection = { fg = colors.base, bg = colors.blue },
+      }
+    end,
+  },
+  color_overrides = {
+    frappe = {
+      rosewater = '#ea6962',
+      flamingo = '#ea6962',
+      red = '#ea6962',
+      maroon = '#ea6962',
+      pink = '#d3869b',
+      mauve = '#d3869b',
+      peach = '#e78a4e',
+      yellow = '#d8a657',
+      green = '#a9b665',
+      teal = '#89b482',
+      sky = '#89b482',
+      sapphire = '#89b482',
+      blue = '#7daea3',
+      lavender = '#7daea3',
+
+      text = '#f5f5f5',
+      subtext1 = '#ebebeb',
+      subtext0 = '#e0e0e0',
+      overlay2 = '#cccccc',
+      overlay1 = '#b3b3b3',
+      overlay0 = '#999999',
+      surface2 = '#424242',
+      surface1 = '#3d3d3d',
+      surface0 = '#383838',
+      base = '#202020',
+      mantle = '#262626',
+      crust = '#2b2b2b',
+    },
+    mocha = {
+      rosewater = '#d3c6aa',
+      flamingo = '#f07173',
+      pink = '#d87595',
+      mauve = '#d87595',
+      red = '#f07173',
+      maroon = '#63b4ed',
+      peach = '#e69875',
+      yellow = '#e2ae6a',
+      green = '#99c983',
+      teal = '#60a673',
+      sky = '#78bdb4',
+      sapphire = '#78bdb4',
+      blue = '#78bdb4',
+      lavender = '#9d94d4',
+
+      text = '#f5f5f5',
+      subtext1 = '#ebebeb',
+      subtext0 = '#e0e0e0',
+      overlay2 = '#cccccc',
+      overlay1 = '#b3b3b3',
+      overlay0 = '#999999',
+      surface2 = '#424242',
+      surface1 = '#3d3d3d',
+      surface0 = '#383838',
+      base = '#202020',
+      mantle = '#262626',
+      crust = '#2b2b2b',
+    },
+  },
+})
+
+vim.cmd('colorscheme catppuccin')
+vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'none' })

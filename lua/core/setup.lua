@@ -1,13 +1,14 @@
-local fn = vim.fn
-local lazypath = fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
-  print('Installing lazy.nvim...')
-  fn.system { 'git', 'clone', '--filter=blob:none', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazypath }
-end
-vim.opt.rtp:prepend(lazypath)
+require('plugins.theme')
+require('plugins.lsp')
+require('plugins.completion')
+require('plugins.format')
 
-require('lazy').setup({ require('core.nvchad'), { import = 'plugins' } }, {
-  defaults = { lazy = true },
-  install = { colorscheme = { 'nvchad' } },
-  ui = { icons = { ft = '', lazy = '󰂠 ', loaded = '', not_loaded = '' }, border = require('akirc').ui.borderStyle },
-})
+require('plugins.treesitter')
+require('plugins.edit')
+require('plugins.ui')
+require('plugins.layout')
+require('plugins.navigation')
+require('plugins.git')
+require('plugins.workspace')
+require('plugins.docs')
+require('plugins.tools')

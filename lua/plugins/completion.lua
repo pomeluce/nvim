@@ -1,10 +1,131 @@
-return {
-  {
-    'windwp/nvim-autopairs',
-    event = { 'BufReadPre', 'BufNewFile', 'InsertEnter' },
-    opts = {
+vim.pack.add({
+  { src = 'https://github.com/saghen/blink.cmp', version = 'v1.8.0' },
+  { src = 'https://github.com/archie-judd/blink-cmp-words' },
+  { src = 'https://github.com/xzbdmw/colorful-menu.nvim' },
+  { src = 'https://github.com/windwp/nvim-autopairs' },
+})
+
+vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
+  group = vim.api.nvim_create_augroup('SetupCompletion', { clear = true }),
+  once = true,
+  callback = function()
+    require('colorful-menu').setup({
+      ls = {
+        gopls = {
+          -- 默认情况下, 我们将变量/函数的类型呈现在最右侧, 以避免它们与原标签拥挤在一起。
+          -- when true:
+          --    foo             *Foo
+          --    ast         "go/ast"
+
+          -- when false:
+          --    foo *Foo
+          --    ast "go/ast"
+          align_type_to_right = true,
+          -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+          preserve_type_when_truncate = true,
+        },
+      },
+    })
+    require('blink.cmp').setup({
+      completion = {
+        documentation = { auto_show = true, window = { border = 'rounded', scrollbar = true } },
+        menu = {
+          border = 'rounded',
+          auto_show = true,
+          auto_show_delay_ms = 0,
+          scrollbar = true,
+          draw = {
+            columns = { { 'label', gap = 3 }, { 'kind_icon' }, { 'kind' }, { 'source_name' } },
+            components = {
+              label = { text = function(ctx) return require('colorful-menu').blink_components_text(ctx) end },
+              source_name = {
+                text = function(ctx)
+                  if not ctx.source_name or ctx.source_name == '' then return '' end
+                  return '[' .. ctx.source_name .. ']'
+                end,
+              },
+            },
+          },
+        },
+        ghost_text = { enabled = true },
+        list = { selection = { preselect = true, auto_insert = true } },
+      },
+      signature = { enabled = true },
+      keymap = {
+        -- 禁用默认快捷键
+        preset = 'none',
+        ['<c-space>'] = { 'show', 'hide' },
+        ['<tab>'] = { 'select_next', 'fallback' },
+        ['<s-tab>'] = { 'select_prev', 'fallback' },
+        ['<C-u>'] = { 'scroll_documentation_up', 'fallback' },
+        ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
+        ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+        ['<cr>'] = { 'select_and_accept', 'fallback' },
+      },
+      cmdline = { keymap = { preset = 'inherit' }, completion = { menu = { auto_show = true } } },
+      sources = {
+        providers = {
+          snippets = {
+            score_offset = 1000,
+            -- 避免在 . " ' 字符之后触发片段
+            should_show_items = function(ctx) return ctx.trigger.initial_kind ~= 'trigger_character' end,
+          },
+          -- 使用同义词词典来源
+          thesaurus = {
+            name = 'blink-cmp-words',
+            module = 'blink-cmp-words.thesaurus',
+            -- 所有可用选项
+            opts = {
+              -- A score offset applied to returned items.
+              -- By default the highest score is 0 (item 1 has a score of -1, item 2 of -2 etc..).
+              score_offset = 0,
+
+              -- Default pointers define the lexical relations listed under each definition,
+              -- see Pointer Symbols below.
+              -- Default is as below ("antonyms", "similar to" and "also see").
+              definition_pointers = { '!', '&', '^' },
+
+              -- The pointers that are considered similar words when using the thesaurus,
+              -- see Pointer Symbols below.
+              -- Default is as below ("similar to", "also see" }
+              similarity_pointers = { '&', '^' },
+
+              -- The depth of similar words to recurse when collecting synonyms. 1 is similar words,
+              -- 2 is similar words of similar words, etc. Increasing this may slow results.
+              similarity_depth = 2,
+            },
+          },
+
+          -- 使用词典来源
+          dictionary = {
+            name = 'blink-cmp-words',
+            module = 'blink-cmp-words.dictionary',
+            -- All available options
+            opts = {
+              -- The number of characters required to trigger completion.
+              -- Set this higher if completion is slow, 3 is default.
+              dictionary_search_threshold = 3,
+
+              -- See above
+              score_offset = 0,
+
+              -- See above
+              definition_pointers = { '!', '&', '^' },
+            },
+          },
+        },
+        -- 按文件类型完成设置
+        per_filetype = {
+          text = { 'dictionary' },
+          markdown = { 'lsp', 'thesaurus' },
+          typst = { 'lsp', 'snippets', 'dictionary' },
+          tex = { 'dictionary', 'thesaurus' },
+        },
+      },
+    })
+    require('nvim-autopairs').setup({
       fast_wrap = {},
-      disable_filetype = { 'TelescopePrompt', 'vim' },
+      disable_filetype = { 'snacks_picker_input', 'vim' },
       check_ts = true,
       ts_config = {
         -- 不在该节点添加 autopairs
@@ -13,36 +134,6 @@ return {
         -- 不对 java 进行 treesitter 检查
         java = false,
       },
-    },
-  },
-  {
-
-    'hrsh7th/nvim-cmp',
-    event = 'InsertEnter',
-    dependencies = {
-      -- copilot 智能提示
-      {
-        'zbirenbaum/copilot.lua',
-        dependencies = { { 'zbirenbaum/copilot-cmp', main = 'copilot_cmp', opts = {} } },
-        main = 'copilot',
-        cmd = 'Copilot',
-        event = 'InsertEnter',
-        opts = { suggestion = { enabled = false }, panel = { enabled = false } },
-      },
-      {
-        'L3MON4D3/LuaSnip',
-        dependencies = { 'rafamadriz/friendly-snippets' },
-        opts = { history = true, updateevents = 'TextChanged,TextChangedI' },
-      },
-      -- cmp sources plugins
-      {
-        'hrsh7th/cmp-path',
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-buffer',
-        'hrsh7th/cmp-cmdline',
-        'saadparwaiz1/cmp_luasnip',
-      },
-    },
-    config = function() require('configs.completion') end,
-  },
-}
+    })
+  end,
+})
