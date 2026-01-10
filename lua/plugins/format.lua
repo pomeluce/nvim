@@ -2,24 +2,21 @@ vim.pack.add({
   { src = 'https://github.com/stevearc/conform.nvim' },
 })
 
+local function root_file(files, bufnr)
+  bufnr = bufnr or 0
+  local name = vim.api.nvim_buf_get_name(bufnr)
+  if name == '' then return false end
+  local dir = vim.fs.dirname(name)
+  if not dir then return false end
+  return vim.fs.root(dir, files) ~= nil
+end
+
 vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
   group = vim.api.nvim_create_augroup('SetupFormat', { clear = true }),
   once = true,
   callback = function()
     local util = require('conform.util')
-    local cfg = vim.fn.stdpath('config')
-
-    local function root_file(files, bufnr)
-      bufnr = bufnr or 0
-
-      local name = vim.api.nvim_buf_get_name(bufnr)
-      if name == '' then return false end
-
-      local dir = vim.fs.dirname(name)
-      if not dir then return false end
-
-      return vim.fs.root(dir, files) ~= nil
-    end
+    local cfg = vim.fn.stdpath('config') .. '/lua/configs/fmt'
 
     require('conform').setup({
       formatters_by_ft = {
@@ -44,7 +41,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
         yaml = { 'prettier' },
         zsh = { 'beautysh' },
       },
-
       formatters = {
         prettier = {
           command = 'prettier',
@@ -54,7 +50,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
 
             if not has_root then
               table.insert(args, '--config')
-              table.insert(args, vim.fn.expand(cfg .. '/.prettierrc.json'))
+              table.insert(args, vim.fn.expand(cfg .. '/prettierrc.json'))
             end
 
             -- 根据文件类型设置 parser(可选)
@@ -83,7 +79,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           args = function()
             local has_root = root_file({ '.stylua.toml', 'stylua.toml' })
             return has_root and { '--stdin-filepath', '$FILENAME', '--', '-' }
-              or { '--stdin-filepath', '$FILENAME', '--config-path', vim.fn.expand(cfg .. '/.stylua.toml'), '--', '-' }
+              or { '--stdin-filepath', '$FILENAME', '--config-path', vim.fn.expand(cfg .. '/stylua.toml'), '--', '-' }
           end,
           stdin = true,
         },
@@ -99,7 +95,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           command = 'rustfmt',
           args = function()
             local has_root = root_file({ '.rustfmt.toml', 'rustfmt.toml' })
-            return has_root and {} or { '--config-path', vim.fn.expand(cfg .. '/.rustfmt.toml') }
+            return has_root and {} or { '--config-path', vim.fn.expand(cfg .. '/rustfmt.toml') }
           end,
           stdin = true,
         },
@@ -121,7 +117,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           command = 'sqlfluff',
           args = function()
             local has_root = root_file({ '.sqlfluff', 'sqlfluff.cfg' })
-            return has_root and { 'format', '-' } or { 'format', '--config', vim.fn.expand(cfg .. '/.sqlfluff.cfg'), '-' }
+            return has_root and { 'format', '-' } or { 'format', '--config', vim.fn.expand(cfg .. '/sqlfluff.cfg'), '-' }
           end,
           stdin = true,
           require_cwd = false,
@@ -131,7 +127,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           command = 'taplo',
           args = function()
             local has_root = root_file({ '.taplo.toml', 'taplo.toml' })
-            return has_root and { 'fmt', '--stdin-filepath', '$FILENAME', '-' } or { 'fmt', '--stdin-filepath', '$FILENAME', '-', '--config', vim.fn.expand(cfg .. '/.taplo.toml') }
+            return has_root and { 'fmt', '--stdin-filepath', '$FILENAME', '-' } or { 'fmt', '--stdin-filepath', '$FILENAME', '-', '--config', vim.fn.expand(cfg .. '/taplo.toml') }
           end,
           stdin = true,
         },

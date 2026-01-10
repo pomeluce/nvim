@@ -29,6 +29,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
       messages = { enabled = true, view = 'mini', view_error = 'notify', view_warn = 'notify', view_history = 'messages', view_search = 'virtualtext' },
       popupmenu = { enabled = true, backend = 'cmp' },
       presets = { lsp_doc_border = true },
+      lsp = { progress = { enabled = false } },
     })
   end,
 })

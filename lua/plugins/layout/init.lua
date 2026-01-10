@@ -1,3 +1,4 @@
+require('plugins.layout.heirline')
+require('plugins.layout.mini-files')
 require('plugins.layout.nvimtree')
 require('plugins.layout.snacks')
-require('plugins.layout.mini-files')

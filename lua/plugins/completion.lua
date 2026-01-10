@@ -26,6 +26,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
         },
       },
     })
+
     require('blink.cmp').setup({
       completion = {
         documentation = { auto_show = true, window = { border = 'rounded', scrollbar = true } },
@@ -123,6 +124,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
         },
       },
     })
+
     require('nvim-autopairs').setup({
       fast_wrap = {},
       disable_filetype = { 'snacks_picker_input', 'vim' },

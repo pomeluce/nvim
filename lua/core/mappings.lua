@@ -53,7 +53,6 @@ map('n', '<c-h>', '<c-w>h', { desc = 'Jump to left buffer' })
 map('n', '<c-l>', '<c-w>l', { desc = 'Jump to right buffer' })
 map('n', '<c-k>', '<c-w>k', { desc = 'Jump to top buffer' })
 map('n', '<c-j>', '<c-w>j', { desc = 'Jump to bottom buffer' })
-map('n', 'ss', ':bn<cr>', { desc = 'Cycle toggle buffer' })
 
 -- 调整窗口尺寸
 map('n', 's=', '<c-w>=', { desc = 'Resize all window same size' })

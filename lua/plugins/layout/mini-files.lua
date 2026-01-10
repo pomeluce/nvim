@@ -8,10 +8,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
     _G.MiniFiles = require('mini.files')
 
     MiniFiles.setup({
-      mappings = {
-        close = '<ESC>',
-        synchronize = 'S',
-      },
+      mappings = { close = '<ESC>', synchronize = 'S' },
       windows = { width_focus = 25, width_nofocus = 20 },
     })
     -- 打开 mini files 文件管理器

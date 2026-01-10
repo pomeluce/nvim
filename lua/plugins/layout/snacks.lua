@@ -47,7 +47,7 @@ Snacks.setup({
 local map = require('utils').map
 
 -- 全局搜索文件
-map('n', '<leader>ff', function() Snacks.picker.smart({ hidden = true }) end, { desc = 'Smart file picker' })
+map('n', '<leader>ff', function() Snacks.picker.smart() end, { desc = 'Smart file picker' })
 -- 查找打开的缓冲区
 map('n', '<leader>fb', function() Snacks.picker.buffers({ sort_lastused = true }) end, { desc = 'Find buffer' })
 -- 查找最近打开的文件
@@ -74,9 +74,9 @@ map('n', '<leader>fd', Snacks.picker.diagnostics_buffer, { desc = 'Find diagnost
 map('n', '<leader>fH', Snacks.picker.highlights, { desc = 'Find highlights' })
 
 -- 删除缓冲区
-map('n', '<leader>bc', Snacks.bufdelete.delete, { desc = 'Delete buffers' })
+-- map('n', '<leader>bc', Snacks.bufdelete.delete, { desc = 'Delete buffers' })
 -- 删除其他缓冲区
-map('n', '<leader>bC', Snacks.bufdelete.other, { desc = 'Delete other buffers' })
+-- map('n', '<leader>bC', Snacks.bufdelete.other, { desc = 'Delete other buffers' })
 
 -- 切换浮动终端
 map({ 'n', 't' }, '<c-t>', Snacks.terminal.toggle, { desc = 'Toggle float termiinal' })

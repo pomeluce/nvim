@@ -33,7 +33,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
       status_formatter = nil, -- 使用默认
       max_file_length = 40000, -- 如果文件行数超过此数量则禁用
       -- 传递给 nvim_open_win 的选项
-      preview_config = { border = 'rounded', style = 'minimal', relative = 'cursor', row = 0, col = 1 },
+      preview_config = { style = 'minimal', relative = 'cursor', row = 0, col = 1 },
     })
   end,
 })

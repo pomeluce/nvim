@@ -1,5 +1,32 @@
 local register = vim.api.nvim_create_user_command
-local pack = require('core.pack')
+local pack = require('configs.pack')
+
+-- 插件列表
+register('PackInstalled', function()
+  local installed = pack.installed_plugins() or {}
+  if #installed == 0 then
+    vim.notify('No installed plugins found', vim.log.levels.INFO)
+    return
+  end
+
+  local lock_path = pack.find_lock_file()
+  local lock = nil
+  if lock_path then
+    local content = require('utils').read_file(lock_path)
+    if content and content ~= '' then
+      local ok, parsed = pcall(vim.json.decode, content)
+      if ok and type(parsed) == 'table' then lock = parsed end
+    end
+  end
+  local lock_plugins = (lock and lock.plugins) or {}
+
+  local lines, highlights = pack.build_lines_and_highlights(installed, lock_plugins)
+
+  pack.open_floating_window(lines, highlights)
+end, { nargs = 0, desc = 'Show installed plugins in a floating window' })
+
+-- 插件更新
+register('PackUpdate', function() vim.pack.update() end, { nargs = 0, desc = 'Run vim.pack.update() and show result' })
 
 -- 插件删除
 register('PackRemove', function(opts)
@@ -15,7 +42,7 @@ register('PackRemove', function(opts)
     return
   end
   vim.notify('Removed plugin: ' .. name)
-end, { nargs = 1, complete = function(arg_lead) return pack.installed_complete(arg_lead) end, desc = 'pack: remove plugin' })
+end, { nargs = 1, complete = function(arg_lead) return pack.installed_complete(arg_lead) end, desc = 'Run vim.pack.del() remove you input plugin' })
 
 -- 插件清理
 register('PackClean', function()
@@ -39,7 +66,7 @@ register('PackClean', function()
   table.sort(unused)
 
   local msg = 'Remove unused plugins?\n\n' .. table.concat(unused, '\n')
-  local confirm = vim.fn.input(msg .. "\n\nType 'Y(yes)' to confirm: ")
+  local confirm = vim.fn.input(msg .. "\n\nType '[Y]es' to confirm: ")
   confirm = confirm:lower()
   if confirm ~= 'y' and confirm ~= 'yes' and confirm ~= '' then
     vim.notify('PackClean cancelled')
@@ -48,7 +75,7 @@ register('PackClean', function()
 
   vim.pack.del(unused)
   vim.notify('Removed plugins:\n' .. table.concat(unused, '\n'))
-end, { desc = 'pack: clean plugin' })
+end, { desc = 'Run vim.pack.del() remove all unused plugin' })
 
 -- 文件保存
 register('IntelliSave', function()

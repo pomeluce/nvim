@@ -159,4 +159,7 @@ opt.signcolumn = 'yes'
 -- 设置光标样式
 opt.guicursor = { 'n-v-c:block', 'i-ci-ve:ver25', 'r-cr:hor20', 'o:hor50' }
 
+-- 设置窗口边框
+opt.winborder = 'rounded'
+
 require('configs.folding')

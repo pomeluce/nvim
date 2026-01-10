@@ -26,7 +26,7 @@ end
 local hlword = require('configs.hlword')
 
 vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('SetupLSP', {}),
+  group = vim.api.nvim_create_augroup('SetupLSP', { clear = true }),
   callback = function(event)
     -- 诊断样式
     local x = vim.diagnostic.severity
@@ -38,13 +38,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
     })
 
     -- 默认边框样式
-    local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+    --[[ local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
     ---@diagnostic disable-next-line: duplicate-set-field
     function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
       opts = opts or {}
       opts.border = 'rounded'
       return orig_util_open_floating_preview(contents, syntax, opts, ...)
-    end
+    end ]]
 
     local map = require('utils').map
     -- 当前 LSP 客户端
@@ -58,12 +58,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- 内联提示
     if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-      map(
-        'n',
-        '<leader>th',
-        function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf })) end,
-        { buffer = event.buf, desc = 'LSP: Toggle Inlay Hints' }
-      )
+      local function inlay_hint() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf })) end
+      map('n', '<leader>th', inlay_hint, { buffer = event.buf, desc = 'LSP: Toggle Inlay Hints' })
     end
 
     -- 高亮光标单词
