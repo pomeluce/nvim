@@ -64,7 +64,6 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = { 'typescript-language-server' },
   filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
   init_options = {
     plugins = { { name = '@vue/typescript-plugin', location = typescript_plugin_path, languages = { 'vue' }, configNamespace = 'typescript' } },

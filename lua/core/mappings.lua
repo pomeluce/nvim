@@ -62,9 +62,10 @@ map('n', 'sj', "winnr() <= winnr('$') - winnr() ? '<c-w>10+' : '<c-w>10-'", { de
 map('n', 'sk', "winnr() <= winnr('$') - winnr() ? '<c-w>10-' : '<c-w>10+'", { desc = 'Extent window to bottom', expr = true })
 
 -- flash 代码跳转
-map({ 'n', 'x', 'o' }, 's', function()
+local function code_jump()
   require('flash').jump({ search = { mode = function(str) return '\\<' .. str end } })
-end, { desc = 'Flash code jump' })
+end
+map({ 'n', 'x', 'o' }, 's', code_jump, { desc = 'Flash code jump' })
 -- flash 代码选中
 map({ 'n', 'x', 'o' }, 'fs', function() require('flash').treesitter() end, { desc = 'Flash code select' })
 -- flash 跳转复制
@@ -118,6 +119,11 @@ map({ 'n', 'v' }, 'zz', 'za', { desc = 'Toggle fold under cursor' })
 -- 查看语法高亮
 map('n', 'H', ':Inspect<CR>', { desc = 'Inspect syntax highlight group under cursor' })
 
+-- 查看当前行 git 提交信息
+map('n', 'C', ':Gitsigns blame_line full=true<CR>', { desc = 'Show current line git blame' })
+-- 切换当前行 git 提交记录信息
+map('n', '\\g', ':Gitsigns toggle_current_line_blame<CR>', { desc = 'Toggle show blame line' })
+
 -- 代码格式化
 map('n', '<leader>fm', ':Format<CR>', { desc = 'Format current buffer' })
 
@@ -131,3 +137,6 @@ map('v', '<leader>ts', ":'<,'>:Translate ZH<CR>", { desc = 'Translator text in f
 map('n', '<leader>sl', ':NeovimProjectLoadRecent<cr>', { desc = 'Load last project session' })
 map('n', '<leader>sp', ':NeovimProjectDiscover<cr>', { desc = 'Select project session for discover' })
 map('n', '<leader>sh', ':NeovimProjectHistory<cr>', { desc = 'Select project session for history' })
+
+-- swtich
+map('n', '`', ':Switch<CR>', { desc = 'Switch segments of text with predefined replacements' })

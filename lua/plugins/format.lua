@@ -73,7 +73,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           stdin = true,
           cwd = util.root_file({ '.prettierrc', '.prettierrc.json', 'package.json', '.git' }),
         },
-
         stylua = {
           command = 'stylua',
           args = function()
@@ -83,13 +82,11 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           end,
           stdin = true,
         },
-
         nixfmt = {
           command = 'nixfmt',
           args = {},
           stdin = true,
         },
-
         rustfmt = {
           -- rules: https://rust-lang.github.io/rustfmt
           command = 'rustfmt',
@@ -99,7 +96,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           end,
           stdin = true,
         },
-
         shfmt = {
           command = 'shfmt',
           args = function()
@@ -112,7 +108,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           end,
           stdin = true,
         },
-
         sqlfluff = {
           command = 'sqlfluff',
           args = function()
@@ -122,7 +117,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           stdin = true,
           require_cwd = false,
         },
-
         taplo = {
           command = 'taplo',
           args = function()
@@ -131,7 +125,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           end,
           stdin = true,
         },
-
         beautysh = {
           command = 'beautysh',
           args = function()

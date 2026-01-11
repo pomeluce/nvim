@@ -1,0 +1,7 @@
+{
+  "TypeScript Export Default Template": {
+    "prefix": "exptemp",
+    "body": ["export default {${1}};"],
+    "description": "typescript export default template"
+  }
+}

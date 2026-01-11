@@ -1,32 +1,17 @@
 vim.pack.add({
-  { src = 'https://github.com/saghen/blink.cmp', version = 'v1.8.0' },
-  { src = 'https://github.com/archie-judd/blink-cmp-words' },
-  { src = 'https://github.com/xzbdmw/colorful-menu.nvim' },
+  { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('v1.*') },
   { src = 'https://github.com/windwp/nvim-autopairs' },
+  { src = 'https://github.com/xzbdmw/colorful-menu.nvim' },
+  { src = 'https://github.com/fang2hou/blink-copilot' },
+  { src = 'https://github.com/L3MON4D3/LuaSnip', version = vim.version.range('v2.*') },
+  { src = 'https://github.com/rafamadriz/friendly-snippets' },
+  { src = 'https://github.com/archie-judd/blink-cmp-words' },
 })
 
 vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
   group = vim.api.nvim_create_augroup('SetupCompletion', { clear = true }),
   once = true,
   callback = function()
-    require('colorful-menu').setup({
-      ls = {
-        gopls = {
-          -- 默认情况下, 我们将变量/函数的类型呈现在最右侧, 以避免它们与原标签拥挤在一起。
-          -- when true:
-          --    foo             *Foo
-          --    ast         "go/ast"
-
-          -- when false:
-          --    foo *Foo
-          --    ast "go/ast"
-          align_type_to_right = true,
-          -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
-          preserve_type_when_truncate = true,
-        },
-      },
-    })
-
     require('blink.cmp').setup({
       completion = {
         documentation = { auto_show = true, window = { border = 'rounded', scrollbar = true } },
@@ -35,6 +20,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
           auto_show = true,
           auto_show_delay_ms = 0,
           scrollbar = true,
+          max_height = 14,
           draw = {
             columns = { { 'label', gap = 3 }, { 'kind_icon' }, { 'kind' }, { 'source_name' } },
             components = {
@@ -51,6 +37,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
         ghost_text = { enabled = true },
         list = { selection = { preselect = true, auto_insert = true } },
       },
+      snippets = { preset = 'luasnip' },
       signature = { enabled = true },
       keymap = {
         -- 禁用默认快捷键
@@ -65,12 +52,14 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
       },
       cmdline = { keymap = { preset = 'inherit' }, completion = { menu = { auto_show = true } } },
       sources = {
+        default = { 'lsp', 'snippets', 'copilot', 'path', 'buffer' },
         providers = {
           snippets = {
             score_offset = 1000,
             -- 避免在 . " ' 字符之后触发片段
             should_show_items = function(ctx) return ctx.trigger.initial_kind ~= 'trigger_character' end,
           },
+          copilot = { name = 'copilot', module = 'blink-copilot', score_offset = 100, async = true },
           -- 使用同义词词典来源
           thesaurus = {
             name = 'blink-cmp-words',
@@ -96,7 +85,6 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
               similarity_depth = 2,
             },
           },
-
           -- 使用词典来源
           dictionary = {
             name = 'blink-cmp-words',
@@ -124,7 +112,6 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
         },
       },
     })
-
     require('nvim-autopairs').setup({
       fast_wrap = {},
       disable_filetype = { 'snacks_picker_input', 'vim' },
@@ -137,5 +124,26 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
         java = false,
       },
     })
+    require('colorful-menu').setup({
+      ls = {
+        gopls = {
+          -- 默认情况下, 我们将变量/函数的类型呈现在最右侧, 以避免它们与原标签拥挤在一起。
+          -- when true:
+          --    foo             *Foo
+          --    ast         "go/ast"
+
+          -- when false:
+          --    foo *Foo
+          --    ast "go/ast"
+          align_type_to_right = true,
+          -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+          preserve_type_when_truncate = true,
+        },
+      },
+      max_width = 0.20,
+    })
+    -- load luasnip
+    require('luasnip.loaders.from_vscode').lazy_load() -- 添加 friendly-snippets 片段
+    require('luasnip.loaders.from_vscode').lazy_load({ paths = { './snippets' } }) -- 添加自定义片段
   end,
 })

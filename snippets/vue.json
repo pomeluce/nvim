@@ -1,0 +1,7 @@
+{
+  "Vue3 Script Setup TypeScript Template": {
+    "prefix": "vtemp",
+    "body": ["<script setup lang=\"ts\">", "</script>", "", "<template>", "  <main>${1}</main>", "</template>", "", "<style scoped lang=\"scss\">", "</style>"],
+    "description": "vue3 setup typescript template"
+  }
+}

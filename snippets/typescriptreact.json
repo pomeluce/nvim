@@ -1,0 +1,19 @@
+{
+  "React Function Component Template": {
+    "prefix": "rtemp",
+    "body": ["const ${1}: React.FC<${2}> = () => {", "  return <main>${3}</main>;", "};", "", "export default ${1};"],
+    "description": "react function component template"
+  },
+
+  "Vue JSX/TSX Optional Component Template": {
+    "prefix": "vtemp",
+    "body": ["export default defineComponent({", "  setup() {", "    return () => <main>${1}</main>", "  },", "});"],
+    "description": "vue jsx/tsx optional component template"
+  },
+
+  "Vue JSX/TSX Setup Component Template": {
+    "prefix": "vtemp-setup",
+    "body": ["export default defineComponent<{}>(() => {", "  return () => <main>${1}</main>", "});"],
+    "description": "vue jsx/tsx setup component template"
+  }
+}
