@@ -131,6 +131,10 @@
       "rev": "0fe38fd3fa6433101f4e173f681bb134e175c022",
       "src": "https://github.com/AndrewRadev/switch.vim"
     },
+    "todo-comments.nvim": {
+      "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
+      "src": "https://github.com/folke/todo-comments.nvim"
+    },
     "translate.nvim": {
       "rev": "1a841e56407ba02e919ed9af573dbe531404aebb",
       "src": "https://github.com/uga-rosa/translate.nvim"

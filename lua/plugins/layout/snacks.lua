@@ -53,9 +53,9 @@ map('n', '<leader>fb', function() Snacks.picker.buffers({ sort_lastused = true }
 -- 查找最近打开的文件
 map('n', '<leader>fo', Snacks.picker.recent, { desc = 'Find recent file' })
 -- 全局搜索文本
-map('n', '<leader>ft', Snacks.picker.grep, { desc = 'Live grep in files' })
+map('n', '<leader>fw', Snacks.picker.grep, { desc = 'Live grep in files' })
 -- 当前 buffer 搜索文本
-map('n', '<leader>fT', function() Snacks.picker.lines({ layout = 'dropdown' }) end, { desc = 'Live grep in current buffer' })
+map('n', '<leader>fW', function() Snacks.picker.lines({ layout = 'dropdown' }) end, { desc = 'Live grep in current buffer' })
 -- 在帮助文档中搜索
 map('n', '<leader>fh', function() Snacks.picker.help({ layout = 'dropdown' }) end, { desc = 'Find in help' })
 -- 查找所有的 Snacks picker 布局
@@ -64,6 +64,28 @@ map('n', '<leader>fl', Snacks.picker.picker_layouts, { desc = 'Find snacks picke
 map('n', '<leader>fk', function() Snacks.picker.keymaps({ layout = 'dropdown' }) end, { desc = 'Find keymaps with snacks' })
 -- 查找图标
 map('n', '<leader>fi', function() Snacks.picker.icons({ layout = 'dropdown' }) end, { desc = 'Find icons' })
+-- 查找 todo 注释
+local function find_todo()
+  if vim.bo.filetype == 'markdown' then
+    Snacks.picker.grep_buffers({
+      finder = 'grep',
+      format = 'file',
+      prompt = ' ',
+      search = '^\\s*- \\[ \\]',
+      regex = true,
+      live = false,
+      args = { '--no-ignore' },
+      on_show = function() vim.cmd.stopinsert() end,
+      buffers = false,
+      supports_live = false,
+      layout = 'ivy',
+    })
+  else
+    Snacks.picker.todo_comments({ layout = 'select' })
+  end
+end
+map('n', '<leader>ft', find_todo, { desc = 'Find TODO comments' })
+
 -- 查找变量引用(不包含声明)
 map('n', 'grr', function() Snacks.picker.lsp_references({ include_declaration = false, include_current = true }) end, { desc = 'Find lsp references' })
 
