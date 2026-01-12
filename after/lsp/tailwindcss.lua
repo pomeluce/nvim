@@ -1,6 +1,33 @@
 ---@type vim.lsp.Config
 return {
   cmd = { 'tailwindcss-language-server', '--stdio' },
+  filetypes = {
+    'astro',
+    'clojure',
+    'htmldjango',
+    'elixir',
+    'eruby',
+    'haml',
+    'html',
+    'htmlangular',
+    'heex',
+    'liquid',
+    'markdown',
+    'php',
+    'twig',
+    'css',
+    'less',
+    'sass',
+    'scss',
+    'stylus',
+    'javascript',
+    'javascriptreact',
+    'rescript',
+    'typescript',
+    'typescriptreact',
+    'vue',
+    'svelte',
+  },
   settings = {
     -- config params: https://github.com/tailwindlabs/tailwindcss-intellisense#extension-settings
     tailwindCSS = {

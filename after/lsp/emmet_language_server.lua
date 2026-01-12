@@ -1,7 +1,7 @@
 ---@type vim.lsp.Config
 return {
   cmd = { 'emmet-language-server', '--stdio' },
-  filetypes = { 'astro', 'css', 'eruby', 'html', 'htmldjango', 'javascriptreact', 'less', 'pug', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue' },
+  filetypes = { 'astro', 'css', 'eruby', 'html', 'htmldjango', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue' },
   single_file_support = true,
   init_options = {
     html = {
