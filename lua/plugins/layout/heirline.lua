@@ -13,6 +13,71 @@ local function buf_index(bufnr)
     if value == bufnr then return i end
   end
 end
+local function confirm_delete_buffer(bufnr)
+  local modified = vim.api.nvim_get_option_value('modified', { buf = bufnr })
+
+  if modified then
+    local bufname = vim.api.nvim_buf_get_name(bufnr)
+    bufname = bufname == '' and '[No Name]' or vim.fn.fnamemodify(bufname, ':~:.')
+    if bufname:match('^/') then bufname = vim.fn.fnamemodify(bufname, ':t') end
+    if bufname == '' then bufname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':t') end
+    local choice = vim.fn.confirm('Save changes to "' .. bufname .. '"?', '&Yes\n&No\n&Cancel', 1, 'Question')
+    if choice == 1 then
+      vim.api.nvim_buf_call(bufnr, function() vim.cmd('write') end)
+      vim.api.nvim_buf_delete(bufnr, { force = false })
+    else
+      vim.api.nvim_buf_delete(bufnr, { force = true })
+    end
+  else
+    vim.api.nvim_buf_delete(bufnr, { force = false })
+  end
+end
+
+local function close_buffer(bufnr)
+  bufnr = bufnr or cur_buf()
+
+  if vim.bo[bufnr].buftype == 'terminal' then
+    vim.cmd(vim.bo.buflisted and 'set nobl | enew' or 'hide')
+  else
+    local curBufIndex = buf_index(bufnr)
+    local bufhidden = vim.bo.bufhidden
+
+    -- force close floating wins or nonbuflisted
+    if api.nvim_win_get_config(0).zindex then
+      vim.cmd('bw')
+      return
+      -- handle listed bufs
+    elseif curBufIndex and #vim.t.bufs > 1 then
+      local newBufIndex = curBufIndex == #vim.t.bufs and -1 or 1
+      vim.cmd('b' .. vim.t.bufs[curBufIndex + newBufIndex])
+      -- handle unlisted
+    elseif not vim.bo.buflisted then
+      local tmpbufnr = vim.t.bufs[1]
+      if tmpbufnr then
+        local winid = vim.fn.bufwinid(tmpbufnr)
+        winid = winid ~= -1 and winid or 0
+        api.nvim_set_current_win(winid)
+        api.nvim_set_current_buf(tmpbufnr)
+      end
+      vim.cmd('bw' .. bufnr)
+      return
+    else
+      vim.cmd('enew')
+    end
+
+    if not (bufhidden == 'delete') then confirm_delete_buffer(bufnr) end
+  end
+
+  vim.cmd('redrawtabline')
+end
+--- @param include_cur_buf boolean 是否关闭当前 buffer
+local function close_all_buffer(include_cur_buf)
+  local bufs = vim.t.bufs
+  if include_cur_buf ~= nil and not include_cur_buf then table.remove(bufs, buf_index(cur_buf())) end
+  for _, buf in ipairs(bufs) do
+    close_buffer(buf)
+  end
+end
 
 vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
   group = vim.api.nvim_create_augroup('SetupHeirline', { clear = true }),
@@ -56,59 +121,13 @@ vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
     map('n', '<s-tab>', prev_buf, { desc = 'Toggle to prev buffer' })
 
     -- 删除当前 buffer
-    local function close_buffer(bufnr)
-      bufnr = bufnr or cur_buf()
-
-      if vim.bo[bufnr].buftype == 'terminal' then
-        vim.cmd(vim.bo.buflisted and 'set nobl | enew' or 'hide')
-      else
-        local curBufIndex = buf_index(bufnr)
-        local bufhidden = vim.bo.bufhidden
-
-        -- force close floating wins or nonbuflisted
-        if api.nvim_win_get_config(0).zindex then
-          vim.cmd('bw')
-          return
-        -- handle listed bufs
-        elseif curBufIndex and #vim.t.bufs > 1 then
-          local newBufIndex = curBufIndex == #vim.t.bufs and -1 or 1
-          vim.cmd('b' .. vim.t.bufs[curBufIndex + newBufIndex])
-        -- handle unlisted
-        elseif not vim.bo.buflisted then
-          local tmpbufnr = vim.t.bufs[1]
-          if tmpbufnr then
-            local winid = vim.fn.bufwinid(tmpbufnr)
-            winid = winid ~= -1 and winid or 0
-            api.nvim_set_current_win(winid)
-            api.nvim_set_current_buf(tmpbufnr)
-          end
-          vim.cmd('bw' .. bufnr)
-          return
-        else
-          vim.cmd('enew')
-        end
-
-        if not (bufhidden == 'delete') then vim.cmd('confirm bd' .. bufnr) end
-      end
-
-      vim.cmd('redrawtabline')
-    end
     map('n', '<leader>bc', close_buffer, { desc = 'Delete current buffer' })
 
     -- 删除所有 buffer
-    --- @param include_cur_buf boolean 是否关闭当前 buffer
-    local function close_all_buffer(include_cur_buf)
-      local bufs = vim.t.bufs
-      if include_cur_buf ~= nil and not include_cur_buf then table.remove(bufs, buf_index(cur_buf())) end
-      for _, buf in ipairs(bufs) do
-        close_buffer(buf)
-      end
-    end
     map('n', '<leader>bC', function() close_all_buffer(false) end, { desc = 'Delete other buffers' })
   end,
 })
 
--- 设置 tab 和 buf
 -- autocmds for tabufline -> store bufnrs on bufadd, bufenter events
 -- thx to https://github.com/ii14 & stores buffer per tab -> table
 vim.api.nvim_create_autocmd({ 'BufAdd', 'BufEnter', 'TabNew' }, {
