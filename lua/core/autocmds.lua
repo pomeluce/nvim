@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd('InsertLeave', {
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('HighlightYank', { clear = true }),
-  callback = function() vim.highlight.on_yank({ higroup = 'CurSearch' }) end,
+  callback = function() vim.hl.on_yank({ higroup = 'CurSearch' }) end,
 })
 
 -- 用 o 换行不要延续注释
@@ -93,19 +93,6 @@ vim.api.nvim_create_autocmd('TermOpen', {
   end,
 })
 
--- 快速关闭终端
-vim.api.nvim_create_autocmd('TermClose', {
-  group = vim.api.nvim_create_augroup('TermPromptClose', { clear = true }),
-  pattern = '*',
-  callback = function(args)
-    local bufnr = args.buf
-    local wins = vim.fn.win_findbuf(bufnr)
-    for _, w in ipairs(wins) do
-      if vim.api.nvim_win_is_valid(w) then vim.api.nvim_win_close(w, true) end
-    end
-  end,
-})
-
 -- vim.pack.update buffer 快捷键绑定
 local function is_pack_buf(bufnr)
   if not vim.api.nvim_buf_is_loaded(bufnr) then return false end
@@ -121,7 +108,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
       if is_pack_buf(bufnr) and bufnr ~= event.buf then pcall(vim.api.nvim_buf_delete, bufnr, { force = true }) end
     end
 
-    local map = require('utils').map
+    local map = vim.keymap.set
     map('n', 'S', ':write<cr>', { buffer = event.buf, desc = 'Confirm and update all plugin' })
     map('n', 'R', ':PackUpdate<cr>', { buffer = event.buf, desc = 'Retry plugin update' })
     map('n', 'q', ':close<cr>', { buffer = event.buf, desc = 'Close plugin confirmation buffer' })

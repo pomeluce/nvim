@@ -11,7 +11,7 @@ require('nvim-tree').setup({
   -- 在多个窗口下打开 buffer 时, 默认使用最近窗口
   actions = { open_file = { window_picker = { enable = false } } },
   on_attach = function(bufnr)
-    local map = require('utils').map
+    local map = vim.keymap.set
     local api = require('nvim-tree.api')
     -- BEGIN_DEFAULT_ON_ATTACH
     local opts = function(desc) return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true } end

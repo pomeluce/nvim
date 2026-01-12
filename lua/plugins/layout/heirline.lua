@@ -5,6 +5,7 @@ vim.pack.add({
 vim.t.bufs = vim.t.bufs or vim.tbl_filter(function(buf) return vim.fn.buflisted(buf) == 1 end, vim.api.nvim_list_bufs())
 
 local api = vim.api
+local map = vim.keymap.set
 local cur_buf = api.nvim_get_current_buf
 local set_buf = api.nvim_set_current_buf
 
@@ -94,8 +95,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
       end,
     })
 
-    local map = require('utils').map
-
     -- 切换下一个 buf
     local function next_buf()
       local bufs = vim.t.bufs
@@ -107,7 +106,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
       set_buf((curbufIndex == #bufs and bufs[1]) or bufs[curbufIndex + 1])
     end
     map('n', '<tab>', next_buf, { desc = 'Toggle to next buffer' })
-
     -- 切换上一个 buf
     local function prev_buf()
       local bufs = vim.t.bufs
@@ -119,10 +117,8 @@ vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
       set_buf((curbufIndex == 1 and bufs[#bufs]) or bufs[curbufIndex - 1])
     end
     map('n', '<s-tab>', prev_buf, { desc = 'Toggle to prev buffer' })
-
     -- 删除当前 buffer
     map('n', '<leader>bc', close_buffer, { desc = 'Delete current buffer' })
-
     -- 删除所有 buffer
     map('n', '<leader>bC', function() close_all_buffer(false) end, { desc = 'Delete other buffers' })
   end,

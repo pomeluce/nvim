@@ -1,9 +1,9 @@
-local map = require('utils').map
+local map = vim.keymap.set
 
 -- 保存并重新加载配置
-map('n', '<leader>U', ':update<CR> :source<CR>', { desc = 'Reload config file' })
+map('n', '<leader>U', '<cmd>update<cr> <cmd>source<cr>', { desc = 'Reload config file' })
 -- 重新加载 Neovim
-map('n', '<leader>R', ':restart<CR>', { desc = 'Restart Neovim' })
+map('n', '<leader>R', '<cmd>restart<cr>', { desc = 'Restart Neovim' })
 -- 代码补全
 map('i', '<c-space>', '<c-x><c-o>', { desc = 'Trigger completion' })
 -- terminal 切换 visual 模式
@@ -11,9 +11,9 @@ map('t', '<c-space>', '<c-\\><c-n>', { desc = 'Toggle visual mode in floaterm' }
 -- 释放替换键
 map('n', 's', '<nop>', { desc = 'Released substitute key' })
 -- 代码保存
-map('n', 'S', ':IntelliSave<cr>', { desc = 'Intelli save file' })
+map('n', 'S', '<cmd>IntelliSave<cr>', { desc = 'Intelli save file' })
 -- 强制退出
-map('n', 'Q', ':q!<cr>', { desc = 'Force quit' })
+map('n', 'Q', '<cmd>q!<cr>', { desc = 'Force quit' })
 -- 进入命令模式
 map({ 'n', 'v' }, ';', ':', { desc = 'Toggle mode for command', silent = false })
 -- 重写上下移动
@@ -30,23 +30,23 @@ map('n', '<m-a>', 'ggVG', { desc = 'Select all text' })
 map('n', '<m-s>', 'vi{', { desc = 'Select brackets text' })
 
 -- 全局替换 c-s = :%s/
-map('n', '<c-s>', ':ReplaceWord %<cr>', { desc = 'Buffer literal repalce', silent = false })
-map('v', '<c-s>', "<esc>:ReplaceWord '<,'><cr>", { desc = 'Visual literal repalce', silent = false })
+map('n', '<c-s>', '<cmd>ReplaceWord %<cr>', { desc = 'Buffer literal repalce', silent = false })
+map('v', '<c-s>', "<esc><cmd>ReplaceWord '<,'><cr>", { desc = 'Visual literal repalce', silent = false })
 
 -- 取消搜索高亮
-map('n', '<esc>', ':nohlsearch<cr>', { desc = 'Disable search highlighting' })
+map('n', '<esc>', '<cmd>nohlsearch<cr>', { desc = 'Disable search highlighting' })
 
 -- 设置水平分屏, 并切换到下一个窗口
-map('n', 'sv', ':vsp<cr><c-w>w', { desc = 'Split horizontal window' })
+map('n', 'sv', '<cmd>vsp<cr><c-w>w', { desc = 'Split horizontal window' })
 
 -- 设置垂直分屏, 并切换到下一个窗口
-map('n', 'sp', ':sp<cr><c-w>w', { desc = 'Split vertical window' })
+map('n', 'sp', '<cmd>sp<cr><c-w>w', { desc = 'Split vertical window' })
 
 -- 关闭当前窗口
-map('n', 'sc', ':close<cr>', { desc = 'Close current window' })
+map('n', 'sc', '<cmd>close<cr>', { desc = 'Close current window' })
 
 -- 关闭其他窗口
-map('n', 'so', ':only<cr>', { desc = 'Close other window' })
+map('n', 'so', '<cmd>only<cr>', { desc = 'Close other window' })
 
 -- 设置 buffer 跳转
 map('n', '<c-h>', '<c-w>h', { desc = 'Jump to left buffer' })
@@ -80,16 +80,16 @@ map('i', '<m-k>', '<up>', { desc = 'Move cursor in insert mode' })
 map('i', '<m-j>', '<down>', { desc = 'Move cursor in insert mode' })
 
 -- 向上移动行
-map('n', '<c-m-J>', ':m+<cr>', { desc = 'Move current line to up' })
-map('i', '<c-m-J>', '<esc>:m+<cr>i', { desc = 'Move current line to up' })
-map('v', '<c-m-J>', ":move '>+1<cr>gv", { desc = 'Move current line to up' })
-map('v', 'J', ":move '>+1<cr>gv", { desc = 'Move current line to up' })
+map('n', '<c-m-J>', '<cmd>m+<cr>', { desc = 'Move current line to up' })
+map('i', '<c-m-J>', '<esc><cmd>m+<cr>i', { desc = 'Move current line to up' })
+map('v', '<c-m-J>', "<cmd>move '>+1<cr>gv", { desc = 'Move current line to up' })
+map('v', 'J', "<cmd>move '>+1<cr>gv", { desc = 'Move current line to up' })
 
 -- 向下移动行
-map('n', '<c-m-K>', ':m-2<cr>', { desc = 'Move current line to down' })
-map('i', '<c-m-K>', '<esc>:m-2<cr>i', { desc = 'Move current line to down' })
-map('v', '<c-m-K>', ":move '<-2<cr>gv", { desc = 'Move current line to down' })
-map('v', 'K', ":move '<-2<cr>gv", { desc = 'Move current line to down' })
+map('n', '<c-m-K>', '<cmd>m-2<cr>', { desc = 'Move current line to down' })
+map('i', '<c-m-K>', '<esc><cmd>m-2<cr>i', { desc = 'Move current line to down' })
+map('v', '<c-m-K>', "<cmd>move '<-2<cr>gv", { desc = 'Move current line to down' })
+map('v', 'K', "<cmd>move '<-2<cr>gv", { desc = 'Move current line to down' })
 
 -- 代码连续缩进
 map('v', '<', '<gv', { desc = 'Indent to left' })
@@ -117,26 +117,26 @@ map('n', 'T', toggle_nvim_tree, { desc = 'Toggle file tree' })
 map({ 'n', 'v' }, 'zz', 'za', { desc = 'Toggle fold under cursor' })
 
 -- 查看语法高亮
-map('n', 'H', ':Inspect<CR>', { desc = 'Inspect syntax highlight group under cursor' })
+map('n', 'H', '<cmd>Inspect<cr>', { desc = 'Inspect syntax highlight group under cursor' })
 
 -- 查看当前行 git 提交信息
-map('n', 'C', ':Gitsigns blame_line full=true<CR>', { desc = 'Show current line git blame' })
+map('n', 'C', '<cmd>Gitsigns blame_line full=true<cr>', { desc = 'Show current line git blame' })
 -- 切换当前行 git 提交记录信息
-map('n', '\\g', ':Gitsigns toggle_current_line_blame<CR>', { desc = 'Toggle show blame line' })
+map('n', '\\g', '<cmd>Gitsigns toggle_current_line_blame<cr>', { desc = 'Toggle show blame line' })
 
 -- 代码格式化
-map('n', '<leader>fm', ':Format<CR>', { desc = 'Format current buffer' })
+map('n', '<leader>fm', '<cmd>Format<cr>', { desc = 'Format current buffer' })
 
 -- 翻译插件
-map('n', '<leader>tr', 'viw:Translate ZH -output=replace<CR>', { desc = 'Translator text and replace(normal)' })
-map('v', '<leader>tr', ":'<,'>Translate ZH -output=replace<CR>", { desc = 'Translator text and repalce(visual)' })
-map('n', '<leader>ts', 'viw:Translate ZH<CR>', { desc = 'Translator text in floating(normal)' })
-map('v', '<leader>ts', ":'<,'>:Translate ZH<CR>", { desc = 'Translator text in floating(visual)' })
+map('n', '<leader>tr', 'viw<cmd>Translate ZH -output=replace<cr>', { desc = 'Translator text and replace(normal)' })
+map('v', '<leader>tr', "<cmd>'<,'>Translate ZH -output=replace<cr>", { desc = 'Translator text and repalce(visual)' })
+map('n', '<leader>ts', 'viw<cmd>Translate ZH<cr>', { desc = 'Translator text in floating(normal)' })
+map('v', '<leader>ts', "<cmd>'<,'>:Translate ZH<cr>", { desc = 'Translator text in floating(visual)' })
 
 -- 项目管理
-map('n', '<leader>sl', ':NeovimProjectLoadRecent<cr>', { desc = 'Load last project session' })
-map('n', '<leader>sp', ':NeovimProjectDiscover<cr>', { desc = 'Select project session for discover' })
-map('n', '<leader>sh', ':NeovimProjectHistory<cr>', { desc = 'Select project session for history' })
+map('n', '<leader>sl', '<cmd>NeovimProjectLoadRecent<cr>', { desc = 'Load last project session' })
+map('n', '<leader>sp', '<cmd>NeovimProjectDiscover<cr>', { desc = 'Select project session for discover' })
+map('n', '<leader>sh', '<cmd>NeovimProjectHistory<cr>', { desc = 'Select project session for history' })
 
 -- swtich
-map('n', '`', ':Switch<CR>', { desc = 'Switch segments of text with predefined replacements' })
+map('n', '`', '<cmd>Switch<cr>', { desc = 'Switch segments of text with predefined replacements' })

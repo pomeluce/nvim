@@ -44,7 +44,7 @@ Snacks.setup({
   terminal = { win = { style = 'float', width = math.floor(vim.o.columns * 0.6), height = math.floor(vim.o.lines * 0.65), border = 'rounded' } },
 })
 
-local map = require('utils').map
+local map = vim.keymap.set
 
 -- 全局搜索文件
 map('n', '<leader>ff', function() Snacks.picker.smart() end, { desc = 'Smart file picker' })

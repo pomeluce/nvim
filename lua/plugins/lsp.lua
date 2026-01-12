@@ -15,7 +15,6 @@ local function jump(method, picker, message)
     end)
   end
 end
-
 local function has_document_highlight(bufnr)
   for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
     if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then return true end
@@ -24,29 +23,19 @@ local function has_document_highlight(bufnr)
 end
 
 local hlword = require('configs.hlword')
+local map = vim.keymap.set
+-- 诊断样式
+local x = vim.diagnostic.severity
+vim.diagnostic.config({
+  virtual_text = { spacing = 4, prefix = '' },
+  signs = { text = { [x.ERROR] = '', [x.WARN] = '', [x.INFO] = '', [x.HINT] = '' } },
+  severity_sort = true,
+  float = { severity_sort = true },
+})
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('SetupLSP', { clear = true }),
   callback = function(event)
-    -- 诊断样式
-    local x = vim.diagnostic.severity
-    vim.diagnostic.config({
-      virtual_text = { spacing = 4, prefix = '' },
-      signs = { text = { [x.ERROR] = '', [x.WARN] = '', [x.INFO] = '', [x.HINT] = '' } },
-      severity_sort = true,
-      float = { severity_sort = true },
-    })
-
-    -- 默认边框样式
-    --[[ local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-    ---@diagnostic disable-next-line: duplicate-set-field
-    function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-      opts = opts or {}
-      opts.border = 'rounded'
-      return orig_util_open_floating_preview(contents, syntax, opts, ...)
-    end ]]
-
-    local map = require('utils').map
     -- 当前 LSP 客户端
     local client = assert(vim.lsp.get_client_by_id(event.data.client_id))
 

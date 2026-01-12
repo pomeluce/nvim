@@ -15,36 +15,56 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
   group = vim.api.nvim_create_augroup('SetupFormat', { clear = true }),
   once = true,
   callback = function()
-    local util = require('conform.util')
+    local utils = require('utils')
     local cfg = vim.fn.stdpath('config') .. '/lua/configs/fmt'
 
     require('conform').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
-        css = { 'prettier' },
-        html = { 'prettier' },
-        javascript = { 'prettier' },
-        javascriptreact = { 'prettier' },
-        json = { 'prettier' },
-        jsonc = { 'prettier' },
-        markdown = { 'prettier' },
+        css = { 'prettierd' },
+        html = { 'prettierd' },
+        javascript = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
+        json = { 'prettierd' },
+        jsonc = { 'prettierd' },
+        markdown = { 'prettierd', 'cbfmt' },
         nix = { 'nixfmt' },
         python = { 'ruff_fix', 'ruff_format', 'ruff_organize_imports' },
         rust = { 'rustfmt' },
-        scss = { 'prettier' },
+        scss = { 'prettierd' },
         sh = { 'shfmt' },
         sql = { 'sqlfluff' },
         toml = { 'taplo' },
-        typescript = { 'prettier' },
-        typescriptreact = { 'prettier' },
-        vue = { 'prettier' },
-        yaml = { 'prettier' },
+        typescript = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        vue = { 'prettierd' },
+        yaml = { 'prettierd' },
         zsh = { 'beautysh' },
       },
       formatters = {
-        prettier = {
-          command = 'prettier',
-          args = function(ctx)
+        beautysh = {
+          command = 'beautysh',
+          args = function()
+            local shiftwidth = vim.opt.shiftwidth:get()
+            local expandtab = vim.opt.expandtab:get()
+            if not expandtab then shiftwidth = 0 end
+
+            return { '-i', shiftwidth, '$FILENAME' }
+          end,
+          stdin = false,
+        },
+        cbfmt = {
+          command = 'cbfmt',
+          args = { '-w', '--config', vim.fn.expand(cfg .. '/cbfmt.toml'), '$FILENAME' },
+        },
+        nixfmt = {
+          command = 'nixfmt',
+          args = {},
+          stdin = true,
+        },
+        prettierd = {
+          command = 'prettierd',
+          args = function()
             local has_root = root_file({ '.prettierrc', '.prettierrc.json', '.prettierrc.js', '.prettierrc.cjs' })
             local args = { '--stdin-filepath', '$FILENAME' }
 
@@ -53,39 +73,39 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
               table.insert(args, vim.fn.expand(cfg .. '/prettierrc.json'))
             end
 
-            -- 根据文件类型设置 parser(可选)
-            local parser_map = {
-              css = 'css',
-              markdown = 'markdown',
-              scss = 'scss',
-              typescript = 'typescript',
-              typescriptreact = 'typescript',
-              yaml = 'yaml',
-              vue = 'vue',
-            }
-            local parser = parser_map[ctx.filetype]
-            if parser then
-              table.insert(args, '--parser')
-              table.insert(args, parser)
-            end
             return args
           end,
           stdin = true,
-          cwd = util.root_file({ '.prettierrc', '.prettierrc.json', 'package.json', '.git' }),
-        },
-        stylua = {
-          command = 'stylua',
-          args = function()
-            local has_root = root_file({ '.stylua.toml', 'stylua.toml' })
-            return has_root and { '--stdin-filepath', '$FILENAME', '--', '-' }
-              or { '--stdin-filepath', '$FILENAME', '--config-path', vim.fn.expand(cfg .. '/stylua.toml'), '--', '-' }
+          cwd = function(_, ctx)
+            return vim.fs.root(ctx.dirname, function(name, path)
+              if
+                vim.tbl_contains({
+                  -- https://prettier.io/docs/en/configuration.html
+                  '.prettierrc',
+                  '.prettierrc.json',
+                  '.prettierrc.yml',
+                  '.prettierrc.yaml',
+                  '.prettierrc.json5',
+                  '.prettierrc.js',
+                  '.prettierrc.cjs',
+                  '.prettierrc.mjs',
+                  '.prettierrc.toml',
+                  'prettier.config.js',
+                  'prettier.config.cjs',
+                  'prettier.config.mjs',
+                }, name)
+              then
+                return true
+              end
+
+              if name == 'package.json' then
+                local full_path = vim.fs.joinpath(path, name)
+                local package_data = utils.read_json(full_path)
+                return package_data and package_data.prettier and true or false
+              end
+              return false
+            end)
           end,
-          stdin = true,
-        },
-        nixfmt = {
-          command = 'nixfmt',
-          args = {},
-          stdin = true,
         },
         rustfmt = {
           -- rules: https://rust-lang.github.io/rustfmt
@@ -117,6 +137,15 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           stdin = true,
           require_cwd = false,
         },
+        stylua = {
+          command = 'stylua',
+          args = function()
+            local has_root = root_file({ '.stylua.toml', 'stylua.toml' })
+            return has_root and { '--stdin-filepath', '$FILENAME', '--', '-' }
+              or { '--stdin-filepath', '$FILENAME', '--config-path', vim.fn.expand(cfg .. '/stylua.toml'), '--', '-' }
+          end,
+          stdin = true,
+        },
         taplo = {
           command = 'taplo',
           args = function()
@@ -125,19 +154,25 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           end,
           stdin = true,
         },
-        beautysh = {
-          command = 'beautysh',
-          args = function()
-            local shiftwidth = vim.opt.shiftwidth:get()
-            local expandtab = vim.opt.expandtab:get()
-            if not expandtab then shiftwidth = 0 end
-
-            return { '-i', shiftwidth, '$FILENAME' }
-          end,
-          stdin = false,
-        },
       },
+      format_on_save = function(bufnr)
+        -- 使用全局变量或缓冲区本地变量禁用
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
+        return { timeout_ms = 500, lsp_format = 'fallback' }
+      end,
     })
     vim.api.nvim_create_user_command('Format', function() require('conform').format({ async = true }) end, { desc = 'Format command' })
+    vim.api.nvim_create_user_command('FormatDisable', function(args)
+      if args.bang then
+        -- FormatDisable! 将仅对这个缓冲区禁用格式化
+        vim.b.disable_autoformat = true
+      else
+        vim.g.disable_autoformat = true
+      end
+    end, { desc = 'Disable autoformat-on-save', bang = true })
+    vim.api.nvim_create_user_command('FormatEnable', function()
+      vim.b.disable_autoformat = false
+      vim.g.disable_autoformat = false
+    end, { desc = 'Re-enable autoformat-on-save' })
   end,
 })
