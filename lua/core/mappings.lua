@@ -15,7 +15,7 @@ map('n', 'S', '<cmd>IntelliSave<cr>', { desc = 'Intelli save file' })
 -- 强制退出
 map('n', 'Q', '<cmd>q!<cr>', { desc = 'Force quit' })
 -- 进入命令模式
-map({ 'n', 'v' }, ';', ':', { desc = 'Toggle mode for command', silent = false })
+map({ 'n', 'v' }, ';', ':', { desc = 'Toggle mode for command' })
 -- 重写上下移动
 map({ 'n', 'x', 'v' }, 'j', "v:count == 0 ? 'gj' : 'j'", { desc = 'Move cursor down', expr = true })
 map({ 'n', 'x', 'v' }, 'k', "v:count == 0 ? 'gk' : 'k'", { desc = 'Move cursor up', expr = true })
@@ -30,8 +30,8 @@ map('n', '<m-a>', 'ggVG', { desc = 'Select all text' })
 map('n', '<m-s>', 'vi{', { desc = 'Select brackets text' })
 
 -- 全局替换 c-s = :%s/
-map('n', '<c-s>', '<cmd>ReplaceWord %<cr>', { desc = 'Buffer literal repalce', silent = false })
-map('v', '<c-s>', "<esc><cmd>ReplaceWord '<,'><cr>", { desc = 'Visual literal repalce', silent = false })
+map('n', '<c-s>', '<cmd>ReplaceWord %<cr>', { desc = 'Buffer literal repalce' })
+map('v', '<c-s>', "<esc><cmd>ReplaceWord '<,'><cr>", { desc = 'Visual literal repalce' })
 
 -- 取消搜索高亮
 map('n', '<esc>', '<cmd>nohlsearch<cr>', { desc = 'Disable search highlighting' })

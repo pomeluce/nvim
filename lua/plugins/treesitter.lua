@@ -6,8 +6,15 @@ vim.pack.add({
 })
 
 local map = vim.keymap.set
+---@param lhs string
+---@param capture string
+---@param query_group? string
+local function map_textobj(lhs, capture, query_group)
+  local function _rhs() require('nvim-treesitter-textobjects.select').select_textobject(capture, query_group or 'textobjects') end
+  map({ 'o', 'x' }, lhs, _rhs, { desc = 'Treesitter select: ' .. lhs })
+end
 
-local parsers = {
+local ensure_installed = {
   'c',
   'cmake',
   'cpp',
@@ -34,7 +41,7 @@ vim.api.nvim_create_autocmd('BufReadPre', {
   once = true,
   callback = function()
     local ts = require('nvim-treesitter')
-    ts.install(parsers):wait(60 * 1000)
+    ts.install(ensure_installed)
 
     require('nvim-treesitter-textobjects').setup({
       select = {
@@ -49,15 +56,6 @@ vim.api.nvim_create_autocmd('BufReadPre', {
         include_surrounding_whitespace = false,
       },
     })
-
-    local function map_textobj(lhs, capture, query_group)
-      map(
-        { 'o', 'x' },
-        lhs,
-        function() require('nvim-treesitter-textobjects.select').select_textobject(capture, query_group or 'textobjects') end,
-        { desc = 'Treesitter select: ' .. lhs }
-      )
-    end
     map_textobj('af', '@function.outer')
     map_textobj('if', '@function.inner')
     map_textobj('ac', '@class.outer')
@@ -66,18 +64,31 @@ vim.api.nvim_create_autocmd('BufReadPre', {
 
     require('ts_context_commentstring').setup({})
 
-    vim.cmd([[
-      SetHL { ['@comment'] = { fg = '#868e96', italic = true } } 
-    ]])
+    vim.cmd([[ SetHL { ['@comment'] = { fg = '#868e96', italic = true } } ]])
 
-    -- require('treesitter-context').setup({
-    --   separator = nil,
-    --   max_lines = 5,
-    --   multiwindow = true,
-    --   min_window_height = 15,
-    -- })
-    -- vim.api.nvim_set_hl(0, 'TreesitterContext', { link = 'CursorLine' }) -- remove existing link
-    -- vim.api.nvim_set_hl(0, 'TreesitterContextBottom', { underline = true, sp = '#b4befe' })
-    -- vim.api.nvim_set_hl(0, "TreesitterContextBottom", { link = "CursorLine" }) -- remove existing link
+    require('treesitter-context').setup({ separator = nil, max_lines = 5, multiwindow = true, min_window_height = 15 })
+  end,
+})
+
+-- 自动安装 treesitter
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('AutoInstallTreesitter', { clear = true }),
+  callback = function(event)
+    local ok, nvim_treesitter = pcall(require, 'nvim-treesitter')
+    if not ok then return end
+
+    local parsers = require('nvim-treesitter.parsers')
+    if not parsers[event.match] or not nvim_treesitter.install then return end
+
+    local ft = vim.bo[event.buf].ft
+    local lang = vim.treesitter.language.get_lang(ft)
+
+    nvim_treesitter.install({ lang }):await(function(err)
+      if err then
+        vim.notify('Treesitter install error for ft: ' .. ft .. ' err: ' .. err)
+        return
+      end
+      pcall(vim.treesitter.start, event.buf)
+    end)
   end,
 })
