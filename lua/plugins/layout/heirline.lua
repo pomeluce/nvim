@@ -2,6 +2,8 @@ vim.pack.add({
   { src = 'https://github.com/rebelot/heirline.nvim' },
 })
 
+vim.t.bufs = vim.t.bufs or vim.tbl_filter(function(buf) return vim.fn.buflisted(buf) == 1 end, vim.api.nvim_list_bufs())
+
 local api = vim.api
 local cur_buf = api.nvim_get_current_buf
 local set_buf = api.nvim_set_current_buf
@@ -67,12 +69,10 @@ vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
         if api.nvim_win_get_config(0).zindex then
           vim.cmd('bw')
           return
-
         -- handle listed bufs
         elseif curBufIndex and #vim.t.bufs > 1 then
           local newBufIndex = curBufIndex == #vim.t.bufs and -1 or 1
           vim.cmd('b' .. vim.t.bufs[curBufIndex + newBufIndex])
-
         -- handle unlisted
         elseif not vim.bo.buflisted then
           local tmpbufnr = vim.t.bufs[1]
@@ -105,5 +105,55 @@ vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
       end
     end
     map('n', '<leader>bC', function() close_all_buffer(false) end, { desc = 'Delete other buffers' })
+  end,
+})
+
+-- 设置 tab 和 buf
+-- autocmds for tabufline -> store bufnrs on bufadd, bufenter events
+-- thx to https://github.com/ii14 & stores buffer per tab -> table
+vim.api.nvim_create_autocmd({ 'BufAdd', 'BufEnter', 'TabNew' }, {
+  group = vim.api.nvim_create_augroup('SetTabufs', { clear = true }),
+  callback = function(args)
+    local bufs = vim.t.bufs
+    local is_curbuf = vim.api.nvim_get_current_buf() == args.buf
+
+    if bufs == nil then
+      bufs = vim.api.nvim_get_current_buf() == args.buf and {} or { args.buf }
+    else
+      -- check for duplicates
+      if
+        not vim.tbl_contains(bufs, args.buf)
+        and (args.event == 'BufEnter' or not is_curbuf or vim.api.nvim_get_option_value('buflisted', { buf = args.buf }))
+        and vim.api.nvim_buf_is_valid(args.buf)
+        and vim.api.nvim_get_option_value('buflisted', { buf = args.buf })
+      then
+        table.insert(bufs, args.buf)
+      end
+    end
+
+    -- remove unnamed buffer which isnt current buf & modified
+    if args.event == 'BufAdd' then
+      if #vim.api.nvim_buf_get_name(bufs[1]) == 0 and not vim.api.nvim_get_option_value('modified', { buf = bufs[1] }) then table.remove(bufs, 1) end
+    end
+
+    vim.t.bufs = bufs
+  end,
+})
+vim.api.nvim_create_autocmd('BufDelete', {
+  group = vim.api.nvim_create_augroup('DelTabuf', { clear = true }),
+  callback = function(args)
+    for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+      local bufs = vim.t[tab].bufs
+
+      if bufs then
+        for i, bufnr in ipairs(bufs) do
+          if bufnr == args.buf then
+            table.remove(bufs, i)
+            vim.t[tab].bufs = bufs
+            break
+          end
+        end
+      end
+    end
   end,
 })
