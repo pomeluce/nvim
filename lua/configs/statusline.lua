@@ -114,7 +114,7 @@ return {
     {
       { provider = icons.mode.left, hl = function(self) return { fg = mode_hl[modes[self.mode][2]] } end },
       {
-        provider = function(self) return ' %2(' .. modes[self.mode][1] .. '%)' end,
+        provider = function(self) return ' %2(' .. modes[self.mode][1] .. '%)' end,
         hl = function(self) return { fg = palette.base, bg = mode_hl[modes[self.mode][2]], bold = true } end,
       },
       { provider = icons.mode.right, hl = function(self) return { fg = mode_hl[modes[self.mode][2]], bg = palette.surface2 } end },

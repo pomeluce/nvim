@@ -22,6 +22,10 @@
       "src": "https://github.com/saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
     },
+    "codediff.nvim": {
+      "rev": "f21847c61725070a8cedcb8adefe4cdb14f4c037",
+      "src": "https://github.com/esmuellert/codediff.nvim"
+    },
     "colorful-menu.nvim": {
       "rev": "b51a659459df8d078201aefc995db8175ed55e84",
       "src": "https://github.com/xzbdmw/colorful-menu.nvim"
@@ -49,10 +53,6 @@
     "heirline.nvim": {
       "rev": "fae936abb5e0345b85c3a03ecf38525b0828b992",
       "src": "https://github.com/rebelot/heirline.nvim"
-    },
-    "hlchunk.nvim": {
-      "rev": "3bc2bd7aef28fbed6643534a0fdd0f19966544bc",
-      "src": "https://github.com/shellRaining/hlchunk.nvim"
     },
     "img-clip.nvim": {
       "rev": "b6ddfb97b5600d99afe3452d707444afda658aca",

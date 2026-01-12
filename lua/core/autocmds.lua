@@ -109,9 +109,9 @@ vim.api.nvim_create_autocmd('BufEnter', {
     end
 
     local map = vim.keymap.set
-    map('n', 'S', ':write<cr>', { buffer = event.buf, desc = 'Confirm and update all plugin' })
-    map('n', 'R', ':PackUpdate<cr>', { buffer = event.buf, desc = 'Retry plugin update' })
-    map('n', 'q', ':close<cr>', { buffer = event.buf, desc = 'Close plugin confirmation buffer' })
-    map('n', '<esc>', ':close<cr>', { buffer = event.buf, desc = 'Close plugin confirmation buffer' })
+    map('n', 'S', '<cmd>write<cr>', { buffer = event.buf, desc = 'Confirm and update all plugin' })
+    map('n', 'R', '<cmd>PackUpdate<cr>', { buffer = event.buf, desc = 'Retry plugin update' })
+    map('n', 'q', '<cmd>close<cr>', { buffer = event.buf, desc = 'Close plugin confirmation buffer' })
+    map('n', '<esc>', '<cmd>close<cr>', { buffer = event.buf, desc = 'Close plugin confirmation buffer' })
   end,
 })
