@@ -11,14 +11,14 @@ local function root_file(files, bufnr)
   return vim.fs.root(dir, files) ~= nil
 end
 
-vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
+vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
   group = vim.api.nvim_create_augroup('SetupFormat', { clear = true }),
   once = true,
   callback = function()
-    local utils = require('utils')
+    local conform = require('conform')
     local cfg = vim.fn.stdpath('config') .. '/lua/configs/fmt'
 
-    require('conform').setup({
+    conform.setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         css = { 'prettierd' },
@@ -53,60 +53,9 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
           end,
           stdin = false,
         },
-        cbfmt = {
-          command = 'cbfmt',
-          args = { '-w', '--config', vim.fn.expand(cfg .. '/cbfmt.toml'), '$FILENAME' },
-        },
-        nixfmt = {
-          command = 'nixfmt',
-          args = {},
-          stdin = true,
-        },
-        prettierd = {
-          command = 'prettierd',
-          args = function()
-            local has_root = root_file({ '.prettierrc', '.prettierrc.json', '.prettierrc.js', '.prettierrc.cjs' })
-            local args = { '--stdin-filepath', '$FILENAME' }
-
-            if not has_root then
-              table.insert(args, '--config')
-              table.insert(args, vim.fn.expand(cfg .. '/prettierrc.json'))
-            end
-
-            return args
-          end,
-          stdin = true,
-          cwd = function(_, ctx)
-            return vim.fs.root(ctx.dirname, function(name, path)
-              if
-                vim.tbl_contains({
-                  -- https://prettier.io/docs/en/configuration.html
-                  '.prettierrc',
-                  '.prettierrc.json',
-                  '.prettierrc.yml',
-                  '.prettierrc.yaml',
-                  '.prettierrc.json5',
-                  '.prettierrc.js',
-                  '.prettierrc.cjs',
-                  '.prettierrc.mjs',
-                  '.prettierrc.toml',
-                  'prettier.config.js',
-                  'prettier.config.cjs',
-                  'prettier.config.mjs',
-                }, name)
-              then
-                return true
-              end
-
-              if name == 'package.json' then
-                local full_path = vim.fs.joinpath(path, name)
-                local package_data = utils.read_json(full_path)
-                return package_data and package_data.prettier and true or false
-              end
-              return false
-            end)
-          end,
-        },
+        cbfmt = { command = 'cbfmt', args = { '-w', '--config', vim.fn.expand(cfg .. '/cbfmt.toml'), '$FILENAME' } },
+        nixfmt = { command = 'nixfmt', args = {}, stdin = true },
+        prettierd = vim.tbl_deep_extend('force', require('conform.formatters.prettierd'), { env = { PRETTIERD_DEFAULT_CONFIG = vim.fn.expand(cfg .. '/prettierrc.json') } }),
         rustfmt = {
           -- rules: https://rust-lang.github.io/rustfmt
           command = 'rustfmt',
@@ -161,7 +110,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufCreate' }, {
         return { timeout_ms = 500, lsp_format = 'fallback' }
       end,
     })
-    vim.api.nvim_create_user_command('Format', function() require('conform').format({ async = true }) end, { desc = 'Format command' })
+    vim.api.nvim_create_user_command('Format', function() conform.format({ async = true }) end, { desc = 'Format command' })
     vim.api.nvim_create_user_command('FormatDisable', function(args)
       if args.bang then
         -- FormatDisable! 将仅对这个缓冲区禁用格式化

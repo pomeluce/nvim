@@ -46,6 +46,7 @@ end, { nargs = 1, complete = function(arg_lead) return pack.installed_complete(a
 
 -- 插件清理
 register('PackClean', function()
+  local padding = string.rep(' ', 2)
   -- 已安装插件
   local installed = {}
   for _, p in ipairs(vim.pack.get(nil, { info = true })) do
@@ -65,16 +66,16 @@ register('PackClean', function()
 
   table.sort(unused)
 
-  local msg = 'Remove unused plugins?\n\n' .. table.concat(unused, '\n')
-  local confirm = vim.fn.input(msg .. "\n\nType '[Y]es' to confirm: ")
+  local msg = padding .. 'Remove unused plugins?\n\n' .. padding .. table.concat(unused, '\n')
+  local confirm = vim.fn.input(msg .. '\n\n' .. padding .. "Type '[Y]es' to confirm: ")
   confirm = confirm:lower()
-  if confirm ~= 'y' and confirm ~= 'yes' and confirm ~= '' then
+  if confirm ~= 'y' and confirm ~= 'yes' then
     vim.notify('PackClean cancelled')
     return
   end
 
   vim.pack.del(unused)
-  vim.notify('Removed plugins:\n' .. table.concat(unused, '\n'))
+  -- vim.notify('Removed plugins:\n' .. table.concat(unused, '\n'))
 end, { desc = 'Run vim.pack.del() remove all unused plugin' })
 
 -- 文件保存
