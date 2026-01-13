@@ -70,7 +70,7 @@ vim.api.nvim_create_autocmd('BufReadPre', {
   end,
 })
 
--- 自动安装 treesitter
+-- 自动安装 treesitter 并高亮
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('AutoInstallTreesitter', { clear = true }),
   callback = function(event)

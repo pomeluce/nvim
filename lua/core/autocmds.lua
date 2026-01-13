@@ -59,12 +59,12 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
 
 -- 自动保存折叠信息
 local foldGroup = vim.api.nvim_create_augroup('PersistFolds', { clear = true })
-vim.api.nvim_create_autocmd('BufWinEnter', {
+vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWinEnter' }, {
   group = foldGroup,
   pattern = '*',
   callback = function() vim.cmd([[ silent! loadview ]]) end,
 })
-vim.api.nvim_create_autocmd('BufWinLeave', {
+vim.api.nvim_create_autocmd({ 'BufWinLeave', 'VimLeavePre' }, {
   group = foldGroup,
   pattern = '*',
   callback = function() vim.cmd([[ silent! mkview ]]) end,
