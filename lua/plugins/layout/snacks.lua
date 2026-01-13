@@ -85,15 +85,32 @@ local function find_todo()
   end
 end
 map('n', '<leader>ft', find_todo, { desc = 'Find TODO comments' })
+-- 查找诊断信息
+map('n', '<leader>fd', Snacks.picker.diagnostics_buffer, { desc = 'Find diagnostic in current buffer' })
+-- 查找高亮信息
+map('n', '<leader>fH', Snacks.picker.highlights, { desc = 'Find highlights' })
+-- 查找当前缓冲区符号(优先 LSP, 否则 Treesitter)
+local function lsp_buffer_symbols()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  local function _has_lsp_symbols()
+    for _, client in ipairs(clients) do
+      if client.server_capabilities.documentSymbolProvider then return true end
+    end
+    return false
+  end
+
+  if _has_lsp_symbols() then
+    Snacks.picker.lsp_symbols({ layout = 'dropdown', tree = true })
+  else
+    Snacks.picker.treesitter()
+  end
+end
+map('n', '<leader>fs', lsp_buffer_symbols, { desc = 'Find symbols in current buffer' })
+map('n', '<leader>fS', Snacks.picker.lsp_workspace_symbols, { desc = 'Find symbols in workspace' })
 
 -- 查找变量引用(不包含声明)
 map('n', 'grr', function() Snacks.picker.lsp_references({ include_declaration = false, include_current = true }) end, { desc = 'Find lsp references' })
-
--- 查找诊断信息
-map('n', '<leader>fd', Snacks.picker.diagnostics_buffer, { desc = 'Find diagnostic in current buffer' })
-
--- 查找高亮信息
-map('n', '<leader>fH', Snacks.picker.highlights, { desc = 'Find highlights' })
 
 -- 删除缓冲区
 -- map('n', '<leader>bc', Snacks.bufdelete.delete, { desc = 'Delete buffers' })

@@ -143,7 +143,7 @@ return {
         end,
         hl = { fg = palette.overlay2, bg = palette.surface0 },
       },
-      { provider = icons.file.right, hl = { fg = palette.surface0, bg = palette.base } },
+      { provider = icons.file.right, hl = { fg = palette.surface0 } },
     },
     -- git-branch
     {

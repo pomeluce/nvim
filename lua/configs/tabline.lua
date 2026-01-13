@@ -15,9 +15,9 @@ return {
       local title = self.title
       local width = vim.api.nvim_win_get_width(self.winid)
       local pad = math.ceil(width - #title)
-      return '  ' .. title .. string.rep(' ', pad - 2)
+      return '   ' .. title .. string.rep(' ', pad - 2)
     end,
-    hl = function(self) return vim.api.nvim_get_current_win() == self.winid and 'TablineSel' or 'Tabline' end,
+    hl = function(self) return vim.api.nvim_get_current_win() == self.winid and { fg = palette.blue } or {} end,
   },
   -- buffer
   {
@@ -117,22 +117,6 @@ return {
         provider = '  ',
         hl = function(self) return { fg = self.is_active and palette.overlay0 or palette.overlay2 } end,
       }
-
-      -- 当前 tab 只显示当前 tab 的 buffer
-      -- function()
-      --   local tab = vim.api.nvim_get_current_tabpage()
-      --   local bufs = {}
-      --   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
-      --     local buf = vim.api.nvim_win_get_buf(win)
-      --     if vim.api.nvim_buf_is_loaded(buf) then bufs[buf] = true end
-      --   end
-      --   -- 转成 array
-      --   local list = {}
-      --   for buf in pairs(bufs) do
-      --     table.insert(list, buf)
-      --   end
-      --   return list
-      -- end,
     ),
     { provider = '%=' },
   },
