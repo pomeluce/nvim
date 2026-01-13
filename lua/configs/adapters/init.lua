@@ -1,0 +1,1 @@
+require('configs.adapters.cpp')

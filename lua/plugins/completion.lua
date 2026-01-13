@@ -59,7 +59,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
             -- 避免在 . " ' 字符之后触发片段
             should_show_items = function(ctx) return ctx.trigger.initial_kind ~= 'trigger_character' end,
           },
-          copilot = { name = 'copilot', module = 'blink-copilot', score_offset = 100, async = true },
+          copilot = { name = 'copilot', module = 'blink-copilot', score_offset = 100, async = true, opts = { kind_hl = 'BlickCmpItemKindCopilot' } },
           -- 使用同义词词典来源
           thesaurus = {
             name = 'blink-cmp-words',
@@ -145,5 +145,6 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
     -- load luasnip
     require('luasnip.loaders.from_vscode').lazy_load() -- 添加 friendly-snippets 片段
     require('luasnip.loaders.from_vscode').lazy_load({ paths = { './snippets' } }) -- 添加自定义片段
+    vim.api.nvim_set_hl(0, 'BlickCmpItemKindCopilot', { fg = '#3750F8' })
   end,
 })

@@ -1,6 +1,7 @@
 require('plugins.theme')
 require('plugins.lsp')
 require('plugins.completion')
+require('plugins.debugging')
 require('plugins.format')
 
 require('plugins.treesitter')
