@@ -8,14 +8,8 @@ vim.api.nvim_create_autocmd('UIEnter', {
     require('nvim-highlight-colors').setup({
       render = 'virtual',
       virtual_symbol = '',
-      enable_hex = true,
-      enable_short_hex = true,
-      enable_rgb = true,
-      enable_hsl = true,
-      enable_hsl_without_function = true,
-      enable_var_usage = true,
-      enable_named_colors = false,
       enable_tailwind = true,
+      exclude_filetypes = { 'blink-cmp-menu' },
     })
   end,
 })

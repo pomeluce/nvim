@@ -1,13 +1,10 @@
 ---@type vim.lsp.Config
 return {
-  cmd = { 'emmet-language-server', '--stdio' },
   filetypes = { 'astro', 'css', 'eruby', 'html', 'htmldjango', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue' },
-  single_file_support = true,
+  workspace_required = false,
   init_options = {
-    html = {
-      -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
-      options = { ['bem.enabled'] = true },
-    },
+    -- 有关可能的选项, 请参见: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
+    html = { options = { ['bem.enabled'] = true } },
     ---@type table<string, string>
     includeLanguages = {},
     --- @type string[]

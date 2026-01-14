@@ -45,6 +45,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --   vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
     -- end
 
+    -- 关闭 LSP 自带的颜色高亮
+    vim.lsp.document_color.enable(false, event.buf)
+
     -- 内联提示
     if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
       local function inlay_hint() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf })) end

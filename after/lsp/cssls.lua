@@ -1,8 +1,7 @@
 ---@type vim.lsp.Config
 return {
-  cmd = { 'vscode-css-language-server', '--stdio' },
   filetypes = { 'css', 'scss', 'less' },
-  single_file_support = true,
+  workspace_required = false,
   settings = {
     css = { validate = true, lint = { unknownAtRules = 'ignore' } },
     scss = { validate = true, lint = { unknownAtRules = 'ignore' } },

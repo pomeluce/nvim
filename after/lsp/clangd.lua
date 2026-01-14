@@ -1,16 +1,11 @@
 ---@type vim.lsp.Config
 return {
-  cmd = { 'clangd', '--offset-encoding=utf-16' },
-  filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
-  single_file_support = true,
+  filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+  workspace_required = false, -- 单文件支持
   init_options = {
-    -- clang 文件状态
-    clangdFileStatus = true,
-    -- 使用占位符
-    usePlaceholders = true,
-    -- 自动补全
-    completeUnimported = true,
-    -- 语义高亮
-    semanticHighlighting = true,
+    clangdFileStatus = true, -- clang 文件状态
+    usePlaceholders = true, -- 使用占位符
+    completeUnimported = true, -- 自动补全
+    semanticHighlighting = true, -- 语义高亮
   },
 }

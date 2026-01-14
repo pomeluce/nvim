@@ -3,8 +3,8 @@ local enable = require('utils').lsp_enable
 vim.lsp.enable('copilot')
 
 enable('python', 'basedpyright')
-enable({ 'sh', 'zsh' }, 'bashls')
-enable({ 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' }, 'clangd')
+enable({ 'bash', 'sh', 'zsh' }, 'bashls')
+enable({ 'c', 'cpp', 'objc', 'objcpp', 'cuda' }, 'clangd')
 enable('cmake', 'cmake')
 enable({ 'css', 'scss', 'less' }, 'cssls')
 enable({ 'astro', 'css', 'eruby', 'html', 'htmldjango', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue' }, 'emmet_language_server')
