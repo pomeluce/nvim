@@ -14,7 +14,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
       enable_hsl = true,
       enable_hsl_without_function = true,
       enable_var_usage = true,
-      enable_named_colors = true,
+      enable_named_colors = false,
       enable_tailwind = true,
     })
   end,
