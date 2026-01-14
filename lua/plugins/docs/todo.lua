@@ -3,7 +3,7 @@ vim.pack.add({
   { src = 'https://github.com/nvim-lua/plenary.nvim' },
 })
 
-vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
   group = vim.api.nvim_create_augroup('SetupTodoComments', { clear = true }),
   once = true,
   callback = function()
