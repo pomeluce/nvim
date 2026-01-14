@@ -1,6 +1,6 @@
 vim.pack.add({
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('v1.*') },
-  { src = 'https://github.com/windwp/nvim-autopairs' },
+  { src = 'https://github.com/altermo/ultimate-autopair.nvim' },
   { src = 'https://github.com/xzbdmw/colorful-menu.nvim' },
   { src = 'https://github.com/fang2hou/blink-copilot' },
   { src = 'https://github.com/L3MON4D3/LuaSnip', version = vim.version.range('v2.*') },
@@ -109,18 +109,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
         },
       },
     })
-    require('nvim-autopairs').setup({
-      fast_wrap = {},
-      disable_filetype = { 'snacks_picker_input', 'vim' },
-      check_ts = true,
-      ts_config = {
-        -- 不在该节点添加 autopairs
-        lua = { 'string', 'source' },
-        javascript = { 'template_string' },
-        -- 不对 java 进行 treesitter 检查
-        java = false,
-      },
-    })
+    require('ultimate-autopair').setup({})
     require('colorful-menu').setup({
       ls = {
         gopls = {

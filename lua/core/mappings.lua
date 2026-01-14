@@ -25,8 +25,9 @@ map('v', 'c', '"_c', { desc = 'Delete without copy to register' })
 -- 粘贴之后不复制被粘贴的文本
 map('v', 'p', '"_dhp', { desc = 'Paste without copy to register' })
 
--- 选中全文, 从当前选中的 { 复制全文
+-- 选中全文
 map('n', '<m-a>', 'ggVG', { desc = 'Select all text' })
+-- 从当前选中的 { 复制全文
 map('n', '<m-s>', 'vi{', { desc = 'Select brackets text' })
 
 -- 全局替换 c-s = :%s/

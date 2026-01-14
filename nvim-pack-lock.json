@@ -90,10 +90,6 @@
       "rev": "beaf41a30c26fd7d6c386d383155cbd65dd554cd",
       "src": "https://github.com/catppuccin/nvim"
     },
-    "nvim-autopairs": {
-      "rev": "c2a0dd0d931d0fb07665e1fedb1ea688da3b80b4",
-      "src": "https://github.com/windwp/nvim-autopairs"
-    },
     "nvim-dap": {
       "rev": "cdfd55a133f63228c55f91378f12908cb2a78ded",
       "src": "https://github.com/mfussenegger/nvim-dap"
@@ -139,6 +135,10 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
       "version": "'main'"
     },
+    "nvim-ts-autotag": {
+      "rev": "c4ca798ab95b316a768d51eaaaee48f64a4a46bc",
+      "src": "https://github.com/windwp/nvim-ts-autotag"
+    },
     "nvim-ts-context-commentstring": {
       "rev": "1b212c2eee76d787bbea6aa5e92a2b534e7b4f8f",
       "src": "https://github.com/JoosepAlviste/nvim-ts-context-commentstring"
@@ -170,6 +170,10 @@
     "translate.nvim": {
       "rev": "1a841e56407ba02e919ed9af573dbe531404aebb",
       "src": "https://github.com/uga-rosa/translate.nvim"
+    },
+    "ultimate-autopair.nvim": {
+      "rev": "72e160cb1ce8c0db2ac4315f77d97420a2f4223d",
+      "src": "https://github.com/altermo/ultimate-autopair.nvim"
     },
     "vimcdoc": {
       "rev": "5059f9c972845cd6c479fbd975de9465aedbc609",
