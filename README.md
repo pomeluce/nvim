@@ -1,6 +1,6 @@
 <div align='center'>
 
-# AKIRNVIM
+# AKIRVIM
 
 </div>
 
@@ -20,7 +20,8 @@ rm -rf ~/.local/share/nvim/
 2. 所需环境(以 nixos 为例)
 
 ```nix
-environment.systemPackages = with pkgs; [
+{
+  environment.systemPackages = with pkgs; [
     bat
     fd
     fzf
@@ -29,9 +30,11 @@ environment.systemPackages = with pkgs; [
     tree-sitter
     unzip
     wl-clipboard
-    luajitPackages.luarocks-nix
-    python313Packages.pynvim
+    luajitPackages.luarocks
+    luajitPackages.jsregexp
+    python314Packages.pynvim
     translate-shell
+    imagemagick
 
     # lsp
     basedpyright
@@ -51,16 +54,27 @@ environment.systemPackages = with pkgs; [
     vscode-langservers-extracted
     vue-language-server
 
+    # dap
+    gdb
+    vscode-extensions.ms-vscode.cpptools
+    vscode-extensions.vadimcn.vscode-lldb.adapter
+    vscode-extensions.vscjava.vscode-java-debug
+    vscode-js-debug
+    vscode-extensions.firefox-devtools.vscode-firefox-debug
+
     # fmt
     beautysh
+    cbfmt
     nixfmt
-    nodePackages.prettier
+    prettier
+    prettierd
     ruff
     rustfmt
     shfmt
     sqlfluff
     stylua
-];
+  ];
+}
 ```
 
 3. 拉取 akirvim 配置
