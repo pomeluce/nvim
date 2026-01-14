@@ -54,6 +54,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
       sources = {
         default = { 'lsp', 'snippets', 'copilot', 'path', 'buffer' },
         providers = {
+          lsp = { score_offset = 100 },
           -- 避免在 . " ' 字符之后触发片段
           snippets = { should_show_items = function(ctx) return ctx.trigger.initial_kind ~= 'trigger_character' end },
           copilot = { name = 'copilot', module = 'blink-copilot', score_offset = 100, async = true, opts = { kind_hl = 'BlickCmpItemKindCopilot' } },
