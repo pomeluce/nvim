@@ -1,7 +1,12 @@
 local dap = require('dap')
 
 dap.adapters.gdb = { type = 'executable', command = 'gdb', args = { '--interpreter=dap', '--eval-command', 'set print pretty on' } }
-dap.adapters.cppdbg = { id = 'cppdbg', type = 'executable', command = 'OpenDebugAD7', options = { detached = false } }
+dap.adapters.cppdbg = {
+  id = 'cppdbg',
+  type = 'executable',
+  command = vim.fn.getenv('VSC_CPPTOOLS_DEBUG') .. '/debugAdapters/bin/OpenDebugAD7',
+  options = { detached = false },
+}
 dap.adapters.codelldb = { type = 'executable', command = 'codelldb' }
 
 dap.configurations.c = dap.configurations.c or {}
