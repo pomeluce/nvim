@@ -6,12 +6,17 @@ vim.pack.add({
 })
 
 local map = vim.keymap.set
+local pattern = { 'c', 'cpp', 'java', 'javascript', 'javascriptreact', 'python', 'typescript', 'typescriptreact' }
 
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('SetupDebugging', { clear = true }),
-  pattern = { 'c', 'cpp', 'java', 'javascript', 'javascriptreact', 'python', 'typescript', 'typescriptreact' },
+  pattern = pattern,
   once = true,
   callback = function()
+    -- 加载项目 dap 配置
+    local dcp = vim.fn.getcwd() .. '/.nvim/dap.lua'
+    if vim.fn.filereadable(dcp) == 1 then dofile(dcp) end
+
     require('configs.adapters')
 
     require('nvim-dap-virtual-text').setup()

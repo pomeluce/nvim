@@ -1,6 +1,5 @@
 vim.pack.add({
   { src = 'https://github.com/lukas-reineke/indent-blankline.nvim' },
-  -- { src = 'https://github.com/TheGLander/indent-rainbowline.nvim' },
   { src = 'https://github.com/HiPhish/rainbow-delimiters.nvim' },
 })
 

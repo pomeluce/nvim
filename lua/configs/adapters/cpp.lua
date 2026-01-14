@@ -13,7 +13,7 @@ dap.configurations.c = dap.configurations.c or {}
 
 vim.list_extend(dap.configurations.c, {
   {
-    name = 'Launch (codelldb)',
+    name = 'Launch(CodeLLDB)',
     type = 'codelldb',
     request = 'launch',
     program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
@@ -21,7 +21,7 @@ vim.list_extend(dap.configurations.c, {
     stopOnEntry = false,
   },
   {
-    name = 'Launch (gdb)',
+    name = 'Launch(GDB)',
     type = 'cppdbg',
     MIMode = 'gdb',
     request = 'launch',
