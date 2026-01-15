@@ -80,17 +80,17 @@ map('i', '<m-l>', '<right>', { desc = 'Move cursor in insert mode' })
 map('i', '<m-k>', '<up>', { desc = 'Move cursor in insert mode' })
 map('i', '<m-j>', '<down>', { desc = 'Move cursor in insert mode' })
 
--- 向上移动行
-map('n', '<c-m-J>', '<cmd>m+<cr>', { desc = 'Move current line to up' })
-map('i', '<c-m-J>', '<esc><cmd>m+<cr>i', { desc = 'Move current line to up' })
-map('v', '<c-m-J>', "<cmd>move '>+1<cr>gv", { desc = 'Move current line to up' })
-map('v', 'J', "<cmd>move '>+1<cr>gv", { desc = 'Move current line to up' })
-
 -- 向下移动行
-map('n', '<c-m-K>', '<cmd>m-2<cr>', { desc = 'Move current line to down' })
-map('i', '<c-m-K>', '<esc><cmd>m-2<cr>i', { desc = 'Move current line to down' })
-map('v', '<c-m-K>', "<cmd>move '<-2<cr>gv", { desc = 'Move current line to down' })
-map('v', 'K', "<cmd>move '<-2<cr>gv", { desc = 'Move current line to down' })
+map('n', '<c-m-j>', '<cmd>m+<cr>', { desc = 'Move current line to down' })
+map('i', '<c-m-j>', '<esc><cmd>m+<cr>i', { desc = 'Move current line to down' })
+map('v', '<c-m-j>', ":move '>+1<cr>gv", { silent = true, desc = 'Move select line to down' })
+map('v', 'J', ":move '>+1<cr>gv", { silent = true, desc = 'Move select line to down' })
+
+-- 向上移动行
+map('n', '<c-m-k>', '<cmd>m-2<cr>', { desc = 'Move current line to up' })
+map('i', '<c-m-k>', '<esc><cmd>m-2<cr>i', { desc = 'Move current line to up' })
+map('v', '<c-m-k>', ":move '<-2<cr>gv", { silent = true, desc = 'Move select line to up' })
+map('v', 'K', ":move '<-2<cr>gv", { silent = true, desc = 'Move select line to up' })
 
 -- 代码连续缩进
 map('v', '<', '<gv', { desc = 'Indent to left' })
