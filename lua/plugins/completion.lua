@@ -1,6 +1,6 @@
 vim.pack.add({
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('v1.*') },
-  { src = 'https://github.com/altermo/ultimate-autopair.nvim' },
+  { src = 'https://github.com/windwp/nvim-autopairs' },
   { src = 'https://github.com/xzbdmw/colorful-menu.nvim' },
   { src = 'https://github.com/fang2hou/blink-copilot' },
   { src = 'https://github.com/L3MON4D3/LuaSnip', version = vim.version.range('v2.*') },
@@ -109,7 +109,6 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
         },
       },
     })
-    require('ultimate-autopair').setup({})
     require('colorful-menu').setup({
       ls = {
         gopls = {
@@ -132,5 +131,17 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
     require('luasnip.loaders.from_vscode').lazy_load() -- 添加 friendly-snippets 片段
     require('luasnip.loaders.from_vscode').lazy_load({ paths = { './snippets' } }) -- 添加自定义片段
     vim.api.nvim_set_hl(0, 'BlickCmpItemKindCopilot', { fg = '#3750F8' })
+  end,
+})
+
+vim.api.nvim_create_autocmd('InsertEnter', {
+  group = vim.api.nvim_create_augroup('SetupAutopairs', { clear = true }),
+  callback = function()
+    local opts = {
+      disable_filetype = { 'snacks_picker_input' },
+      check_ts = true,
+      ts_config = { lua = { 'string' }, javascript = { 'template_string' }, java = false },
+    }
+    vim.schedule(function() require('nvim-autopairs').setup(opts) end)
   end,
 })

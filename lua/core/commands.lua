@@ -66,7 +66,7 @@ register('PackClean', function()
 
   table.sort(unused)
 
-  local msg = padding .. 'Remove unused plugins?\n\n' .. padding .. table.concat(unused, '\n')
+  local msg = padding .. 'Remove unused plugins?\n\n' .. padding .. table.concat(unused, '\n' .. padding)
   local confirm = vim.fn.input(msg .. '\n\n' .. padding .. "Type '[Y]es' to confirm: ")
   confirm = confirm:lower()
   if confirm ~= 'y' and confirm ~= 'yes' then
