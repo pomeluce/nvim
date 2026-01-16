@@ -15,6 +15,7 @@ require('neovim-project').setup({
     '$DEVROOT/code/sql/*',
     '$DEVROOT/code/java/*',
     '$DEVROOT/code/cpp/*',
+    '$DEVROOT/code/python/*',
     '$DEVROOT/code/scripts/*',
   },
   datapath = vim.fn.stdpath('data'),
