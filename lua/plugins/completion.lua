@@ -130,7 +130,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
     -- load luasnip
     require('luasnip.loaders.from_vscode').lazy_load() -- 添加 friendly-snippets 片段
     require('luasnip.loaders.from_vscode').lazy_load({ paths = { './snippets' } }) -- 添加自定义片段
-    vim.api.nvim_set_hl(0, 'BlickCmpItemKindCopilot', { fg = '#3750F8' })
+    vim.api.nvim_set_hl(0, 'BlickCmpItemKindCopilot', { fg = '#5A7ACD' })
   end,
 })
 
