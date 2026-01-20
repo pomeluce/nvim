@@ -2,7 +2,7 @@ vim.pack.add({
   { src = 'https://github.com/lewis6991/gitsigns.nvim' },
 })
 
-vim.api.nvim_create_autocmd('UIEnter', {
+vim.api.nvim_create_autocmd('VimEnter', {
   group = vim.api.nvim_create_augroup('SetupGit', { clear = true }),
   callback = function()
     require('gitsigns').setup({

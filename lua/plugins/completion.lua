@@ -56,7 +56,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
         providers = {
           -- 避免在 . " ' 字符之后触发片段
           snippets = { should_show_items = function(ctx) return ctx.trigger.initial_kind ~= 'trigger_character' end },
-          copilot = { name = 'copilot', module = 'blink-copilot', score_offset = 100, async = true, opts = { kind_hl = 'BlickCmpItemKindCopilot' } },
+          copilot = { name = 'copilot', module = 'blink-copilot', async = true, opts = { kind_hl = 'BlickCmpItemKindCopilot' } },
           -- 使用同义词词典来源
           thesaurus = {
             name = 'blink-cmp-words',
