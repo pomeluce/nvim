@@ -13,7 +13,6 @@ return {
         diagnosticSeverityOverrides = {
           reportMissingTypeStubs = 'none', -- 忽略没有类型提示的第三方库的警告
           reportUnreachable = 'warning', -- 对永远执行不到的代码进行警告
-          reportUnusedImport = 'warning', -- 对没有使用的 import 警告
           reportUnusedCoroutine = 'warning', -- 对 async 函数调用时未添加 await 进行警告
           reportUnknownMemberType = 'none', -- 忽略调用对象属性时未知类型警告
           -- reportCallIssue = 'none', -- 函数调用问题检查
