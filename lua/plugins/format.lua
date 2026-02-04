@@ -22,6 +22,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
       formatters_by_ft = {
         lua = { 'stylua' },
         css = { 'prettierd' },
+        dockerfile = { 'dockerfmt' },
         html = { 'prettierd' },
         javascript = { 'prettierd' },
         javascriptreact = { 'prettierd' },

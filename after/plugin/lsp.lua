@@ -7,6 +7,13 @@ enable({ 'bash', 'sh', 'zsh' }, 'bashls')
 enable({ 'c', 'cpp', 'objc', 'objcpp', 'cuda' }, 'clangd')
 enable('cmake', 'cmake')
 enable({ 'css', 'scss', 'less' }, 'cssls')
+
+vim.filetype.add({
+  filename = { ['docker-compose.yml'] = 'yaml.docker-compose', ['docker-compose.yaml'] = 'yaml.docker-compose' },
+  pattern = { ['docker%-compose.*%.ya?ml'] = 'yaml.docker-compose' },
+})
+enable({ 'dockerfile', 'yaml.docker-compose' }, 'docker_language_server')
+
 enable({ 'astro', 'css', 'eruby', 'html', 'htmldjango', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue' }, 'emmet_language_server')
 enable('html', 'html')
 enable({ 'json', 'jsonc' }, 'jsonls')
