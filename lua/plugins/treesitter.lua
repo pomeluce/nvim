@@ -5,6 +5,9 @@ vim.pack.add({
   { src = 'https://github.com/JoosepAlviste/nvim-ts-context-commentstring' },
 })
 
+-- windows 使用 gcc 而不是 msvc
+if require('utils').is_win then vim.env.CC = 'gcc' end
+
 local map = vim.keymap.set
 ---@param lhs string
 ---@param capture string
