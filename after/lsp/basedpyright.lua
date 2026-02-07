@@ -1,9 +1,12 @@
 ---@type vim.lsp.Config
 return {
+  root_markers = { 'pyproject.toml', 'main.py', 'setup.py', 'setup.cfg', 'requirements.txt', 'Pipfile', 'pyrightconfig.json', '.git' },
   settings = {
     basedpyright = {
       analysis = {
         typeCheckingMode = 'standard',
+        autoImportCompletions = true, -- 开启自动导入补全
+        indexing = true, -- 强制索引工作区文件
         autoSearchPaths = true, -- 自动将项目子路径添加到搜索路径
         useLibraryCodeForTypes = true, -- 对第三方库进行类型推断
         disableOrganizeImports = true, -- 禁用自动导入排序

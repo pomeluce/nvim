@@ -23,7 +23,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "codediff.nvim": {
-      "rev": "648610cb97c40640bc25e4c1bcbe6bf8c76ff826",
+      "rev": "c2becb3b2024f708e1a6c5da850abddd4f2ca45b",
       "src": "https://github.com/esmuellert/codediff.nvim"
     },
     "colorful-menu.nvim": {
@@ -127,7 +127,7 @@
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "92c9b016d16473dabd2bf3760196cf2d928edacc",
+      "rev": "45a07f869b0cffba342276f2c77ba7c116d35db8",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
