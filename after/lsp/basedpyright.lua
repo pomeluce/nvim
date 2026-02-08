@@ -2,7 +2,7 @@
 local settings = {
   basedpyright = {
     analysis = {
-      typeCheckingMode = 'standard',
+      typeCheckingMode = 'recommended',
       autoImportCompletions = true, -- 开启自动导入补全
       indexing = true, -- 强制索引工作区文件
       autoSearchPaths = true, -- 自动将项目子路径添加到搜索路径
@@ -16,6 +16,7 @@ local settings = {
         reportUnreachable = 'warning', -- 对永远执行不到的代码进行警告
         reportUnusedCoroutine = 'warning', -- 对 async 函数调用时未添加 await 进行警告
         reportUnknownMemberType = 'none', -- 忽略调用对象属性时未知类型警告
+        reportUnannotatedClassAttribute = 'none', -- 忽略未声明类属性类型时的警告
         -- reportCallIssue = 'none', -- 函数调用问题检查
       },
     },
