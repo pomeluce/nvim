@@ -10,7 +10,7 @@ local function read_template(p)
 end
 
 local function replace_placeholders(tpl)
-  local filename = vim.fn.expand('%:t')
+  local filename = vim.fn.fnamemodify(vim.fn.expand('%:t'), ':r')
   local user = os.getenv('USER') or os.getenv('USERNAME') or 'Your Name'
   local today = os.date('%Y-%m-%d')
   local time = os.date('%H:%M:%S')
