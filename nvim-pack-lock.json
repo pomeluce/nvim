@@ -175,6 +175,10 @@
       "rev": "1a841e56407ba02e919ed9af573dbe531404aebb",
       "src": "https://github.com/uga-rosa/translate.nvim"
     },
+    "venv-selector.nvim": {
+      "rev": "26a6da0348dc2d0a3787e095bd4e68d976304bb2",
+      "src": "https://github.com/linux-cultist/venv-selector.nvim"
+    },
     "vimcdoc": {
       "rev": "5059f9c972845cd6c479fbd975de9465aedbc609",
       "src": "https://github.com/yianwillis/vimcdoc"
