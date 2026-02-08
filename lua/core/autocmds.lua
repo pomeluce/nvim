@@ -115,3 +115,10 @@ vim.api.nvim_create_autocmd('BufEnter', {
     map('n', '<esc>', '<cmd>close<cr>', { buffer = event.buf, desc = 'Close plugin confirmation buffer' })
   end,
 })
+
+-- 创建文件添加文件头信息
+local header = require('configs.header')
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = header.filetype,
+  callback = header.callback,
+})
