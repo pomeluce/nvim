@@ -128,6 +128,9 @@ map('n', '\\g', '<cmd>Gitsigns toggle_current_line_blame<cr>', { desc = 'Toggle 
 -- 代码格式化
 map('n', '<leader>fm', '<cmd>Format<cr>', { desc = 'Format current buffer' })
 
+-- 文档注释
+map('n', '<leader>d/', '<cmd>Neogen<cr>', { desc = 'Generate documentation comments' })
+
 -- 翻译插件
 map('n', '<leader>tr', 'viw<cmd>Translate ZH -output=replace<cr>', { desc = 'Translator text and replace(normal)' })
 map('v', '<leader>tr', "<cmd>'<,'>Translate ZH -output=replace<cr>", { desc = 'Translator text and repalce(visual)' })

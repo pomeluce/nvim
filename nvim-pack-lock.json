@@ -70,6 +70,10 @@
       "rev": "efc85e42262cd0c9e1fdbf806c25cb0be6de115c",
       "src": "https://github.com/nvim-mini/mini.icons"
     },
+    "neogen": {
+      "rev": "23e7e9f883d01289ebd90e98025acc860ea26366",
+      "src": "https://github.com/danymat/neogen"
+    },
     "neovim-project": {
       "rev": "6ecf6253697b2964e9afef9d000357d887221a2c",
       "src": "https://github.com/coffebar/neovim-project"
