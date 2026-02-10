@@ -23,7 +23,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "codediff.nvim": {
-      "rev": "c2becb3b2024f708e1a6c5da850abddd4f2ca45b",
+      "rev": "d555a93e8bc1d551c69baa8db154d405c1aa23e2",
       "src": "https://github.com/esmuellert/codediff.nvim"
     },
     "colorful-menu.nvim": {

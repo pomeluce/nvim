@@ -46,7 +46,7 @@ Snacks.setup({
 local map = vim.keymap.set
 
 -- 全局搜索文件
-map('n', '<leader>ff', function() Snacks.picker.smart() end, { desc = 'Smart file picker' })
+map('n', '<leader>ff', function() Snacks.picker.smart({ multi = { 'buffers', 'files' } }) end, { desc = 'Smart file picker' })
 -- 查找打开的缓冲区
 map('n', '<leader>fb', function() Snacks.picker.buffers({ sort_lastused = true }) end, { desc = 'Find buffer' })
 -- 查找最近打开的文件
