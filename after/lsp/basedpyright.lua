@@ -17,6 +17,7 @@ local settings = {
         reportUnusedCoroutine = 'warning', -- 对 async 函数调用时未添加 await 进行警告
         reportUnknownMemberType = 'none', -- 忽略调用对象属性时未知类型警告
         reportUnannotatedClassAttribute = 'none', -- 忽略未声明类属性类型时的警告
+        reportUnusedCallResult = 'none', -- 忽略函数调用结果未使用的警告
         -- reportCallIssue = 'none', -- 函数调用问题检查
       },
     },

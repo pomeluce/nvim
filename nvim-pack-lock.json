@@ -23,7 +23,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "codediff.nvim": {
-      "rev": "d555a93e8bc1d551c69baa8db154d405c1aa23e2",
+      "rev": "783258e587bd1bc2bba4d617d648e7424d594107",
       "src": "https://github.com/esmuellert/codediff.nvim"
     },
     "colorful-menu.nvim": {
@@ -31,7 +31,7 @@
       "src": "https://github.com/xzbdmw/colorful-menu.nvim"
     },
     "conform.nvim": {
-      "rev": "c2526f1cde528a66e086ab1668e996d162c75f4f",
+      "rev": "e969e302bced7ffb9a0a0323629f31feb0ca35a6",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "dropbar.nvim": {
@@ -47,7 +47,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "1ce96a464fdbc24208e24c117e2021794259005d",
+      "rev": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "heirline.nvim": {
@@ -59,15 +59,15 @@
       "src": "https://github.com/hakonharnes/img-clip.nvim"
     },
     "indent-blankline.nvim": {
-      "rev": "005b56001b2cb30bfa61b7986bc50657816ba4ba",
+      "rev": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03",
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "mini.files": {
-      "rev": "fafacfecdd6c5a66bb10d173a749f3c098e84498",
+      "rev": "57eb96a828f80efb8095a611e3aafcfa43548f8b",
       "src": "https://github.com/nvim-mini/mini.files"
     },
     "mini.icons": {
-      "rev": "efc85e42262cd0c9e1fdbf806c25cb0be6de115c",
+      "rev": "5b9076dae1bfbe47ba4a14bc8b967cde0ab5d77e",
       "src": "https://github.com/nvim-mini/mini.icons"
     },
     "neogen": {
@@ -91,7 +91,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim": {
-      "rev": "beaf41a30c26fd7d6c386d383155cbd65dd554cd",
+      "rev": "0a5de4da015a175f416d6ef1eda84661623e0500",
       "src": "https://github.com/catppuccin/nvim"
     },
     "nvim-autopairs": {
@@ -99,7 +99,7 @@
       "src": "https://github.com/windwp/nvim-autopairs"
     },
     "nvim-dap": {
-      "rev": "e47878dcf1ccc30136b30d19ab19fe76946d61cd",
+      "rev": "7b11f48753ea6a82f09485dadd08016e2a318cf6",
       "src": "https://github.com/mfussenegger/nvim-dap"
     },
     "nvim-dap-ui": {
@@ -115,7 +115,7 @@
       "src": "https://github.com/brenoprata10/nvim-highlight-colors"
     },
     "nvim-lspconfig": {
-      "rev": "66fd02ad1c7ea31616d3ca678fa04e6d0b360824",
+      "rev": "b7dcde3e6195b43476ae799720b177aedc16d44c",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -123,15 +123,15 @@
       "src": "https://github.com/nvim-neotest/nvim-nio"
     },
     "nvim-surround": {
-      "rev": "1098d7b3c34adcfa7feb3289ee434529abd4afd1",
+      "rev": "7fa0b922bbe6b0d7f33f2d7fd5e5f44119360231",
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-tree.lua": {
-      "rev": "037d89e60fb01a6c11a48a19540253b8c72a3c32",
+      "rev": "87594aa7c8808701b418b285e9adf690acead201",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "45a07f869b0cffba342276f2c77ba7c116d35db8",
+      "rev": "d660b7c002f3922b6bb3da47206645488a698426",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
@@ -156,11 +156,11 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "rainbow-delimiters.nvim": {
-      "rev": "d6b802552cbe7d643a3b6b31f419c248d1f1e220",
+      "rev": "e2858c43caafec291f915ef25fbed27bbe78abbd",
       "src": "https://github.com/HiPhish/rainbow-delimiters.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "48b4175dbca8439d30c1f52231cbe5a712c8f9d9",
+      "rev": "1c958131c083c8557ea499fdb08c88b8afb05c4e",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks.nvim": {
@@ -180,11 +180,11 @@
       "src": "https://github.com/uga-rosa/translate.nvim"
     },
     "venv-selector.nvim": {
-      "rev": "26a6da0348dc2d0a3787e095bd4e68d976304bb2",
+      "rev": "59adce1481e2a182bc1e4d706869b069f19b32ba",
       "src": "https://github.com/linux-cultist/venv-selector.nvim"
     },
     "vimcdoc": {
-      "rev": "5059f9c972845cd6c479fbd975de9465aedbc609",
+      "rev": "69f538182ebe7da2e82890be7b4020c67053d804",
       "src": "https://github.com/yianwillis/vimcdoc"
     }
   }
