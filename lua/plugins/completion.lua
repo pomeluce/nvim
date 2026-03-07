@@ -6,6 +6,7 @@ vim.pack.add({
   { src = 'https://github.com/L3MON4D3/LuaSnip', version = vim.version.range('v2.*') },
   { src = 'https://github.com/rafamadriz/friendly-snippets' },
   { src = 'https://github.com/archie-judd/blink-cmp-words' },
+  { src = 'https://github.com/Kaiser-Yang/blink-cmp-avante' },
 })
 
 vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
@@ -52,11 +53,22 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
       },
       cmdline = { keymap = { preset = 'inherit' }, completion = { menu = { auto_show = true } } },
       sources = {
-        default = { 'lsp', 'snippets', 'copilot', 'path', 'buffer' },
+        default = { 'lsp', 'snippets', 'copilot', 'path', 'buffer', 'avante' },
         providers = {
+          lsp = {
+            name = 'lsp',
+            module = 'blink.cmp.sources.lsp',
+            transform_items = function(_, items)
+              for _, item in ipairs(items) do
+                if item.client_name == 'emmet_ls' or item.client_name == 'emmet_language_server' then item.score_offset = item.score_offset - 10 end
+              end
+              return items
+            end,
+          },
           -- 避免在 . " ' 字符之后触发片段
           snippets = { should_show_items = function(ctx) return ctx.trigger.initial_kind ~= 'trigger_character' end },
           copilot = { name = 'copilot', module = 'blink-copilot', async = true, opts = { kind_hl = 'BlickCmpItemKindCopilot' } },
+          avante = { name = 'avante', module = 'blink-cmp-avante', opts = {} },
           -- 使用同义词词典来源
           thesaurus = {
             name = 'blink-cmp-words',
