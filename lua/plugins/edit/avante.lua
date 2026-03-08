@@ -6,10 +6,11 @@ vim.api.nvim_create_autocmd('VimEnter', {
   group = vim.api.nvim_create_augroup('SetupAvante', { clear = true }),
   callback = function()
     require('utils').pack_build('avante.nvim', { 'make' })
+    local models = require('utils').read_json(os.getenv('HOME') .. '/.config/avante.nvim/models.json')
     require('avante').setup({
       provider = 'coder:qwen3.5-plus',
       input = { provider = 'snacks', provider_opts = { title = 'Avante Input', icon = '󱂛 ', placeholder = 'Enter your API key...' } },
-      providers = {
+      providers = vim.tbl_deep_extend('force', {
         ['coder:qwen3'] = {
           __inherited_from = 'openai',
           endpoint = 'https://openrouter.ai/api/v1',
@@ -22,17 +23,11 @@ vim.api.nvim_create_autocmd('VimEnter', {
           endpoint = 'https://dashscope.aliyuncs.com/compatible-mode/v1',
           model = 'qwen3.5-plus',
         },
-        ['coder:qwen3.5'] = {
+        ['coder:qwen3.5-flash'] = {
           __inherited_from = 'openai',
-          api_key_name = 'SILICONFLOW_API_KEY',
-          endpoint = 'https://api.siliconflow.cn/v1/chat/completions',
-          model = 'Qwen/Qwen3.5-122B-A10B',
-        },
-        ['coder:deepseek-v3.2-pro'] = {
-          __inherited_from = 'openai',
-          api_key_name = 'SILICONFLOW_API_KEY',
-          endpoint = 'https://api.siliconflow.cn/v1/chat/completions',
-          model = 'Pro/deepseek-ai/DeepSeek-V3.2',
+          api_key_name = 'ALIYUN_API_KEY',
+          endpoint = 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+          model = 'qwen3.5-flash',
         },
         ['coder:deepseek'] = {
           __inherited_from = 'openai',
@@ -40,7 +35,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
           endpoint = 'https://api.deepseek.com',
           model = 'deepseek-coder',
         },
-      },
+      }, models or {}),
     })
   end,
 })

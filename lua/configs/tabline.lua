@@ -132,15 +132,8 @@ return {
         provider = '󰅙 ',
         on_click = {
           callback = function()
-            -- 获取当前 tab 页的所有 buffer
-            local buffers = vim.api.nvim_list_bufs()
-            for _, buf in ipairs(buffers) do
-              -- 确保 buffer 是在当前 tab 中的, 并且是有效 buffer
-              if vim.api.nvim_buf_is_loaded(buf) and vim.fn.bufwinnr(buf) ~= -1 then
-                -- 关闭 buffer (不保存更改)
-                vim.cmd('bdelete! ' .. buf)
-              end
-            end
+            -- 关闭当前 tab，包括其所有 buffer
+            vim.cmd('tabclose')
           end,
           name = 'tabclose_cb',
         },

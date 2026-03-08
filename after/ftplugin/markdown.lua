@@ -76,6 +76,7 @@ local opts = {
   -- win_options = { concealcursor = { rendered = 'nvc' } },
   win_options = { concealcursor = { rendered = 'vc' } },
   completions = { blink = { enabled = true }, lsp = { enabled = true } },
+  file_types = { 'markdown', 'Avante' },
 }
 
 local ok, rm = pcall(require, 'render-markdown')

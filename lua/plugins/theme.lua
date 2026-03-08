@@ -33,6 +33,8 @@ require('catppuccin').setup({
         BlinkCmpLabel = { fg = colors.text, style = {} },
         BlinkCmpLabelMatch = { fg = colors.blue, style = { 'bold' } },
         BlinkCmpMenuSelection = { fg = colors.base, bg = colors.blue },
+        AvanteSidebarWinSeparator = { fg = colors.surface1 },
+        AvanteSidebarWinHorizontalSeparator = { fg = colors.surface1 },
       }
     end,
   },
