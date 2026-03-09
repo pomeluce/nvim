@@ -15,6 +15,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter' }, {
   callback = function()
     require('blink.cmp').setup({
       completion = {
+        trigger = { show_on_trigger_character = false },
         documentation = { auto_show = true, window = { border = 'rounded', scrollbar = true } },
         menu = {
           border = 'rounded',
