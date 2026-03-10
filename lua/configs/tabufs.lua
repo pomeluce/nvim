@@ -11,6 +11,86 @@ local function set_tab_bufs(bufs) vim.t.bufs = bufs end
 local cur_buf = api.nvim_get_current_buf
 local set_buf = api.nvim_set_current_buf
 
+--- 不应该包含在切换列表中的 buftype
+local excluded_buftypes = {
+  ['terminal'] = true,
+  ['prompt'] = true,
+  ['popup'] = true,
+  ['nofile'] = true,
+}
+
+--- 不应该包含在切换列表中的 filetype
+local excluded_filetypes = {
+  ['Avante'] = true,
+  ['AvanteInput'] = true,
+  ['AvanteSelectedFiles'] = true,
+  ['neo-tree'] = true,
+  ['neo-tree-popup'] = true,
+  ['NvimTree'] = true,
+  ['aerial'] = true,
+  ['dap-repl'] = true,
+  ['dapui_console'] = true,
+  ['dapui_watches'] = true,
+  ['dapui_stacks'] = true,
+  ['dapui_breakpoints'] = true,
+  ['dapui_scopes'] = true,
+  ['DiffviewFiles'] = true,
+  ['DiffviewFileHistory'] = true,
+  ['fugitive'] = true,
+  ['fugitiveblame'] = true,
+  ['gitcommit'] = true,
+  ['gitrebase'] = true,
+  ['NeogitStatus'] = true,
+  ['NeogitLog'] = true,
+  ['NeogitGitCommandHistory'] = true,
+  ['NeogitPopup'] = true,
+  ['NeogitCommitSelectView'] = true,
+  ['NeogitCommitView'] = true,
+  ['NeogitRefsView'] = true,
+  ['NeogitStashView'] = true,
+  ['toggleterm'] = true,
+  ['lazy'] = true,
+  ['mason'] = true,
+  ['lspinfo'] = true,
+  ['checkhealth'] = true,
+  ['help'] = true,
+  ['man'] = true,
+  ['qf'] = true,
+  ['TelescopePrompt'] = true,
+  ['TelescopeResults'] = true,
+  ['fzf'] = true,
+  ['notify'] = true,
+  ['noice'] = true,
+}
+
+--- 判断 buffer 是否应该包含在切换列表中
+--- @param bufnr number
+--- @return boolean
+local function should_include_buf(bufnr)
+  if not vim.api.nvim_buf_is_valid(bufnr) then return false end
+
+  -- 检查 buflisted
+  if not vim.api.nvim_get_option_value('buflisted', { buf = bufnr }) then return false end
+
+  -- 检查 buftype
+  local buftype = vim.api.nvim_get_option_value('buftype', { buf = bufnr }) or ''
+  if excluded_buftypes[buftype] then return false end
+
+  -- 检查 filetype
+  local filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr }) or ''
+  if excluded_filetypes[filetype] then return false end
+
+  -- 检查是否在浮动窗口中(如果当前窗口是浮动窗口且显示的是这个 buffer)
+  local wins = vim.fn.win_findbuf(bufnr)
+  for _, winid in ipairs(wins) do
+    local win_config = vim.api.nvim_win_get_config(winid)
+    -- 如果 buffer 在浮动窗口中, 不包含
+    if win_config.relative and win_config.relative ~= '' then return false end
+  end
+
+  return true
+end
+
 --- 安全地设置 buffer, 带有效性检查
 local function safe_set_buf(bufnr)
   if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then return false end
@@ -167,7 +247,7 @@ function M.close_buf(bufnr)
       -- 查找下一个有效的 buffer 来切换
       local targetBuf = nil
       for i = 1, #vim.t.bufs do
-        local idx = (curBufIndex + i - 1) % #vim.t.bufs + 1
+        local idx = ((curBufIndex - i - 1) % #vim.t.bufs + #vim.t.bufs) % #vim.t.bufs + 1
         if idx ~= curBufIndex then
           local buf = vim.t.bufs[idx]
           if vim.api.nvim_buf_is_valid(buf) then
@@ -258,11 +338,11 @@ if not vim.b.tabuf_load then
       if not vim.tbl_contains(bufs, args.buf) then
         local should_add = false
         if args.event == 'BufEnter' then
-          should_add = true
+          should_add = should_include_buf(args.buf)
         elseif args.event == 'BufAdd' then
-          should_add = vim.api.nvim_get_option_value('buflisted', { buf = args.buf })
+          should_add = should_include_buf(args.buf)
         elseif args.event == 'TabNew' then
-          should_add = is_curbuf
+          should_add = is_curbuf and should_include_buf(args.buf)
         end
 
         if should_add then table.insert(bufs, args.buf) end
