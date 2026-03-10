@@ -13,26 +13,26 @@ vim.api.nvim_create_autocmd('VimEnter', {
       providers = vim.tbl_deep_extend('force', {
         ['coder:qwen3.5-plus'] = {
           __inherited_from = 'openai',
-          api_key_name = 'ALIYUNCS_API_KEY',
+          api_key_name = 'ALIYUNCS_OPENAI_API_KEY',
           endpoint = 'https://coding.dashscope.aliyuncs.com/v1',
           model = 'qwen3.5-plus',
         },
         ['coder:kimi-2.5'] = {
           __inherited_from = 'openai',
-          api_key_name = 'ALIYUNCS_API_KEY',
+          api_key_name = 'ALIYUNCS_OPENAI_API_KEY',
           endpoint = 'https://coding.dashscope.aliyuncs.com/v1',
           model = 'kimi-k2.5',
         },
         ['coder:glm-5'] = {
           __inherited_from = 'openai',
-          api_key_name = 'ALIYUNCS_API_KEY',
+          api_key_name = 'ALIYUNCS_OPENAI_API_KEY',
           endpoint = 'https://coding.dashscope.aliyuncs.com/v1',
           model = 'glm-5',
         },
 
         ['coder:minimax-m2.5'] = {
           __inherited_from = 'openai',
-          api_key_name = 'ALIYUNCS_API_KEY',
+          api_key_name = 'ALIYUNCS_OPENAI_API_KEY',
           endpoint = 'https://coding.dashscope.aliyuncs.com/v1',
           model = 'MiniMax-M2.5',
         },
