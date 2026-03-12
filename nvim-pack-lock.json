@@ -10,7 +10,7 @@
       "version": "2.0.0 - 3.0.0"
     },
     "avante.nvim": {
-      "rev": "98b7fc255aa28a352f97dd4c0c0ab2a13b0b0657",
+      "rev": "9a7793461549939f1d52b2b309a1aa44680170c8",
       "src": "https://github.com/yetone/avante.nvim"
     },
     "blink-cmp-avante": {
@@ -29,6 +29,10 @@
       "rev": "4b18c32adef2898f95cdef6192cbd5796c1a332d",
       "src": "https://github.com/saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
+    },
+    "claudecode.nvim": {
+      "rev": "432121f0f5b9bda041030d1e9e83b7ba3a93dd8f",
+      "src": "https://github.com/coder/claudecode.nvim"
     },
     "codediff.nvim": {
       "rev": "93cd80c56f71af4671388c568a37d4c84c3ddefa",
@@ -123,7 +127,7 @@
       "src": "https://github.com/brenoprata10/nvim-highlight-colors"
     },
     "nvim-lspconfig": {
-      "rev": "d8bf4c47385340ab2029402201d4d7c9f99f437a",
+      "rev": "0203a9608d63eda57679b01e69f33a7b4c34b0d1",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -135,11 +139,11 @@
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-tree.lua": {
-      "rev": "4b30847c91d498446cb8440c03031359b045e050",
+      "rev": "e1ad8b96834779b4c2674ef83be3f1a4ed007358",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "5cb05e1b0fa3c469958a2b26f36b3fe930af221c",
+      "rev": "493890b87a81dfe6a7e577dbc364ae33fa482da9",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {

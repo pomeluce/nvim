@@ -1,15 +1,17 @@
 vim.pack.add({
-  { src = 'https://github.com/yetone/avante.nvim', data = { build = 'make' } },
+  { src = 'https://github.com/yetone/avante.nvim' },
 })
 
 vim.api.nvim_create_autocmd('VimEnter', {
   group = vim.api.nvim_create_augroup('SetupAvante', { clear = true }),
+  once = true,
   callback = function()
     require('utils').pack_build('avante.nvim', { 'make' })
     local models = require('utils').read_json(os.getenv('HOME') .. '/.config/avante.nvim/models.json')
     require('avante').setup({
       provider = 'coder:qwen3.5-plus',
       input = { provider = 'snacks', provider_opts = { title = 'Avante Input', icon = '󱂛 ', placeholder = 'Enter your API key...' } },
+      behaviour = { auto_set_keymaps = false },
       providers = vim.tbl_deep_extend('force', {
         ['coder:qwen3.5-plus'] = {
           __inherited_from = 'openai',
