@@ -2,7 +2,6 @@ vim.pack.add({
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter-context' },
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects', version = 'main' },
-  { src = 'https://github.com/JoosepAlviste/nvim-ts-context-commentstring' },
 })
 
 -- windows 使用 gcc 而不是 msvc
@@ -64,8 +63,6 @@ vim.api.nvim_create_autocmd('BufReadPre', {
     map_textobj('ac', '@class.outer')
     map_textobj('ic', '@class.inner')
     map_textobj('as', '@local.scope', 'locals')
-
-    require('ts_context_commentstring').setup({})
 
     vim.cmd([[ SetHL { ['@comment'] = { fg = '#868e96', italic = true } } ]])
 
