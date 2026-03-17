@@ -1,6 +1,6 @@
 vim.pack.add({
   { src = 'https://github.com/lukas-reineke/indent-blankline.nvim' },
-  { src = 'https://github.com/HiPhish/rainbow-delimiters.nvim' },
+  -- { src = 'https://github.com/HiPhish/rainbow-delimiters.nvim' },
 })
 
 vim.api.nvim_create_autocmd('BufEnter', {
@@ -19,6 +19,6 @@ vim.api.nvim_create_autocmd('BufEnter', {
     hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
     local highlight = { 'RainbowBlue', 'RainbowViolet', 'RainbowRed', 'RainbowYellow', 'RainbowGreen', 'RainbowOrange', 'RainbowCyan' }
     require('ibl').setup({ indent = { char = '│' }, scope = { char = '│', highlight = highlight } })
-    vim.g.rainbow_delimiters = { query = { javascript = 'rainbow-parens', tsx = 'rainbow-parens', html = 'rainbow-parens' }, highlight = highlight }
+    -- vim.g.rainbow_delimiters = { query = { javascript = 'rainbow-parens', tsx = 'rainbow-parens', html = 'rainbow-parens' }, highlight = highlight }
   end,
 })
