@@ -1,24 +1,14 @@
 vim.pack.add({
-  { src = 'https://github.com/numToStr/Comment.nvim' },
-  { src = 'https://github.com/JoosepAlviste/nvim-ts-context-commentstring' },
+  { src = 'https://github.com/folke/ts-comments.nvim' },
 })
 
-vim.api.nvim_create_autocmd('VimEnter', {
-  group = vim.api.nvim_create_augroup('SetupComment', { clear = true }),
-  callback = function()
-    require('Comment').setup({
-      -- N 模式注释快捷键
-      toggler = { line = '<leader>/', block = '<leader><leader>/' },
-      -- V 模式注释快捷键
-      opleader = { line = '<leader>/', block = '<leader><leader>/' },
-      -- 启用快捷键
-      mappings = { basic = true, extra = false },
-      pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
-    })
+-- 快捷键配置
+local map = vim.keymap.set
 
-    local ft = require('Comment.ft')
-    -- 单独设置注释
-    ft.set('java', { '// %s', '/* %s */' })
-    ft.set('ini', { '; %s' })
-  end,
-})
+-- 行注释
+map('n', '<leader>/', 'gcc', { remap = true, desc = 'Toggle line comment' })
+map('v', '<leader>/', 'gc', { remap = true, desc = 'Toggle line comment' })
+
+-- 块注释
+map('n', '<leader><leader>/', 'gbc', { remap = true, desc = 'Toggle block comment' })
+map('v', '<leader><leader>/', 'gb', { remap = true, desc = 'Toggle block comment' })
