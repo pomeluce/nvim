@@ -20,6 +20,7 @@ enable({ 'json', 'jsonc' }, 'jsonls')
 enable('kotlin', 'kotlin_language_server')
 enable('lua', 'lua_ls')
 enable('nix', 'nil_ls')
+enable('nix', 'nixd')
 enable('rust', 'rust_analyzer')
 enable({
   'astro',
