@@ -100,5 +100,17 @@ require('catppuccin').setup({
   },
 })
 
-vim.cmd('colorscheme catppuccin')
-vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'none' })
+-- vim.cmd('colorscheme catppuccin')
+-- vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'none' })
+
+-- 调整 stylix 背景透明不完全的问题
+vim.api.nvim_create_autocmd('UIEnter', {
+  group = vim.api.nvim_create_augroup('SetupTheme', { clear = true }),
+  callback = function()
+    vim.api.nvim_set_hl(0, 'NvimTreeCursorLine', { link = 'CursorLine' })
+    local groups = { 'NormalFloat', 'WinSeparator', 'Pmenu', 'StatusLine', 'WinBar', 'TabLineFill' }
+    for _, group in ipairs(groups) do
+      vim.api.nvim_set_hl(0, group, { bg = 'NONE' })
+    end
+  end,
+})
