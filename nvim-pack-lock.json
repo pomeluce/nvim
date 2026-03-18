@@ -123,7 +123,7 @@
       "src": "https://github.com/brenoprata10/nvim-highlight-colors"
     },
     "nvim-lspconfig": {
-      "rev": "dc2f86d2b66a6e01a98c37cdadd3be3e90f8ab9a",
+      "rev": "702f69fb167e9119f14adc4dfd4fcadf4d1b07a0",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -135,11 +135,11 @@
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-tree.lua": {
-      "rev": "b3772adec8db61ba9098c5624a0823a77be3a23d",
+      "rev": "e16cd38962bc40c22a51ee004aa4f43726d74a16",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "2cc172c28e5550e00e6beead4599b1469469c1c7",
+      "rev": "2b50ab5ccbcd9e5708deb351308edd738adbf84c",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
@@ -188,7 +188,7 @@
       "src": "https://github.com/linux-cultist/venv-selector.nvim"
     },
     "vimcdoc": {
-      "rev": "68294ca9ad575554c54ff68065d314ef211f9250",
+      "rev": "ad25405f2fb8e5a0c105283a6eb76b08d625bea4",
       "src": "https://github.com/yianwillis/vimcdoc"
     }
   }
