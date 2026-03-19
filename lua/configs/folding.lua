@@ -16,26 +16,19 @@ local function fold_virt_text(result, start_text, lnum)
     local char = start_text:sub(i, i)
     local new_hl = '@text'
 
-    -- if semantic tokens unavailable, use treesitter hl
-    local sem_tokens = vim.lsp.semantic_tokens.get_at_pos(0, lnum, i)
-    if sem_tokens and #sem_tokens > 0 then
-      new_hl = '@' .. sem_tokens[1].type
-    else
-      local captures = vim.treesitter.get_captures_at_pos(0, lnum, i - 1)
-      if #captures > 0 then
-        local top = captures[1]
-        local top_priority = (top.metadata and tonumber(top.metadata.priority)) or 0
-        for _, cap in ipairs(captures) do
-          local raw_prio = cap.metadata and cap.metadata.priority
-          local prio = tonumber(raw_prio) or 0
-          if prio > top_priority then
-            -- print(char .. ' ' .. top_priority .. ' -> ' .. prio)
-            top = cap
-            top_priority = prio
-          end
+    local captures = vim.treesitter.get_captures_at_pos(0, lnum, i - 1)
+    if #captures > 0 then
+      local top = captures[1]
+      local top_priority = (top.metadata and tonumber(top.metadata.priority)) or 0
+      for _, cap in ipairs(captures) do
+        local raw_prio = cap.metadata and cap.metadata.priority
+        local prio = tonumber(raw_prio) or 0
+        if prio > top_priority then
+          top = cap
+          top_priority = prio
         end
-        new_hl = '@' .. top.capture
       end
+      new_hl = '@' .. top.capture
     end
 
     if new_hl then

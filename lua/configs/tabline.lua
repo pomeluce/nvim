@@ -1,4 +1,5 @@
-local palette = require('catppuccin.palettes').get_palette('mocha')
+-- local palette = require('catppuccin.palettes').get_palette('mocha')
+local palette = require('mini.base16').config.palette
 
 return {
   {
@@ -17,7 +18,7 @@ return {
       local pad = math.ceil(width - #title)
       return '   ' .. title .. string.rep(' ', pad - 2)
     end,
-    hl = function(self) return vim.api.nvim_get_current_win() == self.winid and { fg = palette.blue } or {} end,
+    hl = function(self) return vim.api.nvim_get_current_win() == self.winid and { fg = palette.base0E } or {} end,
   },
   -- buffer
   {
@@ -26,7 +27,7 @@ return {
         -- filename
         {
           init = function(self) self.filename = vim.api.nvim_buf_get_name(self.bufnr) end,
-          hl = function(self) return { fg = self.is_active and palette.overlay2 or palette.overlay0 } end,
+          hl = function(self) return { fg = self.is_active and palette.base06 or palette.base04 } end,
           on_click = {
             callback = function(_, minwid, _, button)
               if button == 'm' then
@@ -80,7 +81,7 @@ return {
           {
             condition = function(self) return vim.api.nvim_get_option_value('modified', { buf = self.bufnr }) end,
             provider = ' ',
-            hl = { fg = palette.green },
+            hl = { fg = palette.base0B },
           },
         },
         -- close
@@ -92,7 +93,7 @@ return {
             { provider = string.rep(' ', 1) },
             {
               provider = '',
-              hl = function(self) return { fg = self.is_active and palette.red or palette.overlay0 } end,
+              hl = function(self) return { fg = self.is_active and palette.base08 or palette.base04 } end,
               on_click = {
                 callback = function(_, minwid)
                   vim.schedule(function()
@@ -110,12 +111,12 @@ return {
       -- 左截断
       {
         provider = '  ',
-        hl = function(self) return { fg = self.is_active and palette.overlay0 or palette.overlay2 } end,
+        hl = function(self) return { fg = self.is_active and palette.base04 or palette.base06 } end,
       },
       -- 右截断
       {
         provider = '  ',
-        hl = function(self) return { fg = self.is_active and palette.overlay0 or palette.overlay2 } end,
+        hl = function(self) return { fg = self.is_active and palette.base04 or palette.base06 } end,
       }
     ),
     { provider = '%=' },
@@ -125,7 +126,7 @@ return {
     condition = function() return #vim.api.nvim_list_tabpages() >= 2 end,
     require('heirline.utils').make_tablist({
       provider = function(self) return '%' .. self.tabnr .. 'T ' .. self.tabnr .. ' %T' end,
-      hl = function(self) return self.is_active and { bg = palette.maroon, fg = palette.crust } or { fg = palette.overlay0, bg = palette.surface0 } end,
+      hl = function(self) return self.is_active and { bg = palette.base0E, fg = palette.base00 } or { fg = palette.base04, bg = palette.base01 } end,
       -- 关闭按钮
       {
         condition = function(self) return self.is_active end,

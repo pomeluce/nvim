@@ -1,5 +1,5 @@
 local utils = require('heirline.utils')
-local palette = require('catppuccin.palettes').get_palette('mocha')
+local palette = require('mini.base16').config.palette
 local conditions = require('heirline.conditions')
 
 local function get_hl_fg(hl) return vim.api.nvim_get_hl(0, { name = hl }).fg end
@@ -67,14 +67,14 @@ local modes = {
 }
 
 local mode_hl = {
-  ['Normal'] = palette.blue,
-  ['Insert'] = palette.maroon,
-  ['Visual'] = palette.lavender,
-  ['Select'] = palette.lavender,
-  ['Terminal'] = palette.green,
-  ['NTerminal'] = palette.yellow,
-  ['Confirm'] = palette.peach,
-  ['Command'] = palette.red,
+  ['Normal'] = palette.base0D,
+  ['Insert'] = palette.base0E,
+  ['Visual'] = palette.base0F,
+  ['Select'] = palette.base0F,
+  ['Terminal'] = palette.base0B,
+  ['NTerminal'] = palette.base0A,
+  ['Confirm'] = palette.base09,
+  ['Command'] = palette.base08,
 }
 
 local lsp_msg = ''
@@ -115,13 +115,13 @@ return {
       { provider = icons.mode.left, hl = function(self) return { fg = mode_hl[modes[self.mode][2]] } end },
       {
         provider = function(self) return ' %2(' .. modes[self.mode][1] .. '%)' end,
-        hl = function(self) return { fg = palette.base, bg = mode_hl[modes[self.mode][2]], bold = true } end,
+        hl = function(self) return { fg = palette.base00, bg = mode_hl[modes[self.mode][2]], bold = true } end,
       },
-      { provider = icons.mode.right, hl = function(self) return { fg = mode_hl[modes[self.mode][2]], bg = palette.surface2 } end },
+      { provider = icons.mode.right, hl = function(self) return { fg = mode_hl[modes[self.mode][2]], bg = palette.base03 } end },
     },
     -- filename
     {
-      { provider = icons.file.left, hl = { fg = palette.surface0, bg = palette.surface2 } },
+      { provider = icons.file.left, hl = { fg = palette.base01, bg = palette.base03 } },
       {
         init = function(self)
           local name = vim.fn.fnamemodify(self.filename, ':t')
@@ -132,7 +132,7 @@ return {
           end
         end,
         provider = function(self) return self.icon and (' ' .. self.icon .. ' ') end,
-        hl = { fg = palette.overlay2, bg = palette.surface0 },
+        hl = { fg = palette.base06, bg = palette.base01 },
       },
       {
         provider = function(self)
@@ -141,15 +141,15 @@ return {
           if not conditions.width_percent_below(#name, 0.25) then name = vim.fn.pathshorten(name) end
           return name .. ' '
         end,
-        hl = { fg = palette.overlay2, bg = palette.surface0 },
+        hl = { fg = palette.base06, bg = palette.base01 },
       },
-      { provider = icons.file.right, hl = { fg = palette.surface0 } },
+      { provider = icons.file.right, hl = { fg = palette.base01 } },
     },
     -- git-branch
     {
       condition = conditions.is_git_repo,
       init = function(self) self.status_dict = vim.b.gitsigns_status_dict end,
-      hl = { fg = palette.overlay0 },
+      hl = { fg = palette.base04 },
       -- branch name
       { provider = function(self) return '  %2(' .. self.status_dict.head .. '%) ' end, hl = { bold = true } },
       {
@@ -173,7 +173,7 @@ return {
     },
     { provider = '%=' },
     -- lsp_msg
-    { provider = function() return vim.o.columns < 120 and '' or lsp_msg end, hl = { fg = palette.rosewater } },
+    { provider = function() return vim.o.columns < 120 and '' or lsp_msg end, hl = { fg = palette.base06 } },
     { provider = '%=' },
     -- diagnostics
     {
@@ -200,32 +200,32 @@ return {
         end
         return ''
       end,
-      hl = { fg = palette.green, bold = true },
+      hl = { fg = palette.base0B, bold = true },
     },
     -- 目录
     {
-      { provider = icons.cwd, hl = { fg = palette.red } },
-      { provider = '󰉋 ', hl = { fg = palette.base, bg = palette.red } },
+      { provider = icons.cwd, hl = { fg = palette.base08 } },
+      { provider = '󰉋 ', hl = { fg = palette.base00, bg = palette.base08 } },
       {
         conditions = vim.uv.cwd(),
         provider = function()
           local name = vim.uv.cwd()
           return name and ' ' .. (name:match('([^/\\]+)[/\\]*$') or name) .. ' '
         end,
-        hl = { fg = palette.overlay2, bg = palette.surface2 },
+        hl = { fg = palette.base06, bg = palette.base03 },
       },
     },
     -- cursor
     {
-      { provider = icons.cur, hl = { fg = palette.peach, bg = palette.surface2 } },
-      { provider = '󱉯 ', hl = { fg = palette.base, bg = palette.peach } },
+      { provider = icons.cur, hl = { fg = palette.base09, bg = palette.base03 } },
+      { provider = '󱉯 ', hl = { fg = palette.base00, bg = palette.base09 } },
       {
         provider = function()
           local line = vim.fn.line('.')
           local col = vim.fn.charcol('.')
           return string.format('%' .. digits(line) + 1 .. 'd:%-' .. digits(col) + 1 .. 'd', line, col)
         end,
-        hl = { fg = palette.overlay2, bg = palette.surface2 },
+        hl = { fg = palette.base06, bg = palette.base03 },
       },
     }
   ),
