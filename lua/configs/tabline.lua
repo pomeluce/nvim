@@ -8,7 +8,7 @@ return {
       local bufnr = vim.api.nvim_win_get_buf(win)
       self.winid = win
       if vim.bo[bufnr].filetype == 'NvimTree' then
-        self.title = 'FileBrowser'
+        self.title = ''
         return true
       end
     end,

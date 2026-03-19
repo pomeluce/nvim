@@ -5,7 +5,7 @@ vim.pack.add({
 local map = vim.keymap.set
 local tabuf = require('configs.tabufs')
 
-vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
+vim.api.nvim_create_autocmd('UIEnter', {
   group = vim.api.nvim_create_augroup('SetupHeirline', { clear = true }),
   once = true,
   callback = function()
