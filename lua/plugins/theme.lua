@@ -133,6 +133,8 @@ vim.api.nvim_create_autocmd('UIEnter', {
     set_hl('GitSignsDelete', { fg = palette.base08, bg = 'NONE' })
     set_hl('GitSignsUntracked', { fg = palette.base0C, bg = 'NONE' })
 
+    set_hl('MiniFilesTitleFocused', { fg = palette.base0D, bg = 'NONE' })
+
     set_hl('NonText', { fg = palette.base04 })
 
     set_hl('NvimTreeCursorLine', { link = 'CursorLine' })
