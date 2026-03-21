@@ -8,16 +8,7 @@ vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 
 require('neovim-project').setup({
   -- projects = vim.list_extend({}, akirc.session.projects),
-  projects = {
-    '$DEVROOT/wsp/*',
-    '$DEVROOT/code/web/*',
-    '$DEVROOT/code/rust/*',
-    '$DEVROOT/code/sql/*',
-    '$DEVROOT/code/java/*',
-    '$DEVROOT/code/cpp/*',
-    '$DEVROOT/code/python/*',
-    '$DEVROOT/code/scripts/*',
-  },
+  projects = require('utils').settings('session.projects'),
   datapath = vim.fn.stdpath('data'),
   -- 非项目目录加载最后一次会话
   last_session_on_startup = false,
@@ -32,7 +23,7 @@ require('neovim-project').setup({
     autosave_ignore_filetypes = { 'gitcommit', 'gitrebase' },
     -- 不会自动保存会话的目录列表
     -- autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, akirc.session.ignore_dir),
-    autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, { '~/downloads', '~/Downloads' }),
+    autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, require('utils').settings('session.ignore_dir')),
   },
   picker = {
     -- "telescope", "fzf-lua", "snacks"

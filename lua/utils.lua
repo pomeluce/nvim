@@ -49,6 +49,25 @@ function M.read_json(file)
   return json
 end
 
+---@param path string
+---@return any|nil
+function M.settings(path)
+  local tbl = M.read_json(vim.fn.stdpath('config') .. '/settings.json')
+  if type(tbl) ~= 'table' or type(path) ~= 'string' then return nil end
+
+  local current = tbl
+
+  for key in string.gmatch(path, '[^%.]+') do
+    if type(current) ~= 'table' then return nil end
+
+    current = current[key]
+
+    if current == nil then return nil end
+  end
+
+  return current
+end
+
 M.is_win = vim.fn.has('win32') ~= 0
 M.is_mac = vim.fn.has('macunix') ~= 0
 M.is_unix = vim.fn.has('unix') ~= 0 and not M.is_mac
