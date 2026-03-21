@@ -122,19 +122,6 @@ vim.api.nvim_create_autocmd('UIEnter', {
 
     set_hl('Comment', { fg = palette.base04 })
 
-    set_hl('DiagnosticFloatingOk', { fg = palette.base0B, bg = 'NONE' })
-    set_hl('DiagnosticFloatingInfo', { fg = palette.base0C, bg = 'NONE' })
-    set_hl('DiagnosticFloatingWarn', { fg = palette.base0E, bg = 'NONE' })
-    set_hl('DiagnosticFloatingError', { fg = palette.base08, bg = 'NONE' })
-    set_hl('DiagnosticFloatingHint', { fg = palette.base0D, bg = 'NONE' })
-
-    set_hl('GitSignsAdd', { fg = palette.base0B, bg = 'NONE' })
-    set_hl('GitSignsChange', { fg = palette.base09, bg = 'NONE' })
-    set_hl('GitSignsDelete', { fg = palette.base08, bg = 'NONE' })
-    set_hl('GitSignsUntracked', { fg = palette.base0C, bg = 'NONE' })
-
-    set_hl('MiniFilesTitleFocused', { fg = palette.base0D, bg = 'NONE' })
-
     set_hl('NonText', { fg = palette.base04 })
 
     set_hl('NvimTreeCursorLine', { link = 'CursorLine' })
@@ -146,12 +133,36 @@ vim.api.nvim_create_autocmd('UIEnter', {
     set_hl('SnacksPickerToggle', { fg = palette.base00, bg = palette.base08 })
     set_hl('SnacksPickerTitle', { fg = palette.base00, bg = palette.base0B })
 
-    set_hl('WinSeparator', { fg = palette.base04, bg = 'NONE' })
+    set_hl('WinSeparator', { fg = palette.base03, bg = 'NONE' })
 
     -- 调整 stylix 背景透明不完全的问题
-    local groups = { 'NormalFloat', 'NormalNc', 'Pmenu', 'StatusLine', 'WinBar', 'WinBarNc', 'TabLineFill' }
+    local groups = {
+      'DiagnosticFloatingOk',
+      'DiagnosticFloatingInfo',
+      'DiagnosticFloatingWarn',
+      'DiagnosticFloatingError',
+      'DiagnosticFloatingHint',
+      'GitSignsAdd',
+      'GitSignsChange',
+      'GitSignsDelete',
+      'GitSignsUntracked',
+      'GitSignsStagedAdd',
+      'GitSignsStagedChange',
+      'GitSignsStagedDelete',
+      'GitSignsStagedUntracked',
+      'MiniFilesTitleFocused',
+      'NormalFloat',
+      'NormalNc',
+      'Pmenu',
+      'StatusLine',
+      'TabLineFill',
+      'WinBar',
+      'WinBarNc',
+    }
     for _, group in ipairs(groups) do
-      set_hl(group, { bg = 'NONE' })
+      local hl = vim.tbl_extend('force', vim.api.nvim_get_hl(0, { name = group, link = false }), { bg = 'NONE' })
+      hl.default = hl.default == true and false or nil
+      set_hl(group, hl)
     end
   end,
 })
