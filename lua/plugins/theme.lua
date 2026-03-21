@@ -133,6 +133,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
     set_hl('SnacksPickerToggle', { fg = palette.base00, bg = palette.base08 })
     set_hl('SnacksPickerTitle', { fg = palette.base00, bg = palette.base0B })
 
+    set_hl('WinBarNc', { fg = palette.base04, bg = 'NONE' })
     set_hl('WinSeparator', { fg = palette.base03, bg = 'NONE' })
 
     -- 调整 stylix 背景透明不完全的问题
@@ -157,7 +158,6 @@ vim.api.nvim_create_autocmd('UIEnter', {
       'StatusLine',
       'TabLineFill',
       'WinBar',
-      'WinBarNc',
     }
     for _, group in ipairs(groups) do
       local hl = vim.tbl_extend('force', vim.api.nvim_get_hl(0, { name = group, link = false }), { bg = 'NONE' })
