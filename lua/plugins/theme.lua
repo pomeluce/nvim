@@ -143,6 +143,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
       'DiagnosticFloatingWarn',
       'DiagnosticFloatingError',
       'DiagnosticFloatingHint',
+      'Folded',
       'GitSignsAdd',
       'GitSignsChange',
       'GitSignsDelete',

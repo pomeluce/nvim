@@ -46,7 +46,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- end
 
     -- 关闭 LSP 自带的颜色高亮
-    vim.lsp.document_color.enable(false, event.buf)
+    vim.lsp.document_color.enable(false)
 
     -- 内联提示
     if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
