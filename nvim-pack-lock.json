@@ -55,7 +55,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "7c4faa3540d0781a28588cafbd4dd187a28ac6e3",
+      "rev": "13588ac50446b12542c922430610eaa330c4e425",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "heirline.nvim": {
@@ -107,7 +107,7 @@
       "src": "https://github.com/windwp/nvim-autopairs"
     },
     "nvim-dap": {
-      "rev": "a9d8cb68ee7184111dc66156c4a2ebabfbe01bc5",
+      "rev": "2a8799ad91a1495c6bdf753f9b2179b3ff0f5bba",
       "src": "https://github.com/mfussenegger/nvim-dap"
     },
     "nvim-dap-ui": {
@@ -123,7 +123,7 @@
       "src": "https://github.com/brenoprata10/nvim-highlight-colors"
     },
     "nvim-lspconfig": {
-      "rev": "841c6d4139aedb8a3f2baf30cef5327371385b93",
+      "rev": "1a6d69206749a646ef28bfb39460610b14baff40",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -135,7 +135,7 @@
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-tree.lua": {
-      "rev": "f37ebac81164e1445c499cdd6de86e6d8e5d57e4",
+      "rev": "6eaf74c9919d121d2806ac3c20e757e66bd29c31",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
