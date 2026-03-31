@@ -155,6 +155,10 @@
       "rev": "8e1c0a389f20bf7f5b0dd0e00306c1247bda2595",
       "src": "https://github.com/windwp/nvim-ts-autotag"
     },
+    "opencode.nvim": {
+      "rev": "df533d6da724109bf08446392db860fdceddbd0c",
+      "src": "https://github.com/nickjvandyke/opencode.nvim"
+    },
     "plenary.nvim": {
       "rev": "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
       "src": "https://github.com/nvim-lua/plenary.nvim"
