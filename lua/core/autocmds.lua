@@ -122,3 +122,9 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = header.filetype,
   callback = header.callback,
 })
+
+-- 转换换行符
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup('RedoNL', { clear = true }),
+  callback = function(args) vim.bo[args.buf].fileformat = 'unix' end,
+})

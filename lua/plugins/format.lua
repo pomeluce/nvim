@@ -42,6 +42,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
         vue = { 'prettierd' },
         yaml = { 'prettierd' },
         zsh = { 'beautysh' },
+        ['_'] = { 'trim_whitespace' },
       },
       formatters = {
         beautysh = {
@@ -125,5 +126,23 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
       vim.b.disable_autoformat = false
       vim.g.disable_autoformat = false
     end, { desc = 'Re-enable autoformat-on-save' })
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      callback = function(args)
+        local formatters = conform.list_formatters_for_buffer(args.buf)
+        local real_formatter = false
+        for _, f in ipairs(formatters) do
+          if f.name ~= 'trim_whitespace' then
+            real_formatter = true
+            break
+          end
+        end
+
+        if not real_formatter then
+          local view = vim.fn.winsaveview()
+          vim.cmd('silent! normal! gg=G')
+          vim.fn.winrestview(view)
+        end
+      end,
+    })
   end,
 })
