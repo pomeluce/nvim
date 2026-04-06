@@ -1,7 +1,9 @@
-require('plugins.edit.comment')
-require('plugins.edit.surround')
-require('plugins.edit.switch')
-require('plugins.edit.autotag')
-require('plugins.edit.avante')
-require('plugins.edit.claude')
-require('plugins.edit.case-convert')
+---@type packman.SpecItem[]
+return {
+  { import = 'plugins.edit.comment' },
+  { import = 'plugins.edit.surround' },
+  { import = 'plugins.edit.switch' },
+  { import = 'plugins.edit.autotag' },
+  { import = 'plugins.edit.avante' },
+  { import = 'plugins.edit.claude' },
+}

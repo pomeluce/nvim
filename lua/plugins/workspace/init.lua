@@ -1,1 +1,4 @@
-require('plugins.workspace.session')
+---@type packman.SpecItem[]
+return {
+  { import = 'plugins.workspace.session' },
+}

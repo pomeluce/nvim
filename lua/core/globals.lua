@@ -1,5 +1,5 @@
--- 替换 vim.pack.add 函数
-require('configs.pack').pack_state()
+-- 初始化 packman 插件管理框架
+require('packman')
 
 -- 声明 leader 键
 vim.g.mapleader = ' '

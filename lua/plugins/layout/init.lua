@@ -1,5 +1,8 @@
-require('plugins.layout.heirline')
-require('plugins.layout.mini-files')
-require('plugins.layout.nvimtree')
-require('plugins.layout.snacks')
-require('plugins.layout.dropbar')
+---@type packman.SpecItem[]
+return {
+  { import = 'plugins.layout.heirline' },
+  { import = 'plugins.layout.mini-files' },
+  { import = 'plugins.layout.nvimtree' },
+  { import = 'plugins.layout.snacks' },
+  { import = 'plugins.layout.dropbar' },
+}

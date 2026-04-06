@@ -1,15 +1,16 @@
-require('plugins.theme')
-require('plugins.lsp')
-require('plugins.completion')
-require('plugins.debugging')
-require('plugins.format')
-
-require('plugins.treesitter')
-require('plugins.edit')
-require('plugins.ui')
-require('plugins.layout')
-require('plugins.navigation')
-require('plugins.git')
-require('plugins.workspace')
-require('plugins.docs')
-require('plugins.tools')
+require('packman').setup({
+  { import = 'plugins.theme' },
+  { import = 'plugins.lsp' },
+  { import = 'plugins.completion' },
+  { import = 'plugins.debugging' },
+  { import = 'plugins.format' },
+  { import = 'plugins.treesitter' },
+  { import = 'plugins.edit' },
+  { import = 'plugins.ui' },
+  { import = 'plugins.layout' },
+  { import = 'plugins.navigation' },
+  { import = 'plugins.git' },
+  { import = 'plugins.workspace' },
+  { import = 'plugins.docs' },
+  { import = 'plugins.tools' },
+})

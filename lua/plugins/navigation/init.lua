@@ -1,1 +1,4 @@
-require('plugins.navigation.flash')
+---@type packman.SpecItem[]
+return {
+  { import = 'plugins.navigation.flash' },
+}
