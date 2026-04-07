@@ -93,29 +93,6 @@ vim.api.nvim_create_autocmd('TermOpen', {
   end,
 })
 
--- vim.pack.update buffer 快捷键绑定
-local function is_pack_buf(bufnr)
-  if not vim.api.nvim_buf_is_loaded(bufnr) then return false end
-  local name = vim.api.nvim_buf_get_name(bufnr) or ''
-  return name:match('^nvim%-pack://confirm') ~= nil
-end
-vim.api.nvim_create_autocmd('BufEnter', {
-  group = vim.api.nvim_create_augroup('PackKeyBind', { clear = true }),
-  pattern = 'nvim-pack://confirm*',
-  callback = function(event)
-    -- 关闭其他 nvim-pack buffer, 保证 pack 更新 buffer 始终只有一个
-    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-      if is_pack_buf(bufnr) and bufnr ~= event.buf then pcall(vim.api.nvim_buf_delete, bufnr, { force = true }) end
-    end
-
-    local map = vim.keymap.set
-    map('n', 'S', '<cmd>write<cr>', { buffer = event.buf, desc = 'Confirm and update all plugin' })
-    map('n', 'R', '<cmd>PackUpdate<cr>', { buffer = event.buf, desc = 'Retry plugin update' })
-    map('n', 'q', '<cmd>close<cr>', { buffer = event.buf, desc = 'Close plugin confirmation buffer' })
-    map('n', '<esc>', '<cmd>close<cr>', { buffer = event.buf, desc = 'Close plugin confirmation buffer' })
-  end,
-})
-
 -- 创建文件添加文件头信息
 local header = require('configs.header')
 vim.api.nvim_create_autocmd('FileType', {

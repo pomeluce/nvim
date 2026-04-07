@@ -9,9 +9,16 @@ M.loaded = {}
 ---@type table<string, true>
 M.lazy = {}
 
+---@type table<string, table> 插件名 -> 完整 parsed spec
+M.specs = {}
+
 --- 注册已声明的插件
 ---@param name string
-function M.add(name) M.declared[name] = true end
+---@param spec? table 完整的 parsed spec
+function M.add(name, spec)
+  M.declared[name] = true
+  if spec then M.specs[name] = spec end
+end
 
 --- 标记为已加载
 ---@param name string
@@ -47,6 +54,23 @@ function M.clear()
   M.declared = {}
   M.loaded = {}
   M.lazy = {}
+  M.specs = {}
+end
+
+--- 获取插件的完整 spec
+---@param name string
+---@return table?
+function M.get_spec(name) return M.specs[name] end
+
+--- 获取所有 spec（排序）
+---@return table[]
+function M.get_all_specs()
+  local result = {}
+  for name, spec in pairs(M.specs) do
+    table.insert(result, spec)
+  end
+  table.sort(result, function(a, b) return a.name < b.name end)
+  return result
 end
 
 return M

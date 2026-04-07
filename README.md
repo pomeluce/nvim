@@ -122,9 +122,9 @@ lua/packman/
 ├── init.lua      # 入口: setup() 收集 spec 并加载插件
 ├── spec.lua      # Spec 解析: 短格式转 URL、推断 name、校验字段
 ├── loader.lua    # 加载引擎: vim.pack.add() 注册、延迟加载调度
-├── registry.lua  # 注册表: 追踪插件声明/加载/延迟状态
+├── registry.lua  # 注册表: 追踪插件声明/加载/延迟状态及完整 spec
 ├── cache.lua     # 加载耗时统计
-├── ui.lua        # 浮窗 UI + Pack 命令
+├── ui.lua        # Pack 面板: 多 Tab 浮窗 + 异步 git 操作
 └── types.lua     # 类型定义(---@type packman.SpecItem[])
 ```
 
@@ -157,12 +157,35 @@ return {
 
 #### 命令
 
-| 命令                 | 说明                             |
-| -------------------- | -------------------------------- |
-| `:PackInstalled`     | 查看已安装插件(含状态和版本)     |
-| `:PackStatus`        | 查看插件加载状态和耗时           |
-| `:PackProfile`       | 查看插件加载耗时排名             |
-| `:PackSync`          | 安装缺失 + 清理未声明 + 更新已有 |
-| `:PackUpdate`        | 更新所有插件                     |
-| `:PackRemove <name>` | 删除指定插件                     |
-| `:PackClean`         | 清理未声明的插件                 |
+| 命令                  | 说明                              |
+| --------------------- | --------------------------------- |
+| `:Pack`               | 打开 Pack 面板（默认 Plugins Tab） |
+| `:Pack update`        | 打开面板并切换到 Update Tab        |
+| `:Pack profile`       | 打开面板并切换到 Profile Tab       |
+| `:Pack clean`         | 打开面板并切换到 Clean Tab         |
+
+#### Pack 面板
+
+统一的面板 UI，包含 4 个 Tab 页：
+
+- **Plugins** — 查看所有已声明插件（状态、版本、加载耗时）
+- **Profile** — 插件加载耗时排名（含柱状图）
+- **Update** — 异步检查更新、安装缺失插件、执行更新
+- **Clean** — 清理未声明的插件
+
+面板内快捷键：
+
+| 按键    | 说明                     |
+| ------- | ------------------------ |
+| `1-4`   | 切换 Tab                 |
+| `S`     | Sync（安装缺失 + 更新）  |
+| `U`     | 更新所有插件（Update Tab）|
+| `u`     | 更新选中插件（Update Tab）|
+| `X`     | 移除选中插件（二次确认） |
+| `c`     | 清理未声明插件（二次确认）|
+| `C`     | 取消进行中的操作         |
+| `R`     | 刷新 Profile Tab         |
+| `?`     | 帮助                     |
+| `q/Esc` | 关闭面板                 |
+
+首次启动时，若检测到缺失插件会自动打开 Update Tab 并显示安装进度。

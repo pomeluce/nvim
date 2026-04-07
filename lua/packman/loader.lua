@@ -78,7 +78,7 @@ local function register_plugin(plugin)
   else
     vim.pack.add({ pack_spec })
   end
-  registry.add(plugin.name)
+  registry.add(plugin.name, plugin)
 end
 
 --- 创建延迟加载钩子
@@ -168,6 +168,27 @@ function M.load(plugins)
     end
 
     ::continue::
+  end
+
+  -- 第三遍: 检测缺失插件，触发自动安装
+  local installed = {}
+  for _, p in ipairs(vim.pack.get(nil, { info = true }) or {}) do
+    if p.spec and p.spec.name then installed[p.spec.name] = true end
+  end
+
+  local missing = {}
+  for _, plugin in ipairs(plugins) do
+    if plugin.enabled and not installed[plugin.name] then
+      table.insert(missing, plugin.name)
+    end
+  end
+
+  if #missing > 0 then
+    vim.schedule(function()
+      local ui = require('packman.ui')
+      ui.open('update')
+      ui.do_install(missing)
+    end)
   end
 end
 

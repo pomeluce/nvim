@@ -40,11 +40,11 @@ function M.setup(specs)
     table.insert(parsed, spec_mod.parse(spec))
   end
 
-  -- 3. 加载: 注册 + 配置
-  loader.load(parsed)
-
-  -- 4. 注册 Pack 命令
+  -- 3. 注册命令（在 load 之前，因为 load 可能触发 UI）
   ui.register_commands()
+
+  -- 4. 加载: 注册 + 配置（可能触发首次安装面板）
+  loader.load(parsed)
 end
 
 --- 单插件便捷声明(可内联在 setup 列表中)
