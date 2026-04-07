@@ -8,7 +8,7 @@ return {
       'windwp/nvim-autopairs',
       'xzbdmw/colorful-menu.nvim',
       'fang2hou/blink-copilot',
-      'L3MON4D3/LuaSnip',
+      { 'L3MON4D3/LuaSnip', version = 'v2.*' },
       'rafamadriz/friendly-snippets',
       'archie-judd/blink-cmp-words',
       'Kaiser-Yang/blink-cmp-avante',
@@ -104,25 +104,11 @@ return {
       require('luasnip.loaders.from_vscode').lazy_load()
       require('luasnip.loaders.from_vscode').lazy_load({ paths = { './snippets' } })
       vim.api.nvim_set_hl(0, 'BlickCmpItemKindCopilot', { fg = '#60B5FF' })
-    end,
-  },
-  {
-    'L3MON4D3/LuaSnip',
-    version = 'v2.*',
-  },
-  {
-    'windwp/nvim-autopairs',
-    event = 'InsertEnter',
-    config = function()
-      vim.schedule(
-        function()
-          require('nvim-autopairs').setup({
-            disable_filetype = { 'snacks_picker_input' },
-            check_ts = true,
-            ts_config = { lua = { 'string' }, javascript = { 'template_string' }, java = false },
-          })
-        end
-      )
+      require('nvim-autopairs').setup({
+        disable_filetype = { 'snacks_picker_input' },
+        check_ts = true,
+        ts_config = { lua = { 'string' }, javascript = { 'template_string' }, java = false },
+      })
     end,
   },
 }
