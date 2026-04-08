@@ -16,6 +16,7 @@ enable({ 'dockerfile', 'yaml.docker-compose' }, 'docker_language_server')
 
 enable({ 'astro', 'css', 'eruby', 'html', 'htmldjango', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue' }, 'emmet_language_server')
 enable('html', 'html')
+enable('java', 'jdtls')
 enable({ 'json', 'jsonc' }, 'jsonls')
 enable('kotlin', 'kotlin_language_server')
 enable('lua', 'lua_ls')

@@ -51,7 +51,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets.git"
     },
     "gitsigns.nvim": {
-      "rev": "0d797daee85366bc242580e352a4f62d67557b84",
+      "rev": "8d82c240f190fc33723d48c308ccc1ed8baad69d",
       "src": "https://github.com/lewis6991/gitsigns.nvim.git"
     },
     "heirline.nvim": {
@@ -118,6 +118,10 @@
       "rev": "e2cb22089cc2358b2b995c09578224f142de6039",
       "src": "https://github.com/brenoprata10/nvim-highlight-colors.git"
     },
+    "nvim-java": {
+      "rev": "602a5f7fa92f9c1d425a2159133ff9de86842f0a",
+      "src": "https://github.com/nvim-java/nvim-java.git"
+    },
     "nvim-lspconfig": {
       "rev": "bedca8b426b2fee0ccac596d167d71bbe971253f",
       "src": "https://github.com/neovim/nvim-lspconfig.git"
@@ -156,12 +160,16 @@
       "src": "https://github.com/nvim-lua/plenary.nvim.git"
     },
     "render-markdown.nvim": {
-      "rev": "35c19259bbb8ea0894fa525246c0a6b040314eaa",
+      "rev": "54d4b5431e9634ee3d8d30784e017239b5b89d41",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim.git"
     },
     "snacks.nvim": {
       "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",
       "src": "https://github.com/folke/snacks.nvim.git"
+    },
+    "spring-boot.nvim": {
+      "rev": "98c6ff1dcdda943d341bba3c00ae9d190a2e5f7d",
+      "src": "https://github.com/JavaHello/spring-boot.nvim.git"
     },
     "switch.vim": {
       "rev": "297346b630943ebd4ea58598dfd30bae5debc739",

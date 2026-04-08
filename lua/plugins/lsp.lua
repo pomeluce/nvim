@@ -137,4 +137,9 @@ return {
       })
     end,
   },
+  {
+    'nvim-java/nvim-java',
+    dependencies = { 'JavaHello/spring-boot.nvim' },
+    config = function() require('java').setup({ jdk = { auto_install = false } }) end,
+  },
 }
