@@ -1,10 +1,11 @@
+local map = vim.keymap.set
+
 ---@type packman.SpecItem[]
 return {
   {
     'neovim/nvim-lspconfig',
     config = function()
       local hlword = require('configs.hlword')
-      local map = vim.keymap.set
 
       local function jump(method, picker, message)
         return function()
@@ -140,6 +141,11 @@ return {
   {
     'nvim-java/nvim-java',
     dependencies = { 'JavaHello/spring-boot.nvim' },
-    config = function() require('java').setup({ jdk = { auto_install = false } }) end,
+    config = function()
+      require('java').setup({ jdk = { auto_install = false } })
+      map('n', '<leader>jr', '<cmd>JavaRunnerRunMain<cr>', { desc = 'Run Java Main Class' })
+      map('n', '<leader>js', '<cmd>JavaRunnerStopMain<cr>', { desc = 'Stop Java Main Class' })
+      map('n', '<leader>jl', '<cmd>JavaRunnerToggleLogs<cr>', { desc = 'Toggle Java Logs' })
+    end,
   },
 }
