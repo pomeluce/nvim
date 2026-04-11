@@ -5,6 +5,7 @@
 </div>
 
 - [使用说明](#使用说明)
+- [配置说明](#配置说明)
 - [目录结构](#目录结构)
 - [Packman 插件管理](#packman-插件管理)
 
@@ -90,6 +91,51 @@ cd ~/.config/ && git clone https://github.com/pomeluce/nvim.git
 nvim
 ```
 
+### 配置说明
+
+在配置目录下创建 `settings.json` 来自定义行为。所有配置项均为可选，未配置时使用默认值。
+
+#### 示例
+
+```json
+{
+  "mason": {
+    "enable": true
+  },
+  "theme": {
+    "enable": true
+  },
+  "session": {
+    "projects": ["/home/user/project1", "/home/user/project2"],
+    "ignore_dir": ["/tmp", "/var"]
+  },
+  "lsp": {
+    "jdtls": {
+      "runtimes": [
+        {
+          "name": "JavaSE-21",
+          "path": "/usr/lib/jvm/java-21-openjdk"
+        }
+      ],
+      "maven": {
+        "executable": "/path/to/mvn"
+      }
+    }
+  }
+}
+```
+
+#### 配置项说明
+
+| 配置项               | 类型       | 默认值  | 说明                                             |
+| -------------------- | ---------- | ------- | ------------------------------------------------ |
+| `mason.enable`       | `boolean`  | `false` | 启用 Mason 插件管理器，自动安装配置的 LSP 和 DAP |
+| `theme.enable`       | `boolean`  | `false` | 启用自定义主题（mini.base16 配色方案）           |
+| `session.projects`   | `string[]` | `[]`    | 项目路径列表，用于 neovim-project 项目切换       |
+| `session.ignore_dir` | `string[]` | `[]`    | 自动保存 session 时忽略的目录列表                |
+| `lsp.jdtls.runtimes` | `object[]` | `[]`    | jdtls Java 运行时配置，每项包含 `name` 和 `path` |
+| `lsp.jdtls.maven`    | `object`   | `{}`    | jdtls Maven 配置，如 `executable` 路径           |
+
 ### 目录结构
 
 ```
@@ -108,6 +154,7 @@ nvim
 │   └── utils.lua
 ├── nvim-pack-lock.json
 ├── README.md
+├── settings.json
 └── snippets
 ```
 
@@ -157,12 +204,12 @@ return {
 
 #### 命令
 
-| 命令                  | 说明                              |
-| --------------------- | --------------------------------- |
-| `:Pack`               | 打开 Pack 面板（默认 Plugins Tab） |
-| `:Pack update`        | 打开面板并切换到 Update Tab        |
-| `:Pack profile`       | 打开面板并切换到 Profile Tab       |
-| `:Pack clean`         | 打开面板并切换到 Clean Tab         |
+| 命令            | 说明                               |
+| --------------- | ---------------------------------- |
+| `:Pack`         | 打开 Pack 面板（默认 Plugins Tab） |
+| `:Pack update`  | 打开面板并切换到 Update Tab        |
+| `:Pack profile` | 打开面板并切换到 Profile Tab       |
+| `:Pack clean`   | 打开面板并切换到 Clean Tab         |
 
 #### Pack 面板
 
@@ -175,17 +222,17 @@ return {
 
 面板内快捷键：
 
-| 按键    | 说明                     |
-| ------- | ------------------------ |
-| `1-4`   | 切换 Tab                 |
-| `S`     | Sync（安装缺失 + 更新）  |
-| `U`     | 更新所有插件（Update Tab）|
-| `u`     | 更新选中插件（Update Tab）|
-| `X`     | 移除选中插件（二次确认） |
-| `c`     | 清理未声明插件（二次确认）|
-| `C`     | 取消进行中的操作         |
-| `R`     | 刷新 Profile Tab         |
-| `?`     | 帮助                     |
-| `q/Esc` | 关闭面板                 |
+| 按键    | 说明                       |
+| ------- | -------------------------- |
+| `1-4`   | 切换 Tab                   |
+| `S`     | Sync（安装缺失 + 更新）    |
+| `U`     | 更新所有插件（Update Tab） |
+| `u`     | 更新选中插件（Update Tab） |
+| `X`     | 移除选中插件（二次确认）   |
+| `c`     | 清理未声明插件（二次确认） |
+| `C`     | 取消进行中的操作           |
+| `R`     | 刷新 Profile Tab           |
+| `?`     | 帮助                       |
+| `q/Esc` | 关闭面板                   |
 
 首次启动时，若检测到缺失插件会自动打开 Update Tab 并显示安装进度。
