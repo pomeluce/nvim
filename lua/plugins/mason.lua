@@ -1,10 +1,8 @@
 ---@type packman.SpecItem
 return {
   'mason-org/mason.nvim',
-  dependencies = {
-    'williamboman/mason-lspconfig.nvim',
-    'jay-babu/mason-nvim-dap.nvim',
-  },
+  cmd = { 'Mason', 'MasonInstall', 'MasonUpdate' },
+  dependencies = { 'williamboman/mason-lspconfig.nvim', 'jay-babu/mason-nvim-dap.nvim' },
   enabled = require('utils').settings('mason.enable') or false,
   config = function()
     require('mason').setup({
