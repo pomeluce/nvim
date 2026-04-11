@@ -1,6 +1,7 @@
 require('packman').setup({
   { import = 'plugins.theme' },
   { import = 'plugins.lsp' },
+  { import = 'plugins.mason' },
   { import = 'plugins.completion' },
   { import = 'plugins.debugging' },
   { import = 'plugins.format' },
