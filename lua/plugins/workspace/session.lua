@@ -7,14 +7,14 @@ return {
     dependencies = { 'Shatur/neovim-session-manager', 'nvim-lua/plenary.nvim' },
     config = function()
       require('neovim-project').setup({
-        projects = require('utils').settings('session.projects'),
+        projects = require('utils').settings('session.projects') or {},
         datapath = vim.fn.stdpath('data'),
         last_session_on_startup = false,
         dashboard_mode = false,
         filetype_autocmd_timeout = 200,
         session_manager_opts = {
           autosave_ignore_filetypes = { 'gitcommit', 'gitrebase' },
-          autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, require('utils').settings('session.ignore_dir')),
+          autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, require('utils').settings('session.ignore_dir') or {}),
         },
         picker = {
           type = 'snacks',

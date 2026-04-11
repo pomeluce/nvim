@@ -3,8 +3,8 @@ return {
   settings = {
     java = {
       configuration = {
-        runtimes = require('utils').settings('lsp.jdtls.runtimes'),
-        maven = require('utils').settings('lsp.jdtls.maven'),
+        runtimes = require('utils').settings('lsp.jdtls.runtimes') or {},
+        maven = require('utils').settings('lsp.jdtls.maven') or {},
       },
     },
   },
