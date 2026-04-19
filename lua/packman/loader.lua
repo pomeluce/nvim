@@ -184,10 +184,12 @@ function M.load(plugins)
   end
 
   if #missing > 0 then
+    local names = table.concat(missing, ', ')
     vim.schedule(function()
-      local ui = require('packman.ui')
-      ui.open('update')
-      ui.do_install(missing)
+      vim.notify(
+        'Missing plugins: ' .. names .. '. Run :PackUpdate to install.',
+        vim.log.levels.WARN
+      )
     end)
   end
 end

@@ -6,16 +6,23 @@ local M = {}
 
 local NS = vim.api.nvim_create_namespace('packman_ui')
 
-local TABS = { 'Plugins', 'Profile', 'Update', 'Clean' }
-local TAB_ICONS = { active = '●', inactive = '○' }
+local TABS = { 'Plugins', 'Profile', 'Clean' }
+
+--- Nerd Font 图标（带回退）
+local ICONS = {
+  loaded = '\u{f058}', -- nf-fa-check_circle
+  lazy = '\u{f017}', -- nf-fa-clock_o
+  missing = '\u{f057}', -- nf-fa-times_circle
+  success = '\u{f00c}', -- nf-fa-check
+  fail = '\u{f00d}', -- nf-fa-times
+  bar = '\u{2588}', -- █
+}
 
 --- Panel 状态
 local state = {
   win = nil,
   buf = nil,
   tab = 'Plugins',
-  is_busy = false,
-  cancelled = false,
   confirm_action = nil,
 }
 
@@ -43,22 +50,16 @@ local function render_tab_bar()
 
   for _, name in ipairs(TABS) do
     local is_active = name == state.tab
-    local icon = is_active and TAB_ICONS.active or TAB_ICONS.inactive
-    local label = icon .. ' ' .. name .. '  '
+    local icon = is_active and '󰄲' or ''
+    local icon_hl = is_active and 'DiagnosticOk' or 'NonText'
+    local label = icon .. ' ' .. name .. ' '
     table.insert(parts, label)
-    if is_active then
-      table.insert(hls, { col1 = col, col2 = col + #label, hl_group = 'TabLineSel' })
-    else
-      table.insert(hls, { col1 = col, col2 = col + #label, hl_group = 'TabLine' })
-    end
+    -- 图标高亮
+    table.insert(hls, { col1 = col, col2 = col + #icon, hl_group = icon_hl })
+    -- Tab 名高亮
+    table.insert(hls, { col1 = col + #icon + 1, col2 = col + #label - 1, hl_group = is_active and 'Title' or 'Comment' })
     col = col + #label
   end
-
-  -- 右侧标题
-  local title = 'Pack'
-  local padding = string.rep(' ', math.max(1, 50 - col - #title))
-  table.insert(parts, padding .. title)
-  table.insert(hls, { col1 = col + #padding, col2 = col + #padding + #title, hl_group = 'Title' })
 
   return table.concat(parts), hls
 end
@@ -89,7 +90,7 @@ local function render_plugins()
     end
   end
 
-  table.insert(lines, string.format('  Total: %d plugins | %d loaded | %d lazy | %d missing', #all_specs, loaded_count, lazy_count, missing_count))
+  table.insert(lines, string.format('  %d plugins  %d loaded  %d lazy  %d missing', #all_specs, loaded_count, lazy_count, missing_count))
   table.insert(highlights, { line = #lines - 1, col1 = 0, col2 = -1, hl_group = 'Title' })
   table.insert(lines, '')
 
@@ -99,13 +100,13 @@ local function render_plugins()
     local icon, hl_group
 
     if not is_installed then
-      icon = '✗'
+      icon = ICONS.missing
       hl_group = 'DiagnosticError'
     elseif is_loaded then
-      icon = '●'
+      icon = ICONS.loaded
       hl_group = 'DiagnosticOk'
     else
-      icon = '○'
+      icon = ICONS.lazy
       hl_group = 'DiagnosticWarn'
     end
 
@@ -113,14 +114,11 @@ local function render_plugins()
     local version = is_installed and installed[spec.name].version and tostring(installed[spec.name].version) or ''
     if not is_installed then version = 'MISSING' end
 
-    local ms = cache.load_times[spec.name]
-    local time_str = ms and string.format('%.1fms', ms) or '-'
-
-    local line_text = string.format('  %s %-30s %-12s %-8s %s', icon, spec.name, author, version, time_str)
+    local line_text = string.format('  %s %-30s %-14s %s', icon, spec.name, author, version)
     table.insert(lines, line_text)
     table.insert(highlights, { line = #lines - 1, col1 = 2, col2 = 3, hl_group = hl_group })
     if not is_installed then
-      local miss_start = string.len(string.format('  %s %-30s %-12s ', icon, spec.name, author))
+      local miss_start = string.len(string.format('  %s %-30s %-14s ', icon, spec.name, author))
       table.insert(highlights, {
         line = #lines - 1,
         col1 = miss_start,
@@ -147,94 +145,12 @@ local function render_profile()
 
   for i, entry in ipairs(sorted) do
     local bar_len = math.max(1, math.floor((entry.ms / max_ms) * 20))
-    local bar = string.rep('█', bar_len)
+    local bar = string.rep(ICONS.bar, bar_len)
     local line_text = string.format('  %2d. %-30s %6.1fms  %s', i, entry.name, entry.ms, bar)
     table.insert(lines, line_text)
   end
 
   if #sorted == 0 then table.insert(lines, '  No load time data yet') end
-
-  return lines, highlights
-end
-
---- 获取插件安装路径
----@param name string
----@return string?
-local function get_plugin_path(name)
-  local pack_info = vim.pack.get(nil, { info = true }) or {}
-  for _, p in ipairs(pack_info) do
-    if p.spec and p.spec.name == name then return p.path end
-  end
-  return nil
-end
-
---- 获取当前版本号
----@param path string
----@return string
-local function git_current_version(path)
-  local obj = vim.system({ 'git', 'describe', '--tags', '--abbrev=0' }, { cwd = path, text = true }):wait()
-  if obj.code == 0 and obj.stdout then return vim.trim(obj.stdout) end
-  local obj2 = vim.system({ 'git', 'rev-parse', '--short', 'HEAD' }, { cwd = path, text = true }):wait()
-  if obj2.code == 0 and obj2.stdout then return vim.trim(obj2.stdout) end
-  return '?'
-end
-
---- 获取缺失插件列表
----@return table[] 每项: { name, src }
-local function get_missing_plugins()
-  local installed = {}
-  for _, p in ipairs(vim.pack.get(nil, { info = true }) or {}) do
-    if p.spec and p.spec.name then installed[p.spec.name] = true end
-  end
-
-  local missing = {}
-  for _, spec in ipairs(registry.get_all_specs()) do
-    if not installed[spec.name] then table.insert(missing, { name = spec.name, src = spec.src }) end
-  end
-  return missing
-end
-
--- 缓存检查结果
-local update_cache = {
-  updatable = nil,
-  missing = nil,
-  checked_at = 0,
-  checking = false,
-}
-
-local function render_update()
-  local lines = {}
-  local highlights = {}
-
-  local updatable = update_cache.updatable or {}
-  local missing = update_cache.missing or {}
-
-  if update_cache.checking then
-    -- 异步检查中
-    table.insert(lines, '  Checking for updates...')
-    table.insert(highlights, { line = #lines - 1, col1 = 0, col2 = -1, hl_group = 'Title' })
-    table.insert(lines, '')
-    table.insert(lines, '  Please wait, fetching remote info for each plugin.')
-  elseif not state.is_busy then
-    table.insert(lines, string.format('  %d updates available | %d missing', #updatable, #missing))
-    table.insert(highlights, { line = #lines - 1, col1 = 0, col2 = -1, hl_group = 'Title' })
-    table.insert(lines, '')
-
-    for _, u in ipairs(updatable) do
-      local author = parse_author(registry.get_spec(u.name) and registry.get_spec(u.name).src or '')
-      local line_text = string.format('  ○ %-30s %-12s %s → %s', u.name, author, u.current_ver, u.new_ver)
-      table.insert(lines, line_text)
-      table.insert(highlights, { line = #lines - 1, col1 = 2, col2 = 3, hl_group = 'DiagnosticWarn' })
-    end
-
-    for _, m in ipairs(missing) do
-      local line_text = string.format('  ✗ %-30s (not installed)', m.name)
-      table.insert(lines, line_text)
-      table.insert(highlights, { line = #lines - 1, col1 = 2, col2 = 3, hl_group = 'DiagnosticError' })
-    end
-
-    if #updatable == 0 and #missing == 0 then table.insert(lines, '  All plugins are up to date') end
-  end
 
   return lines, highlights
 end
@@ -262,7 +178,7 @@ local function render_clean()
   for _, p in ipairs(unused) do
     local author = parse_author(p.spec.src)
     local version = p.spec.version and tostring(p.spec.version) or ''
-    local line_text = string.format('  ○ %-30s %-12s %s', p.name, author, version)
+    local line_text = string.format('  %s %-30s %-12s %s', ICONS.lazy, p.name, author, version)
     table.insert(lines, line_text)
     table.insert(highlights, { line = #lines - 1, col1 = 2, col2 = 3, hl_group = 'DiagnosticWarn' })
   end
@@ -291,7 +207,8 @@ local function render()
   end
 
   -- 分隔线
-  table.insert(lines, string.rep('─', 50))
+  table.insert(lines, string.rep('─', 60))
+  table.insert(highlights, { line = 1, col1 = 0, col2 = -1, hl_group = 'NonText' })
 
   -- Tab 内容
   local content_lines, content_hls
@@ -299,8 +216,6 @@ local function render()
     content_lines, content_hls = render_plugins()
   elseif state.tab == 'Profile' then
     content_lines, content_hls = render_profile()
-  elseif state.tab == 'Update' then
-    content_lines, content_hls = render_update()
   elseif state.tab == 'Clean' then
     content_lines, content_hls = render_clean()
   else
@@ -326,21 +241,16 @@ local function render()
       help_line = '  Press c again within 3s to confirm clean'
     end
   elseif state.tab == 'Plugins' then
-    help_line = '  [S]ync  [X] Remove  [1-4] Tab  [?] Help  [q] Close'
-  elseif state.tab == 'Update' then
-    if state.is_busy then
-      help_line = '  [C] Cancel              [1-4] Tab  [q] Close'
-    else
-      help_line = '  [U] Update all  [S]ync  [1-4] Tab  [?] Help  [q] Close'
-    end
+    help_line = '  [X] Remove  [1-3] Tab  [?] Help  [q] Close'
   elseif state.tab == 'Clean' then
-    help_line = '  [c] Clean all  [X] Remove  [1-4] Tab  [?] Help  [q] Close'
+    help_line = '  [c] Clean all  [X] Remove  [1-3] Tab  [?] Help  [q] Close'
   elseif state.tab == 'Profile' then
-    help_line = '  [R] Refresh  [1-4] Tab  [?] Help  [q] Close'
+    help_line = '  [R] Refresh  [1-3] Tab  [?] Help  [q] Close'
   else
-    help_line = '  [1-4] Tab  [?] Help  [q] Close'
+    help_line = '  [1-3] Tab  [?] Help  [q] Close'
   end
   table.insert(lines, help_line)
+  table.insert(highlights, { line = #lines - 1, col1 = 0, col2 = -1, hl_group = 'Comment' })
 
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
@@ -353,87 +263,12 @@ local function render()
   vim.bo[buf].readonly = true
 end
 
---- 检查更新（异步，带缓存，5 分钟有效期）
-function M.check_updates(force)
-  local now = os.time()
-  if not force and update_cache.checked_at > 0 and (now - update_cache.checked_at) < 300 then return end
-
-  if update_cache.checking then return end
-  update_cache.checking = true
-
-  -- 先计算缺失插件（同步，很快）
-  update_cache.missing = get_missing_plugins()
-  update_cache.updatable = {}
-
-  -- 显示 checking 状态
-  render()
-
-  -- 异步串行检查每个已安装插件
-  local all_specs = registry.get_all_specs()
-  local idx = 0
-
-  local function check_next()
-    idx = idx + 1
-    while idx <= #all_specs do
-      local spec = all_specs[idx]
-      local path = get_plugin_path(spec.name)
-      if not path then
-        idx = idx + 1
-      else
-        break
-      end
-    end
-
-    if idx > #all_specs then
-      -- 所有插件检查完毕
-      table.sort(update_cache.updatable, function(a, b) return a.name < b.name end)
-      update_cache.checked_at = os.time()
-      update_cache.checking = false
-      render()
-      return
-    end
-
-    local spec = all_specs[idx]
-    local path = get_plugin_path(spec.name)
-
-    vim.system({ 'git', 'fetch' }, { cwd = path, text = true, timeout = 30000 }, function(fetch_result)
-      if fetch_result.code ~= 0 then
-        vim.schedule(check_next)
-        return
-      end
-
-      vim.system({ 'git', 'rev-parse', 'HEAD' }, { cwd = path, text = true }, function(local_result)
-        vim.system({ 'git', 'rev-parse', '@{u}' }, { cwd = path, text = true }, function(remote_result)
-          if local_result.code == 0 and remote_result.code == 0 then
-            local local_rev = vim.trim(local_result.stdout)
-            local remote_rev = vim.trim(remote_result.stdout)
-            if local_rev ~= remote_rev then
-              table.insert(update_cache.updatable, {
-                name = spec.name,
-                path = path,
-                current_ver = local_rev:sub(1, 7),
-                new_ver = remote_rev:sub(1, 7),
-              })
-            end
-          end
-
-          vim.schedule(check_next)
-        end)
-      end)
-    end)
-  end
-
-  vim.schedule(check_next)
-end
-
 --- 切换 Tab
 ---@param tab_name string
 local function switch_tab(tab_name)
   if not vim.tbl_contains(TABS, tab_name) then return end
   state.tab = tab_name
   render()
-  -- 切换到 Update Tab 时检查更新
-  if tab_name == 'Update' then M.check_updates() end
 end
 
 --- 获取光标所在行的插件名
@@ -444,8 +279,8 @@ local function get_cursor_plugin_name()
   -- 跳过 Tab 栏(2 行) + 统计行 + 空行 = 从第 4 行开始是插件列表
   if line < 4 then return nil end
   local text = vim.api.nvim_get_current_line()
-  -- 匹配插件名: 行格式为 "  ● name ..."
-  local name = text:match('^  [●○✗] (%S+)')
+  -- 匹配插件名: 行格式为 "  <icon> name ..."（兼容 Nerd Font 多字节图标）
+  local name = text:match('^  %S%s+(%S+)')
   return name
 end
 
@@ -468,7 +303,7 @@ local function set_keymaps()
   vim.api.nvim_buf_set_keymap(buf, 'n', 'q', '', { nowait = true, noremap = true, silent = true, callback = close_panel })
   vim.api.nvim_buf_set_keymap(buf, 'n', '<Esc>', '', { nowait = true, noremap = true, silent = true, callback = close_panel })
 
-  -- Tab 切换
+  -- Tab 切换 (数字键)
   for i, name in ipairs(TABS) do
     vim.api.nvim_buf_set_keymap(buf, 'n', tostring(i), '', {
       nowait = true,
@@ -478,55 +313,30 @@ local function set_keymaps()
     })
   end
 
+  -- Tab 切换 (Tab / Shift+Tab 循环)
+  local function cycle_tab(direction)
+    local idx = 0
+    for i, name in ipairs(TABS) do
+      if name == state.tab then idx = i break end
+    end
+    local next_idx = ((idx - 1 + direction) % #TABS) + 1
+    switch_tab(TABS[next_idx])
+  end
+  vim.api.nvim_buf_set_keymap(buf, 'n', '<Tab>', '', {
+    noremap = true, silent = true,
+    callback = function() cycle_tab(1) end,
+  })
+  vim.api.nvim_buf_set_keymap(buf, 'n', '<S-Tab>', '', {
+    noremap = true, silent = true,
+    callback = function() cycle_tab(-1) end,
+  })
+
   -- 帮助
   vim.api.nvim_buf_set_keymap(buf, 'n', '?', '', {
     nowait = true,
     noremap = true,
     silent = true,
-    callback = function() vim.notify('Pack Manager: [1-4] Switch tab  [S] Sync  [q] Close  [?] Help', vim.log.levels.INFO) end,
-  })
-
-  -- 取消
-  vim.api.nvim_buf_set_keymap(buf, 'n', 'C', '', {
-    nowait = true,
-    noremap = true,
-    silent = true,
-    callback = function()
-      if state.is_busy then M.do_cancel() end
-    end,
-  })
-
-  -- Sync
-  vim.api.nvim_buf_set_keymap(buf, 'n', 'S', '', {
-    nowait = true,
-    noremap = true,
-    silent = true,
-    callback = function()
-      if not state.is_busy then M.do_sync() end
-    end,
-  })
-
-  -- Update all
-  vim.api.nvim_buf_set_keymap(buf, 'n', 'U', '', {
-    nowait = true,
-    noremap = true,
-    silent = true,
-    callback = function()
-      if not state.is_busy and state.tab == 'Update' then M.do_update() end
-    end,
-  })
-
-  -- Update selected plugin (Update Tab)
-  vim.api.nvim_buf_set_keymap(buf, 'n', 'u', '', {
-    nowait = true,
-    noremap = true,
-    silent = true,
-    callback = function()
-      if not state.is_busy and state.tab == 'Update' then
-        local name = get_cursor_plugin_name()
-        if name then M.do_update({ name }) end
-      end
-    end,
+    callback = function() vim.notify('Pack Manager: [1-3] Switch tab  [q] Close  [?] Help', vim.log.levels.INFO) end,
   })
 
   -- Clean all (with double-press confirmation)
@@ -535,7 +345,6 @@ local function set_keymaps()
     noremap = true,
     silent = true,
     callback = function()
-      if state.is_busy then return end
       if state.tab ~= 'Clean' then return end
 
       if not state.confirm_action then
@@ -582,7 +391,6 @@ end
 
 --- 移除单个插件（带二次确认）
 function M.do_remove_current()
-  if state.is_busy then return end
   local name = get_cursor_plugin_name()
   if not name then return end
 
@@ -641,219 +449,6 @@ function M.do_clean()
   render()
 end
 
---- 向面板追加内容行（用于异步进度更新）
----@param text string
----@param hl_group? string
-local function append_line(text, hl_group)
-  if not is_open() then return end
-  local buf = state.buf
-  vim.bo[buf].modifiable = true
-
-  local line_count = vim.api.nvim_buf_line_count(buf)
-  local insert_at = line_count - 1 -- 在底部帮助行之前插入
-
-  vim.api.nvim_buf_set_lines(buf, insert_at, insert_at, false, { text })
-  if hl_group then pcall(vim.hl.range, buf, NS, hl_group, { insert_at, 0 }, { insert_at, #text }, { inclusive = false, priority = 100 }) end
-
-  vim.bo[buf].modifiable = false
-  vim.bo[buf].readonly = true
-
-  if is_open() then vim.api.nvim_win_set_cursor(state.win, { insert_at + 1, 0 }) end
-end
-
---- 替换面板中的某一行
----@param line_idx number 0-based
----@param text string
----@param hl_group? string
-local function replace_line(line_idx, text, hl_group)
-  if not is_open() then return end
-  local buf = state.buf
-  vim.bo[buf].modifiable = true
-
-  vim.api.nvim_buf_set_lines(buf, line_idx, line_idx + 1, false, { text })
-  vim.api.nvim_buf_clear_namespace(buf, NS, line_idx, line_idx + 1)
-  if hl_group then pcall(vim.hl.range, buf, NS, hl_group, { line_idx, 0 }, { line_idx, #text }, { inclusive = false, priority = 100 }) end
-
-  vim.bo[buf].modifiable = false
-  vim.bo[buf].readonly = true
-end
-
---- 串行执行异步 git 操作
----@param items table[] 每项: { name, action: 'update'|'install', path?, src? }
----@param on_complete? function
-local function run_async_queue(items, on_complete)
-  if #items == 0 then
-    if on_complete then on_complete() end
-    return
-  end
-
-  state.is_busy = true
-  state.cancelled = false
-  local completed = 0
-  local failed = 0
-  local total = #items
-
-  render()
-
-  local function update_header()
-    local action_label = items[1].action == 'install' and 'Installing' or 'Updating'
-    replace_line(2, string.format('  %s... %d/%d', action_label, completed, total), 'Title')
-  end
-
-  update_header()
-
-  local function process_next(idx)
-    if idx > total or state.cancelled then
-      state.is_busy = false
-      if state.cancelled then append_line('  Cancelled', 'DiagnosticWarn') end
-      update_cache.checked_at = 0
-      render()
-      if on_complete then on_complete(completed, failed) end
-      return
-    end
-
-    local item = items[idx]
-    local cmd, args
-
-    if item.action == 'install' then
-      cmd = 'git'
-      args = { 'clone', item.src, item.path }
-      append_line(string.format('  ● %s  Cloning...', item.name), 'DiagnosticInfo')
-    else
-      cmd = 'git'
-      args = { 'pull' }
-      append_line(string.format('  ● %s  Updating...', item.name), 'DiagnosticInfo')
-    end
-
-    local start_line = vim.api.nvim_buf_line_count(state.buf) - 2
-
-    vim.system({ cmd, unpack(args) }, {
-      cwd = item.path,
-      timeout = 60000,
-    }, function(result)
-      completed = completed + 1
-
-      if result.code ~= 0 then
-        failed = failed + 1
-        local err_msg = result.stderr and vim.trim(result.stderr) or 'Unknown error'
-        replace_line(start_line, string.format('  ✗ %s  Failed: %s', item.name, err_msg:sub(1, 40)), 'DiagnosticError')
-      else
-        local new_ver = git_current_version(item.path or vim.fn.stdpath('data') .. '/pack/packages/opt/' .. item.name)
-        replace_line(start_line, string.format('  ✓ %s  Done (%s)', item.name, new_ver), 'DiagnosticOk')
-      end
-
-      local action_label = items[1].action == 'install' and 'Installing' or 'Updating'
-      replace_line(2, string.format('  %s... %d/%d', action_label, completed, total), 'Title')
-
-      vim.schedule(function() process_next(idx + 1) end)
-    end)
-  end
-
-  process_next(1)
-end
-
---- 更新指定插件（空闲状态调用）
----@param names? string[] nil 表示全部可更新
-function M.do_update(names)
-  if state.is_busy then return end
-
-  local targets = update_cache.updatable or {}
-  if names then targets = vim.tbl_filter(function(u) return vim.tbl_contains(names, u.name) end, targets) end
-
-  if #targets == 0 then
-    vim.notify('No plugins to update', vim.log.levels.INFO)
-    return
-  end
-
-  local items = vim.tbl_map(function(u) return { name = u.name, action = 'update', path = u.path } end, targets)
-
-  run_async_queue(
-    items,
-    function(completed, failed)
-      vim.notify(string.format('Update complete: %d updated, %d failed', completed - failed, failed), failed > 0 and vim.log.levels.WARN or vim.log.levels.INFO)
-    end
-  )
-end
-
---- 安装缺失插件
----@param names? string[] nil 表示全部缺失
-function M.do_install(names)
-  if state.is_busy then return end
-
-  local targets = names or vim.tbl_map(function(m) return m.name end, update_cache.missing or {})
-
-  local items = {}
-  for _, name in ipairs(targets) do
-    local spec = registry.get_spec(name)
-    if spec then
-      local install_path = vim.fn.stdpath('data') .. '/pack/packages/opt/' .. name
-      table.insert(items, { name = name, action = 'install', src = spec.src, path = install_path })
-    end
-  end
-
-  if #items == 0 then
-    vim.notify('No plugins to install', vim.log.levels.INFO)
-    return
-  end
-
-  run_async_queue(items, function(completed, failed)
-    -- 注册并 source 新安装的插件
-    for _, item in ipairs(items) do
-      local spec = registry.get_spec(item.name)
-      if spec then
-        local pack_spec = { src = spec.src, name = spec.name }
-        if spec.version then pack_spec.version = spec.version end
-        -- 先注册（不带 load=false 使其加入 runtimepath）
-        vim.pack.add({ pack_spec })
-      end
-    end
-
-    if failed == 0 then
-      vim.notify(string.format('Installed %d plugins, restart recommended', completed), vim.log.levels.INFO)
-    else
-      vim.notify(string.format('Install complete: %d installed, %d failed', completed - failed, failed), vim.log.levels.WARN)
-    end
-  end)
-end
-
---- Sync: 安装缺失 + 更新全部
-function M.do_sync()
-  if state.is_busy then return end
-  M.check_updates(true)
-
-  local missing = update_cache.missing or {}
-  local updatable = update_cache.updatable or {}
-
-  if #missing == 0 and #updatable == 0 then
-    vim.notify('All plugins are in sync', vim.log.levels.INFO)
-    return
-  end
-
-  local all_items = {}
-
-  for _, m in ipairs(missing) do
-    local spec = registry.get_spec(m.name)
-    if spec then
-      local install_path = vim.fn.stdpath('data') .. '/pack/packages/opt/' .. m.name
-      table.insert(all_items, { name = m.name, action = 'install', src = spec.src, path = install_path })
-    end
-  end
-
-  for _, u in ipairs(updatable) do
-    table.insert(all_items, { name = u.name, action = 'update', path = u.path })
-  end
-
-  run_async_queue(
-    all_items,
-    function(completed, failed)
-      vim.notify(string.format('Sync complete: %d done, %d failed', completed - failed, failed), failed > 0 and vim.log.levels.WARN or vim.log.levels.INFO)
-    end
-  )
-end
-
---- 取消当前操作
-function M.do_cancel() state.cancelled = true end
-
 --- 打开面板
 ---@param tab? string 初始 Tab 名，默认 'Plugins'
 function M.open(tab)
@@ -886,8 +481,6 @@ function M.open(tab)
 
   set_keymaps()
   render()
-  -- 打开时检查更新
-  if state.tab == 'Update' then M.check_updates() end
 end
 
 --- 注册 :Pack 命令
@@ -896,10 +489,14 @@ function M.register_commands()
     local tab = vim.trim(opts.args or '')
     ---@diagnostic disable-next-line: cast-local-type
     if tab == '' then tab = nil end
+    if tab == 'update' then
+      vim.pack.update()
+      return
+    end
     M.open(tab)
   end, {
     nargs = '?',
-    complete = function() return TABS end,
+    complete = function() return { 'plugins', 'profile', 'clean', 'update' } end,
     desc = 'Open pack manager panel',
   })
 end
