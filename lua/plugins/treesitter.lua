@@ -1,5 +1,5 @@
 -- windows 使用 gcc 而不是 msvc
-if require('utils').is_win then vim.env.CC = 'gcc' end
+if require('utils').platform.is_win then vim.env.CC = 'gcc' end
 
 -- 自动安装 treesitter 并高亮
 vim.api.nvim_create_autocmd('FileType', {

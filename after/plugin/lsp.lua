@@ -1,5 +1,11 @@
-local enable = require('utils').lsp_enable
-
+-- local enable = require('utils').lsp.enable_server
+local enable =
+  function(pattern, server)
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = pattern,
+      callback = function() vim.lsp.enable(server) end,
+    })
+  end, 
 vim.lsp.enable('copilot')
 
 enable('python', 'basedpyright')

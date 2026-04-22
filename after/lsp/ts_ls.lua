@@ -63,9 +63,9 @@ if not typescript_plugin_path then
 end
 
 ---@type vim.lsp.Config
-return {
+return require('utils').lsp.config_merge('ts_ls', {
   filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
   init_options = {
     plugins = { { name = '@vue/typescript-plugin', location = typescript_plugin_path, languages = { 'vue' }, configNamespace = 'typescript' } },
   },
-}
+})
