@@ -1,5 +1,5 @@
 local utils = require('heirline.utils')
-local palette = require('mini.base16').config.palette
+local palette = require('base16-colorscheme').colors
 local conditions = require('heirline.conditions')
 
 local function get_hl_fg(hl) return vim.api.nvim_get_hl(0, { name = hl }).fg end

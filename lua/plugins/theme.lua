@@ -5,7 +5,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
     --- @param val vim.api.keyset.highlight
     local set_hl = function(name, val) vim.api.nvim_set_hl(0, name, val) end
 
-    local palette = require('mini.base16').config.palette
+    local palette = require('base16-colorscheme').colors
 
     set_hl('AvanteSidebarWinSeparator', { fg = palette.base04, bg = 'NONE' })
     set_hl('AvanteSidebarWinHorizontalSeparator', { fg = palette.base04, bg = 'NONE' })
@@ -23,6 +23,8 @@ vim.api.nvim_create_autocmd('UIEnter', {
     set_hl('SnacksPickerTitle', { fg = palette.base00, bg = palette.base0B })
     set_hl('WinBarNc', { fg = palette.base04, bg = 'NONE' })
     set_hl('WinSeparator', { fg = palette.base03, bg = 'NONE' })
+    set_hl('FloatBorder', { fg = palette.base05, bg = 'NONE' })
+    set_hl('TreesitterContext', { link = 'FloatBorder' })
 
     local groups = {
       'DiagnosticFloatingOk',
@@ -58,11 +60,12 @@ vim.api.nvim_create_autocmd('UIEnter', {
 ---@type packman.SpecItem[]
 return {
   {
-    'nvim-mini/mini.base16',
-    enabled = require('utils').settings('theme.enable') or false,
+    'RRethy/base16-nvim',
+    -- enabled = require('utils').settings('theme.enable') or false,
     config = function()
-      require('mini.base16').setup({
-        palette = {
+      local is_enabled = require('utils').settings('theme.enable') or true
+      if is_enabled then
+        require('base16-colorscheme').setup({
           base00 = '#2b2b2b',
           base01 = '#505050',
           base02 = '#555555',
@@ -79,8 +82,10 @@ return {
           base0D = '#78bdb4',
           base0E = '#d87595',
           base0F = '#9d94d4',
-        },
-      })
+        })
+      else
+        require('matugen').setup()
+      end
       vim.cmd.highlight({ 'Normal', 'guibg=NONE', 'ctermbg=NONE' })
       vim.cmd.highlight({ 'NonText', 'guibg=NONE', 'ctermbg=NONE' })
       vim.cmd.highlight({ 'SignColumn', 'guibg=NONE', 'ctermbg=NONE' })

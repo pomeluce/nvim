@@ -1,5 +1,5 @@
 -- local palette = require('catppuccin.palettes').get_palette('mocha')
-local palette = require('mini.base16').config.palette
+local palette = require('base16-colorscheme').colors
 
 return {
   {
@@ -53,7 +53,7 @@ return {
               end
             end,
             provider = function(self) return self.icon and (' ' .. self.icon .. ' ') end,
-            hl = function(self) return { fg = vim.api.nvim_get_hl(0, { name = self.icon_hl }).fg } end,
+            hl = function(self) return { fg = vim.api.nvim_get_hl(0, { name = self.icon_hl, link = false }).fg } end,
           },
           -- name
           {
