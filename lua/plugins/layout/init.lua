@@ -5,4 +5,5 @@ return {
   { import = 'plugins.layout.nvimtree' },
   { import = 'plugins.layout.snacks' },
   { import = 'plugins.layout.dropbar' },
+  { import = 'plugins.layout.toggleterm' },
 }

@@ -179,6 +179,10 @@
       "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
       "src": "https://github.com/folke/todo-comments.nvim.git"
     },
+    "toggleterm.nvim": {
+      "rev": "9a88eae817ef395952e08650b3283726786fb5fb",
+      "src": "https://github.com/akinsho/toggleterm.nvim.git"
+    },
     "translate.nvim": {
       "rev": "1a841e56407ba02e919ed9af573dbe531404aebb",
       "src": "https://github.com/uga-rosa/translate.nvim.git"

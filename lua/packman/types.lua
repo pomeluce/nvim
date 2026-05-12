@@ -4,7 +4,7 @@
 ---@field name? string 插件名 (默认从 src 推断)
 ---@field enabled? boolean 是否启用 (默认 true)
 ---@field version? string|vim.VersionRange semver range 或 git branch 名
----@field opts? table 传递给 setup() 的选项
+---@field opts? table|fun():table 传递给 setup() 的选项（支持 function 延迟求值）
 ---@field config? function 自定义配置函数
 ---@field main? string 覆盖推断的 Lua 模块名
 ---@field event? string|string[] 延迟加载事件

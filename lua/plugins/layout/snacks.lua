@@ -93,7 +93,7 @@ return {
       map('n', '<leader>fs', lsp_buffer_symbols, { desc = 'Find symbols in current buffer' })
       map('n', '<leader>fS', Snacks.picker.lsp_workspace_symbols, { desc = 'Find symbols in workspace' })
       map('n', 'grr', function() Snacks.picker.lsp_references({ include_declaration = false, include_current = true }) end, { desc = 'Find lsp references' })
-      map({ 'n', 't' }, '<c-t>', Snacks.terminal.toggle, { desc = 'Toggle float terminal' })
+      -- map({ 'n', 't' }, '<c-t>', Snacks.terminal.toggle, { desc = 'Toggle float terminal' })
 
       -- 命名风格转换 (from plugins.edit.case-convert)
       local cc = {}
