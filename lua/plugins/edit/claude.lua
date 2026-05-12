@@ -36,7 +36,7 @@ return {
         })
       end
 
-      require('claudecode').setup({ terminal_cmd = vim.fn.exepath('claude') })
+      require('claudecode').setup({ terminal_cmd = vim.fn.exepath('claude'), terminal = { split_width_percentage = 0.40 } })
       map('n', '<leader>ac', '<cmd>ClaudeCode<cr>', { desc = 'Toggle Claude' })
       map('n', '<leader>af', '<cmd>ClaudeCodeFocus<cr>', { desc = 'Focus Claude' })
       map('n', '<leader>ar', '<cmd>ClaudeCode --resume<cr>', { desc = 'Resume Claude' })
