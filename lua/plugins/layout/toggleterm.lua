@@ -8,7 +8,7 @@ return {
       local opts = {
         direction = 'float',
         highlights = { FloatBorder = { link = 'FloatBorder' } },
-        float_opts = { width = 120, height = 35, title_pos = 'center', border = 'rounded' },
+        float_opts = { width = 100, height = 30, title_pos = 'center', border = 'rounded' },
       }
       if require('utils').is_win then opts.shell = 'pwsh.exe --noLog' end
 

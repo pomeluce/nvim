@@ -49,7 +49,7 @@ function M.runFile()
     go = 'go run',
     sh = 'bash',
     lua = 'lua',
-  }, require('utils').settings('file.run_cmd') or {})
+  }, require('settings').file.run_cmd)
 
   if run_cmd[ft] then
     M.floaterm('RUN', string.format('%s %s', run_cmd[ft], file))

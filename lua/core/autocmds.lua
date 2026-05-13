@@ -77,19 +77,14 @@ vim.api.nvim_create_autocmd('TermOpen', {
   callback = function(args)
     local bufnr = args.buf
     local api = vim.api
-    local is_float = false
 
-    -- 一个 buffer 可能在多个窗口中, 这里逐个检查
     for _, win in ipairs(api.nvim_list_wins()) do
       if api.nvim_win_get_buf(win) == bufnr then
         local cfg = api.nvim_win_get_config(win)
-        if cfg.relative ~= '' then
-          is_float = true
-          break
-        end
+        if cfg.relative ~= '' then return end
       end
     end
-    api.nvim_buf_set_name(bufnr, string.format('%s[%d]', is_float and 'FloatTerm' or 'Terminal', bufnr))
+    api.nvim_buf_set_name(bufnr, string.format('Terminal[%d]', bufnr))
   end,
 })
 

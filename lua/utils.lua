@@ -40,25 +40,6 @@ function M.read_json(file)
   return json
 end
 
----@param path string
----@return any|nil
-function M.settings(path)
-  local tbl = M.read_json(vim.fn.stdpath('config') .. '/settings.json')
-  if type(tbl) ~= 'table' or type(path) ~= 'string' then return nil end
-
-  local current = tbl
-
-  for key in string.gmatch(path, '[^%.]+') do
-    if type(current) ~= 'table' then return nil end
-
-    current = current[key]
-
-    if current == nil then return nil end
-  end
-
-  return current
-end
-
 M.lsp = {
   ---@param name  string
   ---@param config vim.lsp.Config

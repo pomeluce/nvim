@@ -4,7 +4,7 @@ return {
     'mason-org/mason.nvim',
     cmd = { 'Mason', 'MasonInstall', 'MasonUpdate' },
     dependencies = { 'williamboman/mason-lspconfig.nvim', 'jay-babu/mason-nvim-dap.nvim' },
-    enabled = require('utils').settings('mason.enable') or false,
+    enabled = require('settings').mason.enable,
     config = function()
       require('mason').setup({
         ui = {
