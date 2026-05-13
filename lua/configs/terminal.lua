@@ -5,6 +5,10 @@ local terminals = {}
 
 function M.floaterm(name, cmd, close, opts)
   local Terminal = require('toggleterm.terminal').Terminal
+  if terminals[name] and cmd ~= '' and terminals[name].cmd ~= cmd then
+    if terminals[name]:is_open() then terminals[name]:toggle() end
+    terminals[name] = nil
+  end
   if not terminals[name] then
     terminals[name] = Terminal:new({
       cmd = cmd ~= '' and cmd or nil,
