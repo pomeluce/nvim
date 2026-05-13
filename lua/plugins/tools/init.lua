@@ -4,4 +4,5 @@ return {
   { import = 'plugins.tools.clipimage' },
   { import = 'plugins.tools.codediff' },
   { import = 'plugins.tools.venv-selector' },
+  { import = 'plugins.tools.live-preview' },
 }
