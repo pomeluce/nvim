@@ -31,7 +31,7 @@
       "src": "https://github.com/coder/claudecode.nvim.git"
     },
     "codediff.nvim": {
-      "rev": "8afc229d38dc13ce71b2ffbb860084b2c726e061",
+      "rev": "76ff1b13f0bcba655dca85cea1ef0df877a53c0f",
       "src": "https://github.com/esmuellert/codediff.nvim.git"
     },
     "colorful-menu.nvim": {
@@ -39,7 +39,7 @@
       "src": "https://github.com/xzbdmw/colorful-menu.nvim.git"
     },
     "conform.nvim": {
-      "rev": "dca1a190aa85f9065979ef35802fb77131911106",
+      "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
     "dropbar.nvim": {
@@ -75,11 +75,11 @@
       "src": "https://github.com/brianhuster/live-preview.nvim.git"
     },
     "mini.files": {
-      "rev": "f9f0ccbef0fd24eaddc8675accca83fa1f310c3f",
+      "rev": "423d6b5afb7a94e658950d470957f830d43dd41e",
       "src": "https://github.com/nvim-mini/mini.files.git"
     },
     "mini.icons": {
-      "rev": "9c7b1b90b15bdd69c52f6e31889dbc9987c30ec4",
+      "rev": "520995f1d75da0e4cc901ee95080b1ff2bc46b94",
       "src": "https://github.com/nvim-mini/mini.icons.git"
     },
     "neogen": {
@@ -107,7 +107,7 @@
       "src": "https://github.com/windwp/nvim-autopairs.git"
     },
     "nvim-dap": {
-      "rev": "45a69eba683a2c448dd9ecfc4de89511f0646b5f",
+      "rev": "531771530d4f82ad2d21e436e3cc052d68d7aebb",
       "src": "https://github.com/mfussenegger/nvim-dap.git"
     },
     "nvim-dap-ui": {
@@ -127,7 +127,7 @@
       "src": "https://github.com/nvim-java/nvim-java.git"
     },
     "nvim-lspconfig": {
-      "rev": "75e49cfa588a89ca667d767c0afef3ceac205faa",
+      "rev": "6f76a3eeadc2ee235d74cd7d5319e95a261084af",
       "src": "https://github.com/neovim/nvim-lspconfig.git"
     },
     "nvim-nio": {
@@ -139,7 +139,7 @@
       "src": "https://github.com/kylechui/nvim-surround.git"
     },
     "nvim-tree.lua": {
-      "rev": "f9bfc0059eca24546b69a7006110463da4808f8f",
+      "rev": "07f541fcaa4a5ae019598240362449ab7e9812b3",
       "src": "https://github.com/nvim-tree/nvim-tree.lua.git"
     },
     "nvim-treesitter": {
@@ -164,11 +164,11 @@
       "src": "https://github.com/nvim-lua/plenary.nvim.git"
     },
     "render-markdown.nvim": {
-      "rev": "629eb9533ec989d9d5c6cab8f3ad5372422c24e0",
+      "rev": "5adf0895310c1904e5abfaad40a2baad7fe44a07",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim.git"
     },
     "snacks.nvim": {
-      "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",
+      "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
       "src": "https://github.com/folke/snacks.nvim.git"
     },
     "spring-boot.nvim": {
@@ -196,11 +196,11 @@
       "src": "https://github.com/folke/ts-comments.nvim.git"
     },
     "venv-selector.nvim": {
-      "rev": "bcb2f58533c59b01565285eba49693f00bc460f5",
+      "rev": "cc4bb3975de8835291f9bb45889e96c6b2795fc4",
       "src": "https://github.com/linux-cultist/venv-selector.nvim.git"
     },
     "vimcdoc": {
-      "rev": "1f48fcaebef02e6d10a5a35ca0b8925b166ef95e",
+      "rev": "624d22987fea51e3902b6501fc95804b7a223438",
       "src": "https://github.com/yianwillis/vimcdoc.git"
     }
   }
