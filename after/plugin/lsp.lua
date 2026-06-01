@@ -2,7 +2,7 @@ local enable = require('utils').lsp.enable_server
 
 vim.lsp.enable('copilot')
 
-enable('python', 'basedpyright')
+enable('python', 'ty')
 enable({ 'bash', 'sh', 'zsh' }, 'bashls')
 enable({ 'c', 'cpp', 'objc', 'objcpp', 'cuda' }, 'clangd')
 enable('cmake', 'cmake')
