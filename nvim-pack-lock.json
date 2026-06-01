@@ -31,7 +31,7 @@
       "src": "https://github.com/coder/claudecode.nvim.git"
     },
     "codediff.nvim": {
-      "rev": "76ff1b13f0bcba655dca85cea1ef0df877a53c0f",
+      "rev": "29b06f37251f2e010f53a0892573b2ec03d165e2",
       "src": "https://github.com/esmuellert/codediff.nvim.git"
     },
     "colorful-menu.nvim": {
@@ -43,7 +43,7 @@
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
     "dropbar.nvim": {
-      "rev": "f0a42bd92aa647e44221397723453403f5e20f16",
+      "rev": "808ba31cde89aec8833e9789f5e04557cd31c9e1",
       "src": "https://github.com/Bekaboo/dropbar.nvim.git"
     },
     "flash.nvim": {
@@ -75,7 +75,7 @@
       "src": "https://github.com/brianhuster/live-preview.nvim.git"
     },
     "mini.files": {
-      "rev": "423d6b5afb7a94e658950d470957f830d43dd41e",
+      "rev": "17b58c3227cffe47ded884c234aa61dab492363a",
       "src": "https://github.com/nvim-mini/mini.files.git"
     },
     "mini.icons": {
@@ -127,7 +127,7 @@
       "src": "https://github.com/nvim-java/nvim-java.git"
     },
     "nvim-lspconfig": {
-      "rev": "6f76a3eeadc2ee235d74cd7d5319e95a261084af",
+      "rev": "9573948c38bfabeec353ae7dd7d3ffec4c506a6b",
       "src": "https://github.com/neovim/nvim-lspconfig.git"
     },
     "nvim-nio": {
