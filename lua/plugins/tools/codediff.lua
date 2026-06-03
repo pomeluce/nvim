@@ -1,11 +1,6 @@
----@type packman.SpecItem[]
-return {
-  {
-    'esmuellert/codediff.nvim',
-    cmd = 'CodeDiff',
-    dependencies = { 'MunifTanjim/nui.nvim' },
-    config = function()
-      require('codediff').setup()
-    end,
-  },
-}
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'codediff.nvim', deps = { 'nui.nvim' } }, function() require('codediff').setup() end)
+  end,
+})

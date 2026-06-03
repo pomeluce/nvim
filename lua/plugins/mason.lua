@@ -1,11 +1,14 @@
----@type packman.SpecItem[]
-return {
-  {
-    'mason-org/mason.nvim',
-    cmd = { 'Mason', 'MasonInstall', 'MasonUpdate' },
-    dependencies = { 'williamboman/mason-lspconfig.nvim', 'jay-babu/mason-nvim-dap.nvim' },
-    enabled = require('settings').mason.enable,
-    config = function()
+vim.pack.add({
+  { src = 'https://github.com/mason-org/mason.nvim' },
+})
+
+vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
+  once = true,
+  callback = function()
+    PackUtils.load({
+      name = 'mason.nvim',
+      deps = { 'mason-lspconfig.nvim', 'mason-nvim-dap.nvim' },
+    }, function()
       require('mason').setup({
         ui = {
           -- 设置安装图标
@@ -46,6 +49,6 @@ return {
         ensure_installed = {},
         automatic_installation = true,
       })
-    end,
-  },
-}
+    end)
+  end,
+})

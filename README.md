@@ -149,7 +149,6 @@ nvim
 ├── lua
 │   ├── configs
 │   ├── core
-│   ├── packman
 │   ├── plugins
 │   └── utils.lua
 ├── nvim-pack-lock.json
@@ -158,81 +157,76 @@ nvim
 └── snippets
 ```
 
-### Packman 插件管理
+### PackUtils 插件管理
 
-基于 Neovim 0.12 原生 `vim.pack` API 的声明式插件管理框架，提供类似 lazy.nvim 的使用体验。
+基于 Neovim 0.12 原生 `vim.pack` API 的轻量插件管理，全部逻辑在 `lua/core/setup.lua` 中。
 
-#### 模块结构
+#### 架构
 
 ```
-lua/packman/
-├── init.lua      # 入口: setup() 收集 spec 并加载插件
-├── spec.lua      # Spec 解析: 短格式转 URL、推断 name、校验字段
-├── loader.lua    # 加载引擎: vim.pack.add() 注册、延迟加载调度
-├── registry.lua  # 注册表: 追踪插件声明/加载/延迟状态及完整 spec
-├── cache.lua     # 加载耗时统计
-├── ui.lua        # Pack 面板: 多 Tab 浮窗 + 异步 git 操作
-└── types.lua     # 类型定义(---@type packman.SpecItem[])
+lua/core/setup.lua
+├── specs 列表          — 声明所有插件及其版本约束
+├── PackUtils.sync()    — 自动清理不在 specs 中的孤儿插件
+├── PackUtils.load()    — 插件加载引擎（防重复、依赖管理、构建触发）
+├── PackUtils.run_build() — 异步构建（build_cmd + .build_done 防重复）
+├── :PkUpdate           — 更新插件（支持 Tab 补全、! 强制模式）
+└── :PkStatus           — 查看插件当前版本/状态（离线）
 ```
 
 #### Spec 格式
 
 ```lua
----@type packman.SpecItem[]
-return {
-  {
-    'owner/repo',                        -- 短格式, 自动转为 GitHub URL
-    event = 'VimEnter',                  -- 延迟加载: 事件 / keys / cmd / ft
-    dependencies = { 'dep/one' },        -- 依赖(自动先加载)
-    opts = { ... },                      -- 传给 require().setup() 的配置
-    config = function() ... end,         -- 自定义配置(替代 opts)
-    main = 'custom-module',              -- 覆盖推断的 Lua 模块名
-    version = 'main',                    -- 版本约束或 git branch
-    enabled = true,                      -- 是否启用
-  },
+---@type PackUtils.Spec[]
+local specs = {
+  -- 基础: 仅声明 Git 仓库
+  { src = 'https://github.com/nvim-lua/plenary.nvim' },
+
+  -- 版本约束: 支持 semver range 或 git branch 名
+  { src = 'https://github.com/saghen/blink.cmp', version = 'v1.*' },
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects', version = 'main' },
+
+  -- 条件启用: boolean 或 function → boolean
+  { src = 'https://github.com/mason-org/mason.nvim', enabled = require('settings').mason.enable },
+  { src = 'https://github.com/...', enabled = false },
+  { src = 'https://github.com/...', enabled = function() return vim.fn.executable('some-tool') == 1 end },
 }
 ```
 
-#### 延迟加载
+#### PackUtils.load()
 
-| 条件     | 示例                 | 触发方式                 |
-| -------- | -------------------- | ------------------------ |
-| 事件     | `event = 'UIEnter'`  | `autocmd`                |
-| 按键     | `keys = '<leader>s'` | 首次按键时加载并重新触发 |
-| 命令     | `cmd = 'Neogen'`     | 首次执行命令时加载并执行 |
-| 文件类型 | `ft = 'python'`      | `FileType` autocmd       |
+在 `plugins/*.lua` 中调用，加载并配置单个插件：
+
+```lua
+PackUtils.load({
+  name = 'blink.cmp',           -- 插件名（必填）
+  deps = { 'LuaSnip', '...' },  -- 依赖（可选，先于主插件挂载）
+  enabled = true,               -- boolean | function → boolean (默认 true)
+  loaded = true,                -- boolean | function → boolean (默认 true)
+  build_cmd = ':TSUpdate',      -- 构建命令（可选，支持 :vim-cmd 或 shell）
+}, function()
+  require('blink.cmp').setup({ ... })
+end)
+```
+
+#### 控制层级
+
+| 参数              | 位置             | false 时的效果                |
+| ----------------- | ---------------- | ----------------------------- |
+| `enabled` (specs) | `local specs`    | 不下载、不 packadd、不 config |
+| `enabled` (load)  | `PackUtils.load` | 不 packadd、不 config         |
+| `loaded`          | `PackUtils.load` | 仅 packadd，不执行 config_fn  |
+
+#### 构建系统
+
+通过 `build_cmd` 声明构建任务，`PackUtils` 自动管理：
+
+- `.build_done` stamp 文件防止重复构建
+- `PackChanged` autocmd 在更新/安装后触发重新构建
+- `:vim-cmd` 在 Neovim 主线程执行，shell 命令异步后台执行
 
 #### 命令
 
-| 命令            | 说明                               |
-| --------------- | ---------------------------------- |
-| `:Pack`         | 打开 Pack 面板（默认 Plugins Tab） |
-| `:Pack update`  | 打开面板并切换到 Update Tab        |
-| `:Pack profile` | 打开面板并切换到 Profile Tab       |
-| `:Pack clean`   | 打开面板并切换到 Clean Tab         |
-
-#### Pack 面板
-
-统一的面板 UI，包含 4 个 Tab 页：
-
-- **Plugins** — 查看所有已声明插件（状态、版本、加载耗时）
-- **Profile** — 插件加载耗时排名（含柱状图）
-- **Update** — 异步检查更新、安装缺失插件、执行更新
-- **Clean** — 清理未声明的插件
-
-面板内快捷键：
-
-| 按键    | 说明                       |
-| ------- | -------------------------- |
-| `1-4`   | 切换 Tab                   |
-| `S`     | Sync（安装缺失 + 更新）    |
-| `U`     | 更新所有插件（Update Tab） |
-| `u`     | 更新选中插件（Update Tab） |
-| `X`     | 移除选中插件（二次确认）   |
-| `c`     | 清理未声明插件（二次确认） |
-| `C`     | 取消进行中的操作           |
-| `R`     | 刷新 Profile Tab           |
-| `?`     | 帮助                       |
-| `q/Esc` | 关闭面板                   |
-
-首次启动时，若检测到缺失插件会自动打开 Update Tab 并显示安装进度。
+| 命令                    | 说明                                          |
+| ----------------------- | --------------------------------------------- |
+| `:PkUpdate [plugin...]` | 更新插件（无参数时全部更新），加 `!` 跳过确认 |
+| `:PkStatus [plugin...]` | 查看插件当前版本/状态（离线）                 |

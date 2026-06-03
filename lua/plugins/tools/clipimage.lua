@@ -1,9 +1,8 @@
----@type packman.SpecItem[]
-return {
-  {
-    'hakonharnes/img-clip.nvim',
-    ft = { 'markdown', 'typst', 'tex' },
-    config = function()
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  pattern = { 'markdown', 'typst', 'tex' },
+  callback = function()
+    PackUtils.load({ name = 'img-clip.nvim' }, function()
       require('img-clip').setup({
         default = {
           dir_path = './attachments',
@@ -39,6 +38,6 @@ return {
         },
       })
       vim.keymap.set('n', '<leader>P', '<cmd>PasteImage<cr>', { buffer = true, desc = 'Clip image to markdown' })
-    end,
-  },
-}
+    end)
+  end,
+})

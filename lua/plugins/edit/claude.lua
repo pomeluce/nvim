@@ -1,9 +1,7 @@
----@type packman.SpecItem[]
-return {
-  {
-    'coder/claudecode.nvim',
-    event = 'VimEnter',
-    config = function()
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'claudecode.nvim' }, function()
       local map = vim.keymap.set
 
       local function select_model()
@@ -53,6 +51,6 @@ return {
         pattern = { 'NvimTree', 'neo-tree', 'oil', 'minifiles', 'netrw' },
         callback = function() map('n', '<leader>as', '<cmd>ClaudeCodeTreeAdd<cr>', { desc = 'Add file', buffer = true }) end,
       })
-    end,
-  },
-}
+    end)
+  end,
+})

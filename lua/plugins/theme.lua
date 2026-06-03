@@ -1,10 +1,37 @@
+PackUtils.load({ name = 'base16-nvim' }, function()
+  require('base16-colorscheme').setup({
+    base00 = '#2b2b2b',
+    base01 = '#505050',
+    base02 = '#555555',
+    base03 = '#5a5a5a',
+    base04 = '#999999',
+    base05 = '#b3b3b3',
+    base06 = '#cccccc',
+    base07 = '#e0e0e0',
+    base08 = '#f07173',
+    base09 = '#e69875',
+    base0A = '#e2ae6a',
+    base0B = '#99c983',
+    base0C = '#60a673',
+    base0D = '#78bdb4',
+    base0E = '#d87595',
+    base0F = '#9d94d4',
+  })
+  vim.cmd.highlight({ 'Normal', 'guibg=NONE', 'ctermbg=NONE' })
+  vim.cmd.highlight({ 'NonText', 'guibg=NONE', 'ctermbg=NONE' })
+  vim.cmd.highlight({ 'SignColumn', 'guibg=NONE', 'ctermbg=NONE' })
+  vim.cmd.highlight({ 'LineNr', 'guibg=NONE', 'ctermbg=NONE' })
+  vim.cmd.highlight({ 'LineNrAbove', 'guibg=NONE', 'ctermbg=NONE' })
+  vim.cmd.highlight({ 'LineNrBelow', 'guibg=NONE', 'ctermbg=NONE' })
+end)
+
+--- @param name string
+--- @param val vim.api.keyset.highlight
+local set_hl = function(name, val) vim.api.nvim_set_hl(0, name, val) end
+
 vim.api.nvim_create_autocmd('UIEnter', {
   group = vim.api.nvim_create_augroup('SetupTheme', { clear = true }),
   callback = function()
-    --- @param name string
-    --- @param val vim.api.keyset.highlight
-    local set_hl = function(name, val) vim.api.nvim_set_hl(0, name, val) end
-
     local palette = require('base16-colorscheme').colors
 
     set_hl('AvanteSidebarWinSeparator', { fg = palette.base04, bg = 'NONE' })
@@ -56,36 +83,3 @@ vim.api.nvim_create_autocmd('UIEnter', {
     end
   end,
 })
-
----@type packman.SpecItem[]
-return {
-  {
-    'RRethy/base16-nvim',
-    config = function()
-      require('base16-colorscheme').setup({
-        base00 = '#2b2b2b',
-        base01 = '#505050',
-        base02 = '#555555',
-        base03 = '#5a5a5a',
-        base04 = '#999999',
-        base05 = '#b3b3b3',
-        base06 = '#cccccc',
-        base07 = '#e0e0e0',
-        base08 = '#f07173',
-        base09 = '#e69875',
-        base0A = '#e2ae6a',
-        base0B = '#99c983',
-        base0C = '#60a673',
-        base0D = '#78bdb4',
-        base0E = '#d87595',
-        base0F = '#9d94d4',
-      })
-      vim.cmd.highlight({ 'Normal', 'guibg=NONE', 'ctermbg=NONE' })
-      vim.cmd.highlight({ 'NonText', 'guibg=NONE', 'ctermbg=NONE' })
-      vim.cmd.highlight({ 'SignColumn', 'guibg=NONE', 'ctermbg=NONE' })
-      vim.cmd.highlight({ 'LineNr', 'guibg=NONE', 'ctermbg=NONE' })
-      vim.cmd.highlight({ 'LineNrAbove', 'guibg=NONE', 'ctermbg=NONE' })
-      vim.cmd.highlight({ 'LineNrBelow', 'guibg=NONE', 'ctermbg=NONE' })
-    end,
-  },
-}

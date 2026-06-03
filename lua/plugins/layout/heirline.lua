@@ -1,9 +1,7 @@
----@type packman.SpecItem[]
-return {
-  {
-    'rebelot/heirline.nvim',
-    event = 'UIEnter',
-    config = function()
+vim.api.nvim_create_autocmd('UIEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'heirline.nvim' }, function()
       local map = vim.keymap.set
       local tabuf = require('configs.tabufs')
 
@@ -21,6 +19,6 @@ return {
       map('n', '<s-tab>', tabuf.prev_buf, { desc = 'Toggle to prev buffer' })
       map('n', '<leader>bc', tabuf.close_buf, { desc = 'Delete current buffer' })
       map('n', '<leader>bC', function() tabuf.cloase_bufs(false) end, { desc = 'Delete other buffers' })
-    end,
-  },
-}
+    end)
+  end,
+})

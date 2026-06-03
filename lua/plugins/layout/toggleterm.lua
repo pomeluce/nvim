@@ -1,10 +1,7 @@
----@type packman.SpecItem[]
-return {
-  {
-    'akinsho/toggleterm.nvim',
-    event = 'UIEnter',
-    init = function() end,
-    config = function()
+vim.api.nvim_create_autocmd('UIEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'toggleterm.nvim' }, function()
       local opts = {
         direction = 'float',
         highlights = { FloatBorder = { link = 'FloatBorder' } },
@@ -20,6 +17,6 @@ return {
       local map = vim.keymap.set
       map('n', '<leader>rf', term.runFile, { desc = 'Run current buffer file' })
       map('i', '<leader>rf', term.runFile, { desc = 'Run current buffer file' })
-    end,
-  },
-}
+    end)
+  end,
+})

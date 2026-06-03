@@ -1,7 +1,4 @@
----@type packman.SpecItem[]
-return {
-  {
-    'brianhuster/live-preview.nvim',
-    cmd = { 'LivePreview' },
-  },
-}
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  callback = function() PackUtils.load({ name = 'live-preview.nvim' }) end,
+})

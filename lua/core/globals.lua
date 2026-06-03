@@ -1,6 +1,3 @@
--- 初始化 packman 插件管理框架
-require('packman')
-
 -- 声明 leader 键
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '

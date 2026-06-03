@@ -1,9 +1,7 @@
----@type packman.SpecItem[]
-return {
-  {
-    'stevearc/conform.nvim',
-    event = { 'BufReadPost', 'BufNewFile' },
-    config = function()
+vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'conform.nvim' }, function()
       local function root_file(files, bufnr)
         bufnr = bufnr or 0
         local name = vim.api.nvim_buf_get_name(bufnr)
@@ -136,6 +134,6 @@ return {
           end
         end,
       })
-    end,
-  },
-}
+    end)
+  end,
+})

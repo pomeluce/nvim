@@ -1,8 +1,7 @@
----@type packman.SpecItem[]
-return {
-  {
-    'folke/snacks.nvim',
-    config = function()
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'snacks.nvim' }, function()
       _G.Snacks = require('snacks')
 
       Snacks.setup({
@@ -199,6 +198,6 @@ return {
       end
       map('n', '<leader>cc', cc.convert_word, { desc = 'Convert naming style (word)' })
       map('v', '<leader>cc', cc.convert_selection, { desc = 'Convert naming style (selection)' })
-    end,
-  },
-}
+    end)
+  end,
+})

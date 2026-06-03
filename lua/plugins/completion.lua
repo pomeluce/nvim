@@ -1,18 +1,10 @@
----@type packman.SpecItem[]
-return {
-  {
-    'saghen/blink.cmp',
-    version = 'v1.*',
-    event = { 'InsertEnter', 'CmdlineEnter' },
-    dependencies = {
-      'xzbdmw/colorful-menu.nvim',
-      'fang2hou/blink-copilot',
-      { 'L3MON4D3/LuaSnip', version = 'v2.*' },
-      'rafamadriz/friendly-snippets',
-      'archie-judd/blink-cmp-words',
-      'Kaiser-Yang/blink-cmp-avante',
-    },
-    config = function()
+vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter', 'LspAttach' }, {
+  once = true,
+  callback = function()
+    PackUtils.load({
+      name = 'blink.cmp',
+      deps = { 'colorful-menu.nvim', 'blink-copilot', 'LuaSnip', 'friendly-snippets', 'blink-cmp-words', 'blink-cmp-avante' },
+    }, function()
       require('blink.cmp').setup({
         completion = {
           trigger = { show_on_trigger_character = false },
@@ -103,18 +95,23 @@ return {
       require('luasnip.loaders.from_vscode').lazy_load()
       require('luasnip.loaders.from_vscode').lazy_load({ paths = { './snippets' } })
       vim.api.nvim_set_hl(0, 'BlickCmpItemKindCopilot', { fg = '#60B5FF' })
-    end,
-  },
-  {
-    'windwp/nvim-autopairs',
-    event = 'InsertEnter',
-    config = function()
-      local opts = {
-        disable_filetype = { 'snacks_picker_input' },
-        check_ts = true,
-        ts_config = { lua = { 'string' }, javascript = { 'template_string' }, java = false },
-      }
-      vim.schedule(function() require('nvim-autopairs').setup(opts) end)
-    end,
-  },
-}
+    end)
+  end,
+})
+
+vim.api.nvim_create_autocmd('InsertEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'nvim-autopairs' }, function()
+      vim.schedule(
+        function()
+          require('nvim-autopairs').setup({
+            disable_filetype = { 'snacks_picker_input' },
+            check_ts = true,
+            ts_config = { lua = { 'string' }, javascript = { 'template_string' }, java = false },
+          })
+        end
+      )
+    end)
+  end,
+})

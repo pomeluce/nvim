@@ -2,12 +2,10 @@ vim.g.nvim_tree_firsttime = 1
 vim.cmd('hi! NvimTreeCursorLine cterm=NONE ctermbg=238')
 vim.cmd('hi! link NvimTreeFolderIcon NvimTreeFolderName')
 
----@type packman.SpecItem[]
-return {
-  {
-    'nvim-tree/nvim-tree.lua',
-    event = 'VimEnter',
-    config = function()
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'nvim-tree.lua' }, function()
       require('nvim-tree').setup({
         sort_by = 'case_sensitive',
         actions = { open_file = { window_picker = { enable = false } } },
@@ -50,6 +48,6 @@ return {
         sync_root_with_cwd = true,
         respect_buf_cwd = true,
       })
-    end,
-  },
-}
+    end)
+  end,
+})

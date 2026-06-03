@@ -1,14 +1,11 @@
----@type packman.SpecItem[]
-return {
-  {
-    'mfussenegger/nvim-dap',
-    ft = { 'c', 'cpp', 'java', 'javascript', 'javascriptreact', 'python', 'typescript', 'typescriptreact' },
-    dependencies = {
-      'rcarriga/nvim-dap-ui',
-      'theHamsta/nvim-dap-virtual-text',
-      'nvim-neotest/nvim-nio',
-    },
-    config = function()
+vim.api.nvim_create_autocmd('FileType', {
+  once = true,
+  pattern = { 'c', 'cpp', 'java', 'javascript', 'javascriptreact', 'python', 'typescript', 'typescriptreact' },
+  callback = function()
+    PackUtils.load({
+      name = 'nvim-dap',
+      deps = { 'nvim-dap-ui', 'nvim-dap-virtual-text', 'nvim-nio' },
+    }, function()
       local map = vim.keymap.set
       local dcp = vim.fn.getcwd() .. '/.nvim/dap.lua'
       if vim.fn.filereadable(dcp) == 1 then dofile(dcp) end
@@ -65,6 +62,6 @@ return {
       map('n', '<leader>db', dap.toggle_breakpoint, { desc = 'DAP: Breakpoint' })
       map('n', '<leader>dB', function() dap.set_breakpoint(vim.fn.input('Condition for breakpoint:')) end, { desc = 'DAP: Conditional Breakpoint' })
       map('n', '<leader>dD', dap.clear_breakpoints, { desc = 'DAP: Clear Breakpoints' })
-    end,
-  },
-}
+    end)
+  end,
+})

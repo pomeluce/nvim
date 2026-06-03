@@ -2,8 +2,9 @@ local register = vim.api.nvim_create_user_command
 
 -- 文件保存
 register('IntelliSave', function()
-  -- 如果目录不存在, 创建目录
-  if vim.fn.empty(vim.fn.glob(vim.fn.expand('%:p:h'))) == 1 then vim.fn.system('mkdir -p ' .. vim.fn.expand('%:p:h')) end
+  local dir = vim.fn.expand('%:p:h')
+  -- 如果目录不存在, 创建目录,  如果路径以 nvim-pack: 开头则不进行处理
+  if (not vim.startswith(dir, 'nvim-pack:')) and vim.fn.empty(vim.fn.glob(dir)) == 1 then vim.fn.system('mkdir -p ' .. dir) end
   -- 写入文件
   vim.cmd('w')
 end, { nargs = 0, desc = 'file intelligence saving' })

@@ -20,16 +20,10 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
----@type packman.SpecItem[]
-return {
-  {
-    'nvim-treesitter/nvim-treesitter',
-    event = 'BufReadPre',
-    dependencies = {
-      { 'nvim-treesitter/nvim-treesitter-context' },
-      { 'nvim-treesitter/nvim-treesitter-textobjects', version = 'main' },
-    },
-    config = function()
+vim.api.nvim_create_autocmd('BufReadPre', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'nvim-treesitter', deps = { 'nvim-treesitter-context', 'nvim-treesitter-textobjects' } }, function()
       local map = vim.keymap.set
       ---@param lhs string
       ---@param capture string
@@ -45,6 +39,7 @@ return {
         'cpp',
         'css',
         'go',
+        'http',
         'java',
         'javascript',
         'json',
@@ -84,6 +79,6 @@ return {
       vim.cmd([[ SetHL { ['@comment'] = { fg = '#868e96', italic = true } } ]])
 
       require('treesitter-context').setup({ separator = nil, max_lines = 5, multiwindow = true, min_window_height = 15 })
-    end,
-  },
-}
+    end)
+  end,
+})

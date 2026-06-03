@@ -1,4 +1,1 @@
----@type packman.SpecItem
-return {
-  'MeanderingProgrammer/render-markdown.nvim',
-}
+PackUtils.load({ name = 'render-markdown.nvim' })

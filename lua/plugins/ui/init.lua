@@ -1,7 +1,4 @@
----@type packman.SpecItem[]
-return {
-  { import = 'plugins.ui.mini-icons' },
-  { import = 'plugins.ui.noice' },
-  { import = 'plugins.ui.colors' },
-  { import = 'plugins.ui.indentline' },
-}
+require('plugins.ui.mini-icons')
+require('plugins.ui.noice')
+require('plugins.ui.colors')
+require('plugins.ui.indentline')

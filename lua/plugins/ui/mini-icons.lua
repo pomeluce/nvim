@@ -4,11 +4,10 @@ for _, name in ipairs(prettiers) do
   files[name] = { glyph = '', hl = 'MiniIconsBlue' }
 end
 
----@type packman.SpecItem[]
-return {
-  {
-    'nvim-mini/mini.icons',
-    config = function()
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'mini.icons' }, function()
       require('mini.icons').setup({
         style = 'glyph',
         default = { file = { glyph = '󰈚', hl = 'MiniIconsGrey' } },
@@ -23,6 +22,6 @@ return {
         },
       })
       require('mini.icons').mock_nvim_web_devicons()
-    end,
-  },
-}
+    end)
+  end,
+})

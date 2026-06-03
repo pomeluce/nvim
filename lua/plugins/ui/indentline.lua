@@ -1,10 +1,7 @@
----@type packman.SpecItem[]
-return {
-  {
-    'lukas-reineke/indent-blankline.nvim',
-    event = 'BufEnter',
-    main = 'ibl',
-    config = function()
+vim.api.nvim_create_autocmd('BufEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'indent-blankline.nvim' }, function()
       local hooks = require('ibl.hooks')
       hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
         vim.api.nvim_set_hl(0, 'RainbowBlue', { default = true, fg = '#61AFEF', ctermfg = 'Blue' })
@@ -18,6 +15,6 @@ return {
       hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
       local highlight = { 'RainbowBlue', 'RainbowViolet', 'RainbowRed', 'RainbowYellow', 'RainbowGreen', 'RainbowOrange', 'RainbowCyan' }
       require('ibl').setup({ indent = { char = '│' }, scope = { char = '│', highlight = highlight } })
-    end,
-  },
-}
+    end)
+  end,
+})

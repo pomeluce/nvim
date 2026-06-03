@@ -1,11 +1,19 @@
----@type packman.SpecItem[]
-return {
-  {
-    'yetone/avante.nvim',
-    event = 'VimEnter',
-    enabled = false,
-    config = function()
-      require('utils').pack_build('avante.nvim', { 'make' })
+------@type packman.SpecItem[]
+---return {
+---  {
+---    'yetone/avante.nvim',
+---    event = 'VimEnter',
+---    enabled = false,
+---    config = function()
+---      require('utils').pack_build('avante.nvim', { 'make' })
+---    end,
+---  },
+---}
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  callback = function()
+    PackUtils.load({ name = 'avante.nvim', enabled = false, build_cmd = 'make' }, function()
       local models = require('utils').read_json(os.getenv('HOME') .. '/.config/avante.nvim/models.json')
       require('avante').setup({
         provider = 'coder:qwen3.5-plus',
@@ -18,6 +26,6 @@ return {
           ['coder:minimax-m2.5'] = { __inherited_from = 'openai', api_key_name = 'ALIYUNCS_API_KEY', endpoint = 'https://coding.dashscope.aliyuncs.com/v1', model = 'MiniMax-M2.5' },
         }, models or {}),
       })
-    end,
-  },
-}
+    end)
+  end,
+})
