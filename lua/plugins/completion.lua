@@ -102,16 +102,15 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter', 'LspAttach' }, {
 vim.api.nvim_create_autocmd('InsertEnter', {
   once = true,
   callback = function()
-    PackUtils.load({ name = 'nvim-autopairs' }, function()
-      vim.schedule(
-        function()
-          require('nvim-autopairs').setup({
-            disable_filetype = { 'snacks_picker_input' },
-            check_ts = true,
-            ts_config = { lua = { 'string' }, javascript = { 'template_string' }, java = false },
-          })
-        end
-      )
-    end)
+    PackUtils.load(
+      { name = 'nvim-autopairs' },
+      function()
+        require('nvim-autopairs').setup({
+          disable_filetype = { 'snacks_picker_input' },
+          check_ts = true,
+          ts_config = { lua = { 'string' }, javascript = { 'template_string' }, java = false },
+        })
+      end
+    )
   end,
 })
