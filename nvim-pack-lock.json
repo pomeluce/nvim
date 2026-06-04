@@ -5,10 +5,6 @@
       "src": "https://github.com/L3MON4D3/LuaSnip",
       "version": "2.0.0 - 3.0.0"
     },
-    "avante.nvim": {
-      "rev": "20470a792ff85cd347dd68707d0adf473514182c",
-      "src": "https://github.com/yetone/avante.nvim"
-    },
     "base16-nvim": {
       "rev": "23e5128eb5f629c29532c24a1e733cbe019f05bb",
       "src": "https://github.com/RRethy/base16-nvim"
@@ -31,7 +27,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "claudecode.nvim": {
-      "rev": "2a418a9f6066714ebf23330b9ea1ee8828c8f98a",
+      "rev": "8ec321279d3d9eddb0ce5f52d4b0d051dafb5743",
       "src": "https://github.com/coder/claudecode.nvim"
     },
     "codediff.nvim": {
@@ -77,10 +73,6 @@
     "live-preview.nvim": {
       "rev": "c1fcf75c5f9c9c01dd392852de44204b60f1b5b1",
       "src": "https://github.com/brianhuster/live-preview.nvim"
-    },
-    "mason.nvim": {
-      "rev": "16ba83bfc8a25f52bb545134f5bee082b195c460",
-      "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.files": {
       "rev": "500f9e18f3ae387b5aecf2261e33845bc5dd7b68",

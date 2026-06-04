@@ -13,7 +13,7 @@
 vim.api.nvim_create_autocmd('VimEnter', {
   once = true,
   callback = function()
-    PackUtils.load({ name = 'avante.nvim', enabled = false, build_cmd = 'make' }, function()
+    PackUtils.load({ name = 'avante.nvim', build_cmd = 'make' }, function()
       local models = require('utils').read_json(os.getenv('HOME') .. '/.config/avante.nvim/models.json')
       require('avante').setup({
         provider = 'coder:qwen3.5-plus',
