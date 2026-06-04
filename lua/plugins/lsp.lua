@@ -21,20 +21,26 @@ end
 
 local map = vim.keymap.set
 local hlword = require('configs.hlword')
-local x = vim.diagnostic.severity
-vim.diagnostic.config({
-  virtual_text = { spacing = 4, prefix = '' },
-  signs = { text = { [x.ERROR] = '', [x.WARN] = '', [x.INFO] = '', [x.HINT] = '' } },
-  severity_sort = true,
-  float = { severity_sort = true },
-})
 
 vim.api.nvim_create_autocmd('LspAttach', {
   once = true,
-  group = vim.api.nvim_create_augroup('SetupLSP', { clear = true }),
   callback = function(event)
     PackUtils.load({ name = 'nvim-lspconfig' }, function()
       local client = assert(vim.lsp.get_client_by_id(event.data.client_id))
+
+      vim.diagnostic.config({
+        virtual_text = { spacing = 4, prefix = '' },
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = '',
+            [vim.diagnostic.severity.WARN] = '',
+            [vim.diagnostic.severity.INFO] = '',
+            [vim.diagnostic.severity.HINT] = '',
+          },
+        },
+        severity_sort = true,
+        float = { severity_sort = true },
+      })
 
       -- 代码折叠 LSP 支持
       -- if client and client:supports_method('textDocument/foldingRange') then
@@ -48,13 +54,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
       -- 内联提示
       if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
         local function inlay_hint() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf })) end
-        map('n', '<leader>th', inlay_hint, { buffer = event.buf, desc = 'LSP: Toggle Inlay Hints' })
+        map('n', '<leader>th', inlay_hint, { desc = 'LSP: Toggle Inlay Hints' })
       end
 
       -- 高亮光标单词
       local group = vim.api.nvim_create_augroup('HLCurrsorWord', { clear = true })
       vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-        buffer = event.buf,
         group = group,
         callback = function(ev)
           if has_document_highlight(ev.buf) then
@@ -65,7 +70,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end,
       })
       vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-        buffer = event.buf,
         group = group,
         callback = function()
           vim.lsp.buf.clear_references()
@@ -83,10 +87,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
       -- 重命名
       map('n', '<leader>rn', vim.lsp.buf.rename, { desc = 'LSP: Rename Symbol' })
-
       -- 调用 LSP 代码定义功能, 若无定义则提示
-      map('n', 'gd', jump('textDocument/definition', Snacks.picker.lsp_definitions, 'No definition found'), { buffer = event.buf, desc = 'LSP: Goto Definition' })
-
+      map('n', 'gd', jump('textDocument/definition', Snacks.picker.lsp_definitions, 'No definition found'), { desc = 'LSP: Goto Definition' })
       -- 根据窗口大小智能分屏跳转到定义
       map('n', 'gD', function()
         local win = vim.api.nvim_get_current_win()
@@ -99,11 +101,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
           vim.cmd('vsplit')
         end
         vim.lsp.buf.definition()
-      end, { buffer = event.buf, desc = 'LSP: Goto Definition (split)' })
-
+      end, { desc = 'LSP: Goto Definition (split)' })
       -- 调用 LSP 代码实现功能, 若无实现则提示
-      map('n', 'gi', jump('textDocument/implementation', Snacks.picker.lsp_implementations, 'No implementation found'), { buffer = event.buf, desc = 'LSP: Goto Implementation' })
-
+      map('n', 'gi', jump('textDocument/implementation', Snacks.picker.lsp_implementations, 'No implementation found'), { desc = 'LSP: Goto Implementation' })
       -- 跳转到错误位置
       map('n', 'ge', function()
         -- 优先级: ERROR > WARN > HINT
@@ -118,13 +118,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
           end
         end
         vim.notify('No diagnostic found', vim.log.levels.INFO)
-      end, { buffer = event.buf, desc = 'LSP: Goto Next Diagnostic' })
-
+      end, { desc = 'LSP: Goto Next Diagnostic' })
       -- 代码修复提示
-      map({ 'n', 'i' }, '<a-cr>', vim.lsp.buf.code_action, { buffer = event.buf, desc = 'LSP: Code Action' })
-
+      map({ 'n', 'i' }, '<a-cr>', vim.lsp.buf.code_action, { desc = 'LSP: Code Action' })
       -- 显示悬停文档
-      map('n', 'K', vim.lsp.buf.hover, { buffer = event.buf, desc = 'LSP: Hover Documentation' })
+      map('n', 'K', vim.lsp.buf.hover, { desc = 'LSP: Hover Documentation' })
     end)
   end,
 })

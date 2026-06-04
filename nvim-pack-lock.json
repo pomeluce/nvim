@@ -200,7 +200,7 @@
       "src": "https://github.com/linux-cultist/venv-selector.nvim"
     },
     "vimcdoc": {
-      "rev": "624d22987fea51e3902b6501fc95804b7a223438",
+      "rev": "7fed0e2d7a20741f01ad165938db8054f39ede02",
       "src": "https://github.com/yianwillis/vimcdoc"
     }
   }

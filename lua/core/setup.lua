@@ -93,6 +93,7 @@ local specs = {
   { src = 'https://github.com/brianhuster/live-preview.nvim' },
   { src = 'https://github.com/uga-rosa/translate.nvim' },
   { src = 'https://github.com/linux-cultist/venv-selector.nvim' },
+  { src = 'https://github.com/rest-nvim/rest.nvim', enabled = false },
 }
 -- 在 spec 中设置 enabled = false 可禁用插件:
 --   不会加载, 不会下载(如果是新添加的), 已在硬盘上不会被删除
@@ -378,8 +379,8 @@ for _, spec in ipairs(specs) do
   end
 end
 
--- 同步清理孤儿插件(传入全部 specs, disabled 的也受保护不被删)
-PackUtils.sync(specs)
+-- 同步清理孤儿插件(仅保护 enabled 的插件)
+PackUtils.sync(active_specs)
 
 -- 正式下载/注册插件(仅启用的)
 vim.pack.add(active_specs)
