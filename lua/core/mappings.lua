@@ -3,7 +3,7 @@ local map = vim.keymap.set
 -- 保存并重新加载配置
 map('n', '<leader>U', '<cmd>update<cr> <cmd>source<cr>', { desc = 'Reload config file' })
 -- 重新加载 Neovim
-map('n', '<leader>R', '<cmd>restart<cr>', { desc = 'Restart Neovim' })
+-- map('n', '<leader>R', '<cmd>restart<cr>', { desc = 'Restart Neovim' })
 -- 代码补全
 map('i', '<c-space>', '<c-x><c-o>', { desc = 'Trigger completion' })
 -- terminal 切换 visual 模式

@@ -52,6 +52,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
     set_hl('WinSeparator', { fg = palette.base03, bg = 'NONE' })
     set_hl('FloatBorder', { fg = palette.base05, bg = 'NONE' })
     set_hl('TreesitterContext', { link = 'FloatBorder' })
+    set_hl('TabLine', { fg = palette.base04 })
 
     local groups = {
       'DiagnosticFloatingOk',
