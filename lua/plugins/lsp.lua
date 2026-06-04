@@ -126,12 +126,5 @@ vim.api.nvim_create_autocmd('LspAttach', {
       -- 显示悬停文档
       map('n', 'K', vim.lsp.buf.hover, { buffer = event.buf, desc = 'LSP: Hover Documentation' })
     end)
-
-    PackUtils.load({ name = 'nvim-java', deps = { 'spring-boot.nvim' } }, function()
-      require('java').setup({ jdk = { auto_install = false } })
-      map('n', '<leader>jr', '<cmd>JavaRunnerRunMain<cr>', { desc = 'Run Java Main Class' })
-      map('n', '<leader>js', '<cmd>JavaRunnerStopMain<cr>', { desc = 'Stop Java Main Class' })
-      map('n', '<leader>jl', '<cmd>JavaRunnerToggleLogs<cr>', { desc = 'Toggle Java Logs' })
-    end)
   end,
 })
