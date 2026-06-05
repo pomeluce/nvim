@@ -20,7 +20,6 @@ enable('java', 'jdtls')
 enable({ 'json', 'jsonc' }, 'jsonls')
 enable('kotlin', 'kotlin_language_server')
 enable('lua', 'lua_ls')
-enable('nix', 'nil_ls')
 enable('nix', 'nixd')
 enable('rust', 'rust_analyzer')
 enable({
@@ -53,3 +52,4 @@ enable({
 enable('toml', 'taplo')
 enable({ 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' }, { 'ts_ls', 'vue_ls' })
 enable('vue', 'vue_ls')
+enable('xml', 'lemminx')

@@ -1,3 +1,5 @@
+local map = vim.keymap.set
+
 vim.api.nvim_create_autocmd('FileType', {
   once = true,
   pattern = { 'http', 'rest', 'javascript', 'lua' },
@@ -8,12 +10,12 @@ vim.api.nvim_create_autocmd('FileType', {
       local ws = require('kulala.cmd.websocket')
       kulala.setup({
         kulala_core = { path = vim.fn.exepath('kulala-core') },
-        global_keymaps = {
-          ['Send request <cr>'] = { '<c-cr>', kulala.run, mode = { 'n', 'v' }, ft = { 'http', 'rest' } },
-          ['Send request'] = { 's', kulala.run, mode = { 'n', 'v' } },
-          ['Send all requests'] = { 'a', kulala.run_all, mode = { 'n', 'v' } },
-          ['Open scratchpad'] = { 'b', kulala.scratchpad },
+        lsp = {
+          enable = true,
+          filetypes = { 'http', 'rest', 'json', 'yaml', 'bruno' },
+          keymaps = false,
         },
+        global_keymaps = false,
         kulala_keymaps = {
           ['Previous tab'] = { '<s-tab>', ui.show_previous_tab, mode = { 'n' } },
           ['Next tab'] = { '<tab>', ui.show_next_tab, mode = { 'n' } },
@@ -48,6 +50,11 @@ vim.api.nvim_create_autocmd('FileType', {
           ['Close'] = { 'q', ui.close_kulala_buffer, prefix = false },
         },
       })
+
+      map({ 'n', 'v' }, '<C-CR>', kulala.run, { desc = 'Send request' })
+      map({ 'n', 'v' }, '<leader>Rs', kulala.run, { desc = 'Send request' })
+      map({ 'n', 'v' }, '<leader>Ra', kulala.run_all, { desc = 'Send all requests' })
+      map({ 'n', 'v' }, '<leader>Rb', kulala.scratchpad, { desc = 'Open scratchpad' })
     end)
   end,
 })
