@@ -10,6 +10,10 @@ vim.api.nvim_create_autocmd('FileType', {
       local ws = require('kulala.cmd.websocket')
       kulala.setup({
         kulala_core = { path = vim.fn.exepath('kulala-core') },
+        ui = {
+          split_direction = 'horizontal',
+          win_opts = { width = 80, height = 18 },
+        },
         lsp = {
           enable = true,
           filetypes = { 'http', 'rest', 'json', 'yaml', 'bruno' },

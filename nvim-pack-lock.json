@@ -31,7 +31,7 @@
       "src": "https://github.com/coder/claudecode.nvim"
     },
     "codediff.nvim": {
-      "rev": "29b06f37251f2e010f53a0892573b2ec03d165e2",
+      "rev": "de91a62733db59d0755bdfefa50dcfd669002453",
       "src": "https://github.com/esmuellert/codediff.nvim"
     },
     "colorful-menu.nvim": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "kulala.nvim": {
-      "rev": "1c55c7c7194b91d4f5b84f3e34db211a600ec261",
+      "rev": "34189185048988248a6a4b78fc35d83a6ac7f343",
       "src": "https://github.com/mistweaverco/kulala.nvim"
     },
     "live-preview.nvim": {
@@ -79,7 +79,7 @@
       "src": "https://github.com/brianhuster/live-preview.nvim"
     },
     "mini.files": {
-      "rev": "500f9e18f3ae387b5aecf2261e33845bc5dd7b68",
+      "rev": "02874bc653fbecf2bee2c65441d0ebd09110f011",
       "src": "https://github.com/nvim-mini/mini.files"
     },
     "mini.icons": {

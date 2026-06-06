@@ -1,4 +1,4 @@
-vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
+vim.o.sessionoptions = 'blank,buffers,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 
 PackUtils.load(
   { name = 'neovim-project', deps = { 'neovim-session-manager', 'plenary.nvim' } },
