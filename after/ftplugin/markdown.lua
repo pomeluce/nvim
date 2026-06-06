@@ -65,18 +65,18 @@ local opts = {
     hyperlink = ' ',
   },
   anti_conceal = {
-    -- disabled_modes = { 'n' },
+    disabled_modes = { 'n' },
     ignore = {
-      -- bullet = true, -- render bullet in insert mode
+      bullet = true, -- render bullet in insert mode
       head_border = true,
       head_background = true,
     },
   },
   -- https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/509
-  -- win_options = { concealcursor = { rendered = 'nvc' } },
-  win_options = { concealcursor = { rendered = 'vc' } },
+  win_options = { concealcursor = { rendered = 'nvc' } },
+  -- win_options = { concealcursor = { rendered = 'vc' } },
   completions = { blink = { enabled = true }, lsp = { enabled = true } },
-  file_types = { 'markdown', 'Avante' },
+  file_types = { 'markdown', 'Avante', 'kulala_ui' },
 }
 
 local ok, rm = pcall(require, 'render-markdown')

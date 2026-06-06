@@ -35,23 +35,26 @@ rm -rf ~/.local/share/nvim/
     luajitPackages.luarocks
     luajitPackages.jsregexp
     python314Packages.pynvim
-    translate-shell
-    imagemagick
+    translate-shell # translate.nvim required
+    imagemagick # img-clip.nvim required
+    kulala-core # kulala.nvim required
 
     # lsp
-    basedpyright
-    bash-language-server
     clang-tools
     cmake-language-server
     copilot-language-server
+    docker-language-server
     emmet-language-server
+    jdt-language-server
     kotlin-language-server
+    lemminx # xml lsp
     lua-language-server
-    marksman
-    nil
+    marksman # markdown
+    nixd # nix
     rust-analyzer
     tailwindcss-language-server
-    taplo
+    taplo # toml
+    ty # python lsp
     typescript-language-server
     vscode-langservers-extracted
     vue-language-server
@@ -65,16 +68,20 @@ rm -rf ~/.local/share/nvim/
     vscode-extensions.firefox-devtools.vscode-firefox-debug
 
     # fmt
-    beautysh
-    cbfmt
+    beautysh # shell: bash zsh
+    cbfmt # markdown
+    dockerfmt
+    kulala-fmt # http
+    libxml2 # xml
     nixfmt
+    nufmt # nushell
     prettier
     prettierd
-    ruff
+    ruff # python
     rustfmt
-    shfmt
-    sqlfluff
-    stylua
+    shfmt # shell
+    sqlfluff # sql
+    stylua # lua
   ];
 }
 ```
@@ -102,9 +109,6 @@ nvim
   "mason": {
     "enable": true
   },
-  "theme": {
-    "enable": true
-  },
   "session": {
     "projects": ["/home/user/project1", "/home/user/project2"],
     "ignore_dir": ["/tmp", "/var"]
@@ -130,7 +134,6 @@ nvim
 | 配置项               | 类型       | 默认值  | 说明                                             |
 | -------------------- | ---------- | ------- | ------------------------------------------------ |
 | `mason.enable`       | `boolean`  | `false` | 启用 Mason 插件管理器，自动安装配置的 LSP 和 DAP |
-| `theme.enable`       | `boolean`  | `false` | 启用自定义主题（mini.base16 配色方案）           |
 | `session.projects`   | `string[]` | `[]`    | 项目路径列表，用于 neovim-project 项目切换       |
 | `session.ignore_dir` | `string[]` | `[]`    | 自动保存 session 时忽略的目录列表                |
 | `lsp.jdtls.runtimes` | `object[]` | `[]`    | jdtls Java 运行时配置，每项包含 `name` 和 `path` |

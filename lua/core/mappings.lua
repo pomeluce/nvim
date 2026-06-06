@@ -57,10 +57,16 @@ map('n', '<c-j>', '<c-w>j', { desc = 'Jump to bottom buffer' })
 
 -- 调整窗口尺寸
 map('n', 's=', '<c-w>=', { desc = 'Resize all window same size' })
-map('n', 's.', "winnr() <= winnr('$') - winnr() ? '<c-w>10>' : '<c-w>10<'", { desc = 'Extend window to right', expr = true })
-map('n', 's,', "winnr() <= winnr('$') - winnr() ? '<c-w>10<' : '<c-w>10>'", { desc = 'Extend window to left', expr = true })
-map('n', 'sj', "winnr() <= winnr('$') - winnr() ? '<c-w>10+' : '<c-w>10-'", { desc = 'Extend window to top', expr = true })
-map('n', 'sk', "winnr() <= winnr('$') - winnr() ? '<c-w>10-' : '<c-w>10+'", { desc = 'Extent window to bottom', expr = true })
+require('configs.resize').setup({
+  timeout = 500,
+  step = 10,
+  mappings = {
+    ['s.'] = { axis = 'width', sign = 1, primary = '.' },
+    ['s,'] = { axis = 'width', sign = -1, primary = ',' },
+    ['sj'] = { axis = 'height', sign = 1, primary = 'j' },
+    ['sk'] = { axis = 'height', sign = -1, primary = 'k' },
+  },
+})
 
 -- flash 代码跳转
 local function code_jump()
