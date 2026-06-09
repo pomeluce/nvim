@@ -1,4 +1,4 @@
-vim.api.nvim_create_autocmd('VimEnter', {
+vim.api.nvim_create_autocmd('FileType', {
   once = true,
   pattern = 'python',
   callback = function()
