@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
       map('n', '<tab>', tabuf.next_buf, { desc = 'Toggle to next buffer' })
       map('n', '<s-tab>', tabuf.prev_buf, { desc = 'Toggle to prev buffer' })
       map('n', '<leader>bc', tabuf.close_buf, { desc = 'Delete current buffer' })
-      map('n', '<leader>bC', function() tabuf.cloase_bufs(false) end, { desc = 'Delete other buffers' })
+      map('n', '<leader>bC', function() tabuf.close_bufs(false) end, { desc = 'Delete other buffers' })
     end)
   end,
 })
