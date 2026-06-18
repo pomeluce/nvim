@@ -17,8 +17,7 @@ local specs = {
 
   -- lsp
   { src = 'https://github.com/neovim/nvim-lspconfig' },
-  { src = 'https://github.com/nvim-java/nvim-java' },
-  { src = 'https://github.com/JavaHello/spring-boot.nvim' },
+  { src = 'https://github.com/mfussenegger/nvim-jdtls' },
 
   -- manson
   { src = 'https://github.com/mason-org/mason.nvim', enabled = require('settings').mason.enable },

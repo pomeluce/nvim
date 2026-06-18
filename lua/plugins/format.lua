@@ -21,6 +21,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
           dockerfile = { 'dockerfmt' },
           html = { 'prettierd' },
           http = { 'kulala-fmt' },
+          java = { 'spotless_gradle', 'spotless_maven', 'google-java-format' },
           javascript = { 'prettierd' },
           javascriptreact = { 'prettierd' },
           json = { 'prettierd' },

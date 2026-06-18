@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "kulala.nvim": {
-      "rev": "9945d576751c8a6a8331c46fc9436d62e796ff28",
+      "rev": "143966c65767414f8b3d545d44b86902ab0f0843",
       "src": "https://github.com/mistweaverco/kulala.nvim"
     },
     "live-preview.nvim": {
@@ -83,7 +83,7 @@
       "src": "https://github.com/nvim-mini/mini.files"
     },
     "mini.icons": {
-      "rev": "d48ad47359218d2b019034f95f601b3861180885",
+      "rev": "ac38c983aed0a2bd32a65ca3e2348e12e58ca292",
       "src": "https://github.com/nvim-mini/mini.icons"
     },
     "neogen": {
@@ -126,9 +126,9 @@
       "rev": "e4c7af0211866162d999ce0bdd6a029302e19139",
       "src": "https://github.com/brenoprata10/nvim-highlight-colors"
     },
-    "nvim-java": {
-      "rev": "f36a376dfebbbb4cf382008ea6e8b70d40049112",
-      "src": "https://github.com/nvim-java/nvim-java"
+    "nvim-jdtls": {
+      "rev": "6e9d953f0b82bccdb834cfde0e893f3119c22592",
+      "src": "https://github.com/mfussenegger/nvim-jdtls"
     },
     "nvim-lspconfig": {
       "rev": "a683e0ddf0cf64c6cd689e18ffb480ade3c162b7",
@@ -174,10 +174,6 @@
     "snacks.nvim": {
       "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
       "src": "https://github.com/folke/snacks.nvim"
-    },
-    "spring-boot.nvim": {
-      "rev": "98c6ff1dcdda943d341bba3c00ae9d190a2e5f7d",
-      "src": "https://github.com/JavaHello/spring-boot.nvim"
     },
     "switch.vim": {
       "rev": "297346b630943ebd4ea58598dfd30bae5debc739",
