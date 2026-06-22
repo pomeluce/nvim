@@ -90,7 +90,7 @@ function M.setup(root_dir)
     if cfg.args and cfg.args ~= '' then cmd_str = cmd_str .. ' ' .. cfg.args end
     local run = self.runs[cfg.mainClass]
     if run then
-      if run.is_running then run:stop() end
+      if run.is_running then vim.fn.jobstop(run.job_id) end
     else
       run = { buf = vim.api.nvim_create_buf(false, true), term_chan = nil, job_id = nil, is_running = false }
       vim.api.nvim_buf_set_name(run.buf, 'Java: ' .. cfg.mainClass)
