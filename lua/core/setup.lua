@@ -69,6 +69,8 @@ local specs = {
   { src = 'https://github.com/nvim-tree/nvim-tree.lua' },
   { src = 'https://github.com/folke/snacks.nvim' },
   { src = 'https://github.com/akinsho/toggleterm.nvim' },
+  { src = 'https://github.com/kevinhwang91/nvim-ufo' },
+  { src = 'https://github.com/kevinhwang91/promise-async' },
 
   -- navigation
   { src = 'https://github.com/folke/flash.nvim' },

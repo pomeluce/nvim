@@ -110,18 +110,14 @@ map('n', 'ga', '`.', { desc = 'Jump cursor to last edit position' })
 -- 行尾添加分号
 map('n', 'g;', '$a;<esc>', { desc = 'Add semicolon for endline' })
 
-local function toggle_nvim_tree()
+map('n', 'T', function()
   if vim.g.nvim_tree_firsttime ~= 1 then
     vim.cmd('NvimTreeToggle')
   else
     vim.g.nvim_tree_firsttime = 0
     vim.cmd('NvimTreeToggle ' .. vim.fn.getcwd())
   end
-end
-map('n', 'T', toggle_nvim_tree, { desc = 'Toggle file tree' })
-
--- 代码折叠
-map({ 'n', 'v' }, 'zz', 'za', { desc = 'Toggle fold under cursor' })
+end, { desc = 'Toggle file tree' })
 
 -- 查看语法高亮
 map('n', 'H', '<cmd>Inspect<cr>', { desc = 'Inspect syntax highlight group under cursor' })

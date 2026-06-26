@@ -162,4 +162,8 @@ opt.guicursor = { 'n-v-c:block', 'i-ci-ve:ver25', 'r-cr:hor20', 'o:hor50' }
 -- 设置窗口边框
 opt.winborder = 'rounded'
 
-require('configs.folding')
+-- 折叠字符
+opt.fillchars = [[fold: ,stlnc:·,eob: ,foldsep:=,foldopen:,foldclose:]]
+-- 折叠缓存目录
+opt.viewdir = vim.fn.stdpath('cache') .. '/viewdir'
+opt.viewoptions:append('folds')

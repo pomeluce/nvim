@@ -57,17 +57,17 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
   end,
 })
 
--- 自动保存折叠信息
+-- 自动保存/恢复折叠信息
 local foldGroup = vim.api.nvim_create_augroup('PersistFolds', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWinEnter' }, {
+vim.api.nvim_create_autocmd('BufWinLeave', {
   group = foldGroup,
   pattern = '*',
-  callback = function() vim.cmd([[ silent! loadview ]]) end,
+  command = 'silent! mkview',
 })
-vim.api.nvim_create_autocmd({ 'BufWinLeave', 'VimLeavePre' }, {
+vim.api.nvim_create_autocmd('BufWinEnter', {
   group = foldGroup,
   pattern = '*',
-  callback = function() vim.cmd([[ silent! mkview ]]) end,
+  command = 'silent! loadview',
 })
 
 -- 修改终端 buffer 名称
@@ -100,3 +100,4 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('RedoNL', { clear = true }),
   callback = function(args) vim.bo[args.buf].fileformat = 'unix' end,
 })
+
