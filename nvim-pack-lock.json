@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "kulala.nvim": {
-      "rev": "8848e90bf05b8416e02b2561039b70acc271071c",
+      "rev": "5ec1bd462c7ac3a72a81207d8eb0b1458ea18410",
       "src": "https://github.com/mistweaverco/kulala.nvim"
     },
     "live-preview.nvim": {
