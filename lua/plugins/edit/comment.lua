@@ -3,7 +3,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     PackUtils.load({ name = 'ts-comments.nvim' }, function()
       local map = vim.keymap.set
-      local bc = require('configs.block_comment')
+      local bc = require('configs.block-comment')
       require('ts-comments').setup({})
 
       -- 行注释(ts-comments 提供)
@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
           sl, el = el, sl
         end
         -- expr 返回的字符串由 Neovim 作为按键序列处理
-        return '<Esc>:lua require("configs.block_comment").toggle_block_comment(' .. sl .. ',' .. el .. ')<CR>'
+        return '<Esc>:lua require("configs.block-comment").toggle_block_comment(' .. sl .. ',' .. el .. ')<CR>'
       end, { expr = true, desc = 'Toggle block comment' })
     end)
   end,

@@ -3,6 +3,20 @@
 -- ==============================================================
 local M = {}
 
+-- JSX/TSX 文件类型(用于节点类型遍历检测)
+local JSX_FILETYPES = { javascriptreact = true, typescriptreact = true }
+
+-- HTML 内容转义/还原(防止内嵌注释破坏外层结构)
+local function html_escape(text) return (text:gsub('<!%-%-', '&lt;!--'):gsub('%-%->', '--&gt;')) end
+
+local function html_restore(text) return (text:gsub('%-%-&gt;', '-->'):gsub('&lt;!%-%-', '<!--')) end
+
+-- 移除行首定界符(保留缩进), 括号截断 gsub 第二返回值
+local function strip_left(line, left) return (line:gsub('^(%s*)' .. vim.pesc(left), '%1', 1)) end
+
+-- 移除行尾定界符
+local function strip_right(line, right) return (line:gsub(vim.pesc(right) .. '%s*$', '', 1)) end
+
 ---@class BcDelimiter
 ---@field left  string
 ---@field right string
@@ -83,19 +97,35 @@ function M.get_delimiters()
     ---@diagnostic disable-next-line: undefined-field
     local ok2, lang = pcall(function() return node:lang() end)
     if ok2 and lang and M.embedded_delimiters[lang] then return M.embedded_delimiters[lang] end
+    -- JSX/TSX: JSX 不是注入语言而是同一 parser 的节点类型, 需检查节点类型
+    if JSX_FILETYPES[ft] then
+      local current = node
+      while current do
+        local ntype = current:type()
+        if ntype:find('^jsx_') or ntype == 'jsx' then return { left = '{/* ', right = ' */}' } end
+        local parent = current:parent()
+        if not parent then break end
+        current = parent
+      end
+    end
   end
 
-  -- 2) treesitter 不可用时, 对 HTML 做文本级回退扫描 <style>/<script> 标签
-  if ft == 'html' then
+  -- 2) treesitter 不可用时, 对 HTML/Vue 做文本级回退扫描 <style>/<script> 标签
+  if ft == 'html' or ft == 'vue' then
     local cline = vim.fn.line('.')
     for l = cline, 1, -1 do
       local line = vim.fn.getline(l)
-      if line:find('<style[>%s]') then return M.embedded_delimiters.css end
+      if line:find('<style[>%s]') then
+        if line:find('lang%s*=%s*["\']scss') then return M.embedded_delimiters.scss end
+        if line:find('lang%s*=%s*["\']less') then return M.embedded_delimiters.css end
+        return M.embedded_delimiters.css
+      end
       if line:find('<script[>%s]') then
         if line:find('type%s*=%s*["\']text/css') then return M.embedded_delimiters.css end
         if line:find('lang%s*=%s*["\']ts') then return M.embedded_delimiters.typescript end
         return M.embedded_delimiters.javascript
       end
+      if line:find('<template[>%s]') then return M.ft_delimiters[ft] end
       -- 遇到其他开始标签或闭合标签终止扫描
       if line:find('</style>') or line:find('</script>') then break end
       if line:find('<%w+[>%s]') and not line:find('<style') and not line:find('<script') then break end
@@ -156,7 +186,7 @@ function M.toggle_block_comment(line_start, line_end)
   -- 定界符独占上下行（由 ft_delimiters 中的 style = 'line' 控制）
   local is_line_delim = (delims.style == 'line')
   -- HTML 类注释需要转义内容中的 --> 防止提前终止注释
-  local is_html_comment = (not is_line_delim and right:find('%-%->') ~= nil)
+  local is_html_comment = (not is_line_delim and right:find('-->', 1, true) ~= nil)
 
   local first_line = vim.fn.getline(line_start)
   local last_line = vim.fn.getline(line_end)
@@ -194,41 +224,39 @@ function M.toggle_block_comment(line_start, line_end)
         vim.fn.deletebufline(buf, line_start - 1)
       end
     else
-      -- HTML 类注释: 先还原转义(--&gt; → -->, &lt;!-- → <!--)
+      -- HTML 类注释: 先还原转义
       if is_html_comment then
         for l = line_start, line_end do
           local line = vim.fn.getline(l)
-          local restored = line:gsub('%-%-&gt;', '-->'):gsub('&lt;!%-%-', '<!--')
+          local restored = html_restore(line)
           if restored ~= line then vim.fn.setline(l, restored) end
         end
+        first_line = vim.fn.getline(line_start)
+        last_line = vim.fn.getline(line_end)
       end
       if line_start == line_end then
         local content = vim.fn.getline(line_start)
-        content = content:gsub('^(%s*)' .. vim.pesc(left), '%1', 1)
-        content = content:gsub(vim.pesc(right) .. '%s*$', '', 1)
+        content = strip_right(strip_left(content, left), right)
         vim.fn.setline(line_start, content)
       else
-        local new_first = first_line:gsub('^(%s*)' .. vim.pesc(left), '%1', 1)
-        local new_last = vim.fn.getline(line_end):gsub(vim.pesc(right) .. '%s*$', '', 1)
-        vim.fn.setline(line_start, new_first)
-        vim.fn.setline(line_end, new_last)
+        vim.fn.setline(line_start, strip_left(first_line, left))
+        vim.fn.setline(line_end, strip_right(last_line, right))
       end
     end
   else
     -- 添加注释
     if is_line_delim then
-      vim.fn.appendbufline(vim.api.nvim_get_current_buf(), line_start - 1, left)
-      vim.fn.appendbufline(vim.api.nvim_get_current_buf(), line_end + 1, right)
+      local indent = first_line:match('^(%s*)') or ''
+      vim.fn.appendbufline(vim.api.nvim_get_current_buf(), line_start - 1, indent .. left)
+      vim.fn.appendbufline(vim.api.nvim_get_current_buf(), line_end + 1, indent .. right)
     else
       -- HTML 类注释: 先转义内容中的 <!-- 和 -->
       if is_html_comment then
         for l = line_start, line_end do
           local line = vim.fn.getline(l)
-          -- 先转义 <!-- 再转义 -->(顺序重要)
-          local escaped = line:gsub('<!%-%-', '&lt;!--'):gsub('%-%->', '--&gt;')
+          local escaped = html_escape(line)
           if escaped ~= line then vim.fn.setline(l, escaped) end
         end
-        -- 重新读取首尾行(可能已被转义修改)
         first_line = vim.fn.getline(line_start)
         last_line = vim.fn.getline(line_end)
       end
