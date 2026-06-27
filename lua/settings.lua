@@ -26,7 +26,24 @@ local utils = require('utils')
 ---@class settings.File
 ---@field run_cmd table<string, string>
 
+---@class settings.Header
+---@field python? string
+---@field lua? string
+---@field javascript? string
+---@field java? string
+---@field kotlin? string
+---@field scala? string
+---@field go? string
+---@field csharp? string
+---@field c? string
+---@field rust? string
+---@field ruby? string
+---@field bash? string
+---@field swift? string
+---@field zig? string
+
 ---@class settings.Root
+---@field header settings.Header
 ---@field session settings.Session
 ---@field lsp settings.Lsp
 ---@field mason settings.Mason
@@ -143,6 +160,7 @@ end
 
 ---@type settings.Root
 local defaults = {
+  header = {},
   session = {
     projects = {},
     ignore_dir = {},

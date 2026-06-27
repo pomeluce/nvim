@@ -8,10 +8,10 @@
 
 ## 环境要求
 
-| 依赖      | 最低版本  | 说明                                                                                |
-| --------- | --------- | ----------------------------------------------------------------------------------- |
-| Neovim    | **0.12+** | 依赖 `vim.fs.root()`、`vim.system()`、`vim.pack` 等 0.11/0.12 API                   |
-| Git       | 2.0+      | 插件克隆                                                                            |
+| 依赖      | 最低版本  | 说明                                                                      |
+| --------- | --------- | ------------------------------------------------------------------------- |
+| Neovim    | **0.12+** | 依赖 `vim.fs.root()`、`vim.system()`、`vim.pack` 等 0.11/0.12 API         |
+| Git       | 2.0+      | 插件克隆                                                                  |
 | Nerd Font | —         | 图标显示（推荐 [Maple Mono](https://github.com/subframe7536/Maple-font)） |
 
 ## 特性
@@ -247,6 +247,84 @@ default = true   # 标记为默认运行时
 | `lsp.jdtls.maven.globalSettings` | `string`   | —       | Maven global settings.xml 路径                    |
 | `file.run_cmd`                   | `table`    | `{}`    | 按文件类型映射的运行命令                          |
 
+### Header 文件头模板
+
+文件头模板由 `lua/configs/header.lua` 自动管理，新文件创建时自动插入。
+
+**内置模板（14 种语言）：**
+
+| 文件类型     | 模板语言                                    |
+| ------------ | ------------------------------------------- |
+| `python`     | Python docstring                            |
+| `lua`        | `--` 行注释                                 |
+| `javascript` | `/** */` 块注释 (JSX/TSX 也适用)            |
+| `java`       | Javadoc 风格，含 `package` / `public class` |
+| `kotlin`     | Javadoc 风格，含 `package` / `class`        |
+| `scala`      | Javadoc 风格，含 `package` / `class`        |
+| `go`         | `//` 行注释，含 `package`                   |
+| `csharp`     | `///` XML 注释，含 `namespace` / `class`    |
+| `c`          | `/* */` 块注释 (C++ 也适用)                 |
+| `rust`       | `//` 行注释                                 |
+| `ruby`       | `#` 行注释                                  |
+| `bash`       | `#` 行注释 (sh/zsh 也适用)                  |
+| `swift`      | `//` 行注释                                 |
+| `zig`        | `//` 行注释                                 |
+
+**ft_map 别名：** 以下文件类型自动映射到同名模板，无需单独配置：
+
+| 原始文件类型      | 映射到       |
+| ----------------- | ------------ |
+| `typescript`      | `javascript` |
+| `javascriptreact` | `javascript` |
+| `typescriptreact` | `javascript` |
+| `cpp`             | `c`          |
+| `sh`              | `bash`       |
+| `zsh`             | `bash`       |
+
+**支持的占位符：**
+
+| 占位符        | 说明                                                  |
+| ------------- | ----------------------------------------------------- |
+| `{USER}`      | 系统用户名（`$USER` / `$USERNAME`）                   |
+| `{DATE}`      | 文件创建日期，默认格式 `%Y-%m-%d`                     |
+| `{TIME}`      | 文件创建时间，默认格式 `%H:%M:%S`                     |
+| `{DATE:fmt}`  | 自定义日期格式，如 `{DATE:%Y/%m/%d}`                  |
+| `{TIME:fmt}`  | 自定义时间格式，如 `{TIME:%H:%M}`                     |
+| `{FILE_NAME}` | 文件名（不含扩展名）                                  |
+| `{CLASS}`     | 类名（默认同文件名，Java/Kotlin/Scala/C# 模板使用）   |
+| `{PACKAGE}`   | 根据文件路径自动推导的包名/命名空间（为空时整行删除） |
+
+**Package 自动推导：** Java/Kotlin/Scala/Go/C# 文件根据文件路径自动推导 `package` / `namespace`：
+
+| 语言   | 项目标记文件                           | 源码目录          |
+| ------ | -------------------------------------- | ----------------- |
+| Java   | `pom.xml`, `build.gradle`              | `src/main/java`   |
+| Kotlin | `pom.xml`, `build.gradle(.kts)`        | `src/main/kotlin` |
+| Scala  | `pom.xml`, `build.gradle`, `build.sbt` | `src/main/scala`  |
+| Go     | `go.mod`                               | `.`               |
+| C#     | `*.csproj`, `*.sln`                    | `.`               |
+
+**自定义模板：** 在 `settings.toml` 中添加 `[header]` 节覆盖任意语言模板：
+
+```toml
+[header]
+python = '''\
+# custom header
+# author: {USER}
+# description: (TODO)
+'''
+javascript = '''\
+/**
+ * custom header
+ * @author {USER}
+ */
+'''
+```
+
+不存在的语言会自动忽略。只覆盖需要修改的模板即可，其余继续使用内置默认值。
+
+**不再需要手写 tmpl 文件。** 旧版 `tmpls/` 目录可清理。
+
 ## 配置热重载
 
 修改 `settings.toml` 后执行 `<leader>U` 重新加载配置，或 `<leader>ju` 仅刷新 jdtls 项目配置。
@@ -275,7 +353,6 @@ default = true   # 标记为默认运行时
 │   ├── settings.lua        # settings.toml 解析器
 │   └── utils.lua           # 工具函数
 ├── snippets/               # 代码片段
-├── tmpls/                  # 文件模板
 ├── init.lua                # 入口
 └── settings.toml           # 用户配置
 ```
@@ -498,4 +575,3 @@ end)
 | `<leader>ph` | 项目历史                      |
 | `<leader>pp` | 加载项目 session              |
 | `<leader>co` | URL 打开                      |
-
