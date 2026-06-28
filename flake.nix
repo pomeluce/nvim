@@ -50,6 +50,7 @@
             wl-clipboard
             luajitPackages.luarocks
             luajitPackages.jsregexp
+            luajitPackages.tomlua
             python314Packages.pynvim
             translate-shell
             imagemagick
@@ -315,6 +316,7 @@
             home.packages = [
               (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
                 wrapRc = false;
+                extraLuaPackages = ps: [ ps.tomlua ];
                 wrapperArgs = lib.optionals (defaultPackages ++ cfg.extraPackages != [ ]) [
                   "--suffix"
                   "PATH"

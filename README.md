@@ -82,7 +82,7 @@ nvim
 }
 ```
 
-应用后使用 `av` 命令启动（等价于 `NVIM_APPNAME=akirnvim nvim`），配置目录 `~/.config/akirnvim/`。
+应用后使用 `av` 命令启动（等价于 `NVIM_APPNAME=akirnvim nvim`），配置目录 `~/.config/akirnvim/`。依赖（包括 `tomlua` Lua 库）由 `wrapNeovimUnstable` 自动注入，无需手动安装。
 
 > **开发调试：** 在仓库目录下运行 `nix develop` 进入开发环境，仓库会自动链接到 `~/.config/nvim`，直接用 `nvim` 修改配置、 `:PkUpdate` 更新插件。退出 shell 后链接自动清理。
 
@@ -176,21 +176,28 @@ enable = true
 
 **前置依赖**（需通过系统包管理器手动安装）：
 
-| 工具          | 用途           | Arch                      | Ubuntu/Debian | macOS (brew)                    |
-| ------------- | -------------- | ------------------------- | ------------- | ------------------------------- |
-| `git`         | 插件克隆       | `git`                     | `git`         | —                               |
-| `fd`          | 文件搜索       | `fd`                      | `fd-find`     | `fd`                            |
-| `fzf`         | 模糊搜索       | `fzf`                     | `fzf`         | `fzf`                           |
-| `ripgrep`     | 文本搜索       | `ripgrep`                 | `ripgrep`     | `ripgrep`                       |
-| `tree-sitter` | 语法解析       | `tree-sitter`             | —             | `tree-sitter`                   |
-| `unzip`       | 解压           | `unzip`                   | `unzip`       | —                               |
-| `lazygit`     | Git UI（可选） | `lazygit`                 | —             | `lazygit`                       |
-| Nerd Font     | 图标           | `ttf-jetbrains-mono-nerd` | —             | `font-jetbrains-mono-nerd-font` |
+| 工具          | 用途           | Arch                      | Ubuntu/Debian             | macOS (brew)                    |
+| ------------- | -------------- | ------------------------- | ------------------------- | ------------------------------- |
+| `git`         | 插件克隆       | `git`                     | `git`                     | —                               |
+| `fd`          | 文件搜索       | `fd`                      | `fd-find`                 | `fd`                            |
+| `fzf`         | 模糊搜索       | `fzf`                     | `fzf`                     | `fzf`                           |
+| `ripgrep`     | 文本搜索       | `ripgrep`                 | `ripgrep`                 | `ripgrep`                       |
+| `tree-sitter` | 语法解析       | `tree-sitter`             | —                         | `tree-sitter`                   |
+| `unzip`       | 解压           | `unzip`                   | `unzip`                   | —                               |
+| `tomlua`      | TOML 解析      | `luarocks install tomlua` | `luarocks install tomlua` | `luarocks install tomlua`       |
+| `lazygit`     | Git UI（可选） | `lazygit`                 | —                         | `lazygit`                       |
+| Nerd Font     | 图标           | `ttf-jetbrains-mono-nerd` | —                         | `font-jetbrains-mono-nerd-font` |
 
 **Python 支持**（可选，用于 pynvim 和 Python LSP）：
 
 ```shell
 pip install pynvim basedpyright
+```
+
+**Lua 库**（`tomlua`，用于 settings.toml 解析）：
+
+```shell
+luarocks install tomlua
 ```
 
 ### Mason 自动安装列表
