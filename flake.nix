@@ -314,6 +314,7 @@
             # ── 3. Wrapped Neovim (avoids init.lua generation) ──
             home.packages = [
               (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
+                wrapRc = false;
                 wrapperArgs = lib.optionals (defaultPackages ++ cfg.extraPackages != [ ]) [
                   "--suffix"
                   "PATH"
