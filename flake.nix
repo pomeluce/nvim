@@ -8,6 +8,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    apkgs = {
+      url = "github:pomeluce/nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -15,6 +19,7 @@
       self,
       flake-parts,
       home-manager,
+      apkgs,
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
@@ -305,13 +310,16 @@
               '')
             ];
 
-            # ── 3. Enable Neovim ──
+            # ── 3. Custom nixpkgs overlay ──
+            nixpkgs.overlays = [ apkgs.overlays.default ];
+
+            # ── 4. Enable Neovim ──
             programs.neovim = {
               enable = lib.mkDefault true;
               extraPackages = defaultPackages ++ cfg.extraPackages;
             };
 
-            # ── 4. Environment variables ──
+            # ── 5. Environment variables ──
             home.sessionVariables = lib.filterAttrs (_: v: v != null) {
               JAVA_LOMBOK = cfg.env.JAVA_LOMBOK;
               VSC_JAVA_DEBUG = cfg.env.VSC_JAVA_DEBUG;
@@ -326,6 +334,7 @@
       perSystem =
         { pkgs, system, ... }:
         let
+          pkgs' = pkgs.extend apkgs.overlays.default;
           akirnvimPackage = pkgs.stdenvNoCC.mkDerivation {
             pname = "akirnvim";
             version = "2026.06.28";
@@ -352,9 +361,9 @@
 
           packages.default = akirnvimPackage;
 
-          devShells.default = pkgs.mkShell {
+          devShells.default = pkgs'.mkShell {
             packages =
-              (with pkgs; [
+              (with pkgs'; [
                 bat
                 fd
                 fzf
