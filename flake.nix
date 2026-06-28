@@ -282,7 +282,7 @@
 
           config = lib.mkIf cfg.enable {
             # ── 1. Link config directory to ~/.config/akirnvim ──
-            home.file.${cfg.configDir}.source =
+            xdg.configFile.${cfg.configDir}.source =
               let
                 # Recursively filter null values to avoid null in TOML
                 filterNulls =
@@ -425,17 +425,17 @@
               ];
 
             shellHook = ''
-              if [ -d ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
-                echo "WARNING: ~/.config/nvim is a real directory, not linking."
-                echo "  Move/remove it first if you want repo-linked dev."
-              else
-                rm -f ~/.config/nvim
-                ln -s ${toString ./.} ~/.config/nvim
-                echo "AKIRVIM dev environment"
-                echo "  repo linked to ~/.config/nvim"
-                echo "  nvim -> uses repo files directly (for dev/debug)"
-                trap 'rm -f ~/.config/nvim' EXIT
+              if [ -z "$AKIRVIM_DEV_LINKED" ]; then
+                export AKIRVIM_DEV_LINKED=1
+                if [ -d ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
+                  echo "WARNING: ~/.config/nvim is a real directory, not linking."
+                else
+                  ln -sfn "$PWD" ~/.config/nvim
+                  echo " repo linked to ~/.config/nvim"
+                fi
               fi
+              echo "AKIRVIM dev environment"
+              echo "  nvim -> uses repo files directly (for dev/debug)"
               echo "  av   -> flake-managed (~/.config/akirnvim/)"
             '';
           };
