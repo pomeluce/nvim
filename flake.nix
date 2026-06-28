@@ -128,6 +128,12 @@
               description = "Additional packages to append to the default Neovim dependency list.";
             };
 
+            defaultEditor = lib.mkOption {
+              type = lib.types.bool;
+              default = true;
+              description = "Set EDITOR and VISUAL to av (AKIRVIM).";
+            };
+
             settings = lib.mkOption {
               type = lib.types.submodule {
                 options = {
@@ -302,31 +308,41 @@
                 cp ${settingsFile} $out/settings.toml
               '';
 
-            # ── 2. av wrapper ──
+            # ── 2. Custom nixpkgs overlay ──
+            nixpkgs.overlays = [ apkgs.overlays.default ];
+
+            # ── 3. Wrapped Neovim (avoids init.lua generation) ──
             home.packages = [
+              (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
+                wrapperArgs = lib.optionals (defaultPackages ++ cfg.extraPackages != [ ]) [
+                  "--suffix"
+                  "PATH"
+                  ":"
+                  (lib.makeBinPath (defaultPackages ++ cfg.extraPackages))
+                ];
+              })
+            ]
+            ++ [
               (pkgs.writeShellScriptBin "av" ''
                 export NVIM_APPNAME=${cfg.configDir}
                 exec nvim "$@"
               '')
             ];
 
-            # ── 3. Custom nixpkgs overlay ──
-            nixpkgs.overlays = [ apkgs.overlays.default ];
-
-            # ── 4. Enable Neovim ──
-            programs.neovim = {
-              enable = lib.mkDefault true;
-              extraPackages = defaultPackages ++ cfg.extraPackages;
-            };
-
-            # ── 5. Environment variables ──
-            home.sessionVariables = lib.filterAttrs (_: v: v != null) {
-              JAVA_LOMBOK = cfg.env.JAVA_LOMBOK;
-              VSC_JAVA_DEBUG = cfg.env.VSC_JAVA_DEBUG;
-              VSC_JAVA_TEST = cfg.env.VSC_JAVA_TEST;
-              VSC_CPPTOOLS_DEBUG = cfg.env.VSC_CPPTOOLS_DEBUG;
-              VSC_FIREFOX_DEBUG = cfg.env.VSC_FIREFOX_DEBUG;
-            };
+            # ── 4. Environment variables ──
+            home.sessionVariables = lib.mkMerge [
+              (lib.mkIf cfg.defaultEditor {
+                EDITOR = "av";
+                VISUAL = "av";
+              })
+              (lib.filterAttrs (_: v: v != null) {
+                JAVA_LOMBOK = cfg.env.JAVA_LOMBOK;
+                VSC_JAVA_DEBUG = cfg.env.VSC_JAVA_DEBUG;
+                VSC_JAVA_TEST = cfg.env.VSC_JAVA_TEST;
+                VSC_CPPTOOLS_DEBUG = cfg.env.VSC_CPPTOOLS_DEBUG;
+                VSC_FIREFOX_DEBUG = cfg.env.VSC_FIREFOX_DEBUG;
+              })
+            ];
           };
 
         };
