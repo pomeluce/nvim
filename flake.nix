@@ -322,6 +322,11 @@
                   "PATH"
                   ":"
                   (lib.makeBinPath (defaultPackages ++ cfg.extraPackages))
+                ] ++ [
+                  "--suffix"
+                  "LUA_CPATH"
+                  ";"
+                  "${pkgs.luajitPackages.tomlua}/lib/lua/5.1/?.so"
                 ];
               })
             ]
@@ -444,6 +449,7 @@
               ];
 
             shellHook = ''
+              export LUA_CPATH="${pkgs'.luajitPackages.tomlua}/lib/lua/5.1/?.so;$LUA_CPATH"
               if [ -z "$AKIRVIM_DEV_LINKED" ]; then
                 export AKIRVIM_DEV_LINKED=1
                 if [ -d ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
