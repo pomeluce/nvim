@@ -288,8 +288,8 @@
           };
 
           config = lib.mkIf cfg.enable {
-            # ── 1. Link config directory to ~/.config/akirnvim ──
-            xdg.configFile.${cfg.configDir}.source =
+            # ── 1. Symlink config files individually (dir stays writable for lock file) ──
+            xdg.configFile =
               let
                 # Recursively filter null values to avoid null in TOML
                 filterNulls =
@@ -303,14 +303,18 @@
                 cleanSettings = filterNulls cfg.settings;
                 settingsFile = (pkgs.formats.toml { }).generate "settings.toml" cleanSettings;
               in
-              pkgs.runCommand "${cfg.package.name}-with-settings" { } ''
-                mkdir -p $out
-                cp -r ${cfg.package}/* $out/
-                cp ${settingsFile} $out/settings.toml
-              '';
+              lib.mkMerge [
+                {
+                  "${cfg.configDir}/init.lua".source = "${cfg.package}/init.lua";
+                  "${cfg.configDir}/lua".source = "${cfg.package}/lua";
+                  "${cfg.configDir}/after".source = "${cfg.package}/after";
+                  "${cfg.configDir}/snippets".source = "${cfg.package}/snippets";
+                  "${cfg.configDir}/settings.toml".source = settingsFile;
+                }
+              ];
 
-            # ── 2. Writable lock file (copied once, not symlinked) ──
-            home.activation.initAkrvimLock = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            # ── 2. Writable lock file (dir is real, not symlinked to store) ──
+            home.activation.copyAkrvimLock = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
               cp ${./nvim-pack-lock.json} "$HOME/.config/${cfg.configDir}/nvim-pack-lock.json"
             '';
 
