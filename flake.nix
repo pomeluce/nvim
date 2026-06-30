@@ -288,7 +288,12 @@
           };
 
           config = lib.mkIf cfg.enable {
-            # ── 1. Symlink config files individually (dir stays writable for lock file) ──
+            # ── 1. Clean up old config (migration from dir symlink to individual files) ──
+            home.activation.cleanOldAkrvimConfig = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
+              rm -rf "$HOME/.config/${cfg.configDir}"
+            '';
+
+            # ── 2. Symlink config files individually (dir stays writable for lock file) ──
             xdg.configFile =
               let
                 # Recursively filter null values to avoid null in TOML
@@ -313,15 +318,15 @@
                 }
               ];
 
-            # ── 2. Writable lock file (dir is real, not symlinked to store) ──
+            # ── 3. Writable lock file (dir is real, not symlinked to store) ──
             home.activation.copyAkrvimLock = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
               cp ${./nvim-pack-lock.json} "$HOME/.config/${cfg.configDir}/nvim-pack-lock.json"
             '';
 
-            # ── 3. Custom nixpkgs overlay ──
+            # ── 4. Custom nixpkgs overlay ──
             nixpkgs.overlays = [ apkgs.overlays.default ];
 
-            # ── 4. Wrapped Neovim (avoids init.lua generation) ──
+            # ── 5. Wrapped Neovim (avoids init.lua generation) ──
             home.packages = [
               (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
                 wrapRc = false;
@@ -348,7 +353,7 @@
               '')
             ];
 
-            # ── 5. Environment variables ──
+            # ── 6. Environment variables ──
             home.sessionVariables = lib.mkMerge [
               (lib.mkIf cfg.defaultEditor {
                 EDITOR = "av";
