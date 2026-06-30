@@ -309,25 +309,32 @@
                 cp ${settingsFile} $out/settings.toml
               '';
 
-            # ── 2. Custom nixpkgs overlay ──
+            # ── 2. Writable lock file (copied once, not symlinked) ──
+            home.activation.initAkrvimLock = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              cp ${./nvim-pack-lock.json} "$HOME/.config/${cfg.configDir}/nvim-pack-lock.json"
+            '';
+
+            # ── 3. Custom nixpkgs overlay ──
             nixpkgs.overlays = [ apkgs.overlays.default ];
 
-            # ── 3. Wrapped Neovim (avoids init.lua generation) ──
+            # ── 4. Wrapped Neovim (avoids init.lua generation) ──
             home.packages = [
               (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
                 wrapRc = false;
                 extraLuaPackages = ps: [ ps.tomlua ];
-                wrapperArgs = lib.optionals (defaultPackages ++ cfg.extraPackages != [ ]) [
-                  "--suffix"
-                  "PATH"
-                  ":"
-                  (lib.makeBinPath (defaultPackages ++ cfg.extraPackages))
-                ] ++ [
-                  "--suffix"
-                  "LUA_CPATH"
-                  ";"
-                  "${pkgs.luajitPackages.tomlua}/lib/lua/5.1/?.so"
-                ];
+                wrapperArgs =
+                  lib.optionals (defaultPackages ++ cfg.extraPackages != [ ]) [
+                    "--suffix"
+                    "PATH"
+                    ":"
+                    (lib.makeBinPath (defaultPackages ++ cfg.extraPackages))
+                  ]
+                  ++ [
+                    "--suffix"
+                    "LUA_CPATH"
+                    ";"
+                    "${pkgs.luajitPackages.tomlua}/lib/lua/5.1/?.so"
+                  ];
               })
             ]
             ++ [
@@ -337,7 +344,7 @@
               '')
             ];
 
-            # ── 4. Environment variables ──
+            # ── 5. Environment variables ──
             home.sessionVariables = lib.mkMerge [
               (lib.mkIf cfg.defaultEditor {
                 EDITOR = "av";
@@ -371,7 +378,7 @@
               runHook preInstall
 
               mkdir -p $out
-              cp -R init.lua lua after snippets nvim-pack-lock.json $out/
+              cp -R init.lua lua after snippets $out/
 
               runHook postInstall
             '';
@@ -471,7 +478,6 @@
               test -d ${akirnvimPackage}/lua
               test -d ${akirnvimPackage}/after
               test -d ${akirnvimPackage}/snippets
-              test -f ${akirnvimPackage}/nvim-pack-lock.json
               touch $out
             '';
 
