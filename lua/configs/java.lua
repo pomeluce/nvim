@@ -68,59 +68,97 @@ function M.setup(root_dir)
 
   require('jdtls').start_or_attach(config)
 
-  -- java_home: runtimes default(runner:launch 优先用 jdtls 的 cfg.javaExec)
-  local function java_home()
-    local runtimes = require('settings').lsp.jdtls.runtimes or {}
+  -- java_home(compliance?): 按版本精确匹配 → default → 第一个 runtime
+  -- compliance 来自 jdtls 的 compiler.compliance, e.g. "1.8" → 匹配 "JavaSE-1.8"
+  local runtimes = require('settings').lsp.jdtls.runtimes or {}
+  local function java_home(compliance)
+    if compliance then
+      local ee_name = 'JavaSE-' .. compliance
+      for _, rt in ipairs(runtimes) do
+        if rt.name == ee_name then return rt.path end
+      end
+    end
     for _, rt in ipairs(runtimes) do
       if rt.default then return rt.path end
     end
     return runtimes[1] and runtimes[1].path or nil
   end
 
+  -- helper: find current jdtls LSP client
+  local function jdtls_client()
+    return vim.tbl_filter(function(c) return c.name == 'jdtls' end, vim.lsp.get_clients())[1]
+  end
+
   -- JavaRunner
   local runner = { runs = {}, curr_run = nil, log_win = -1 }
 
   function runner:launch(cfg)
-    local jh = java_home()
-    local java_bin = cfg.javaExec or (jh and (jh .. '/bin/java')) or 'java'
-    local cmd_str = java_bin
-    if cfg.classPaths and #cfg.classPaths > 0 then cmd_str = cmd_str .. ' -cp ' .. table.concat(cfg.classPaths, ':') end
-    if cfg.vmArgs and cfg.vmArgs ~= '' then cmd_str = cmd_str .. ' ' .. cfg.vmArgs end
-    cmd_str = cmd_str .. ' ' .. cfg.mainClass
-    if cfg.args and cfg.args ~= '' then cmd_str = cmd_str .. ' ' .. cfg.args end
-    local run = self.runs[cfg.mainClass]
-    if run then
-      if run.is_running then vim.fn.jobstop(run.job_id) end
-    else
-      run = { buf = vim.api.nvim_create_buf(false, true), term_chan = nil, job_id = nil, is_running = false }
-      vim.api.nvim_buf_set_name(run.buf, 'Java: ' .. cfg.mainClass)
-      run.term_chan = vim.api.nvim_open_term(run.buf, {
-        on_input = function(_, _, _, data)
-          if run.job_id then vim.fn.chansend(run.job_id, data) end
+    -- 优先级: compliance 精确匹配 → jdtls javaExec → default runtime → 系统 java
+    local jh_default = java_home()
+    local function do_launch(java_bin)
+      local cmd_str = java_bin
+      if cfg.classPaths and #cfg.classPaths > 0 then cmd_str = cmd_str .. ' -cp ' .. table.concat(cfg.classPaths, ':') end
+      if cfg.vmArgs and cfg.vmArgs ~= '' then cmd_str = cmd_str .. ' ' .. cfg.vmArgs end
+      cmd_str = cmd_str .. ' ' .. cfg.mainClass
+      if cfg.args and cfg.args ~= '' then cmd_str = cmd_str .. ' ' .. cfg.args end
+      local run = self.runs[cfg.mainClass]
+      if run then
+        if run.is_running then vim.fn.jobstop(run.job_id) end
+      else
+        run = { buf = vim.api.nvim_create_buf(false, true), term_chan = nil, job_id = nil, is_running = false }
+        vim.api.nvim_buf_set_name(run.buf, 'Java: ' .. cfg.mainClass)
+        run.term_chan = vim.api.nvim_open_term(run.buf, {
+          on_input = function(_, _, _, data)
+            if run.job_id then vim.fn.chansend(run.job_id, data) end
+          end,
+        })
+        self.runs[cfg.mainClass] = run
+      end
+      self.curr_run = run
+      self:show_log(run.buf)
+      vim.fn.chansend(run.term_chan, cmd_str .. '\r\n')
+      run.is_running = true
+      run.job_id = vim.fn.jobstart(cmd_str, {
+        pty = true,
+        on_stdout = function(_, data)
+          if data then vim.fn.chansend(run.term_chan, data) end
+        end,
+        on_stderr = function(_, data)
+          if data then vim.fn.chansend(run.term_chan, data) end
+        end,
+        on_exit = function(_, code)
+          vim.schedule(function()
+            vim.fn.chansend(run.term_chan, string.format('\r\nProcess finished with exit code: %d\r\n', code))
+            run.is_running = false
+            run.job_id = nil
+          end)
         end,
       })
-      self.runs[cfg.mainClass] = run
     end
-    self.curr_run = run
-    self:show_log(run.buf)
-    vim.fn.chansend(run.term_chan, cmd_str .. '\r\n')
-    run.is_running = true
-    run.job_id = vim.fn.jobstart(cmd_str, {
-      pty = true,
-      on_stdout = function(_, data)
-        if data then vim.fn.chansend(run.term_chan, data) end
-      end,
-      on_stderr = function(_, data)
-        if data then vim.fn.chansend(run.term_chan, data) end
-      end,
-      on_exit = function(_, code)
-        vim.schedule(function()
-          vim.fn.chansend(run.term_chan, string.format('\r\nProcess finished with exit code: %d\r\n', code))
-          run.is_running = false
-          run.job_id = nil
-        end)
-      end,
-    })
+
+    -- 从 jdtls 查项目 compliance 做精确匹配
+    local client = jdtls_client()
+    if client then
+      client:request('workspace/executeCommand', {
+        command = 'java.project.getSettings',
+        arguments = {
+          vim.uri_from_bufnr(0),
+          { 'org.eclipse.jdt.core.compiler.compliance' },
+        },
+      }, function(err, settings)
+        local java_bin = nil
+        if settings and settings['org.eclipse.jdt.core.compiler.compliance'] then
+          local jh_matched = java_home(settings['org.eclipse.jdt.core.compiler.compliance'])
+          if jh_matched then java_bin = jh_matched .. '/bin/java' end
+        end
+        -- jh_matched > javaExec > jh_default > java
+        java_bin = java_bin or cfg.javaExec or (jh_default and (jh_default .. '/bin/java')) or 'java'
+        do_launch(java_bin)
+      end, 0)
+    else
+      local java_bin = cfg.javaExec or (jh_default and (jh_default .. '/bin/java')) or 'java'
+      do_launch(java_bin)
+    end
   end
 
   function runner:start()
@@ -194,15 +232,60 @@ function M.setup(root_dir)
   create_cmd('JavaStopMain', function() runner:stop() end, { desc = 'Stop running Java main class' })
   create_cmd('JavaToggleLogs', function() runner:toggle_log() end, { desc = 'Toggle Java run log window' })
   create_cmd('JavaCompile', function()
-    -- 传自定义 on_compile_result, 阻止 nvim-jdtls 默认的 copen(源码 L904)
-    jdtls_mod.compile('full', function()
-      vim.schedule(function()
-        vim.cmd('copen')
-        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-          if vim.bo[buf].buftype == 'quickfix' then vim.bo[buf].buflisted = false end
-        end
+    -- resolve 正确的 JDK → 临时替换 runtimes → 编译 → 在回调中恢复
+    local function do_compile(after)
+      jdtls_mod.compile('full', function()
+        vim.schedule(function()
+          vim.cmd('copen')
+          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.bo[buf].buftype == 'quickfix' then vim.bo[buf].buflisted = false end
+          end
+          if after then after() end
+        end)
       end)
-    end)
+    end
+
+    local client = jdtls_client()
+    if not client then
+      do_compile()
+      return
+    end
+
+    client:request('workspace/executeCommand', {
+      command = 'java.project.getSettings',
+      arguments = {
+        vim.uri_from_bufnr(0),
+        { 'org.eclipse.jdt.core.compiler.compliance' },
+      },
+    }, function(_, settings)
+      local compliance = settings and settings['org.eclipse.jdt.core.compiler.compliance']
+      local jh_matched = compliance and java_home(compliance)
+      if jh_matched then
+        local saved = vim.deepcopy(runtimes)
+        -- restore: 编译完成后恢复原始 runtimes, 带 pcall 防 client 已销毁
+        local function restore()
+          vim.schedule(function()
+            pcall(function()
+              local c = jdtls_client()
+              if c then c:notify('workspace/didChangeConfiguration', {
+                settings = { java = { configuration = { runtimes = saved } } },
+              }) end
+            end)
+          end)
+        end
+        local compile_rt = {}
+        for _, rt in ipairs(runtimes) do
+          if rt.path == jh_matched then table.insert(compile_rt, { name = rt.name, path = rt.path, default = true }) end
+        end
+        client:notify('workspace/didChangeConfiguration', {
+          settings = { java = { configuration = { runtimes = compile_rt } } },
+        })
+        -- 等 jdtls 处理完配置变更再编译, restore 在 compile 回调中执行
+        vim.defer_fn(function() do_compile(restore) end, 500)
+      else
+        do_compile()
+      end
+    end, 0)
   end, { desc = 'Build Java workspace' })
   create_cmd('JavaUpdateConfig', function() jdtls_mod.update_project_config() end, { desc = 'Update jdtls project config' })
   create_cmd('JavaDebugMain', function()
