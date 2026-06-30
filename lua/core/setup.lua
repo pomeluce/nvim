@@ -147,6 +147,23 @@ end, {
   desc = 'Check plugin status without downloading',
 })
 
+-- :PkSync 命令根据 lock 文件同步插件到锁定版本, 不带参数同步全部, 默认显示审查界面; 可以加 ! 强制直接同步
+vim.api.nvim_create_user_command('PkSync', function(opts)
+  local targets = #opts.fargs > 0 and opts.fargs or nil
+  local force = opts.bang -- PkSync! 直接同步不审查
+  if targets then
+    vim.notify('Syncing to lockfile: ' .. table.concat(targets, ', '), vim.log.levels.INFO)
+  else
+    vim.notify('Syncing all plugins to lockfile versions...', vim.log.levels.INFO)
+  end
+  vim.pack.update(targets, { target = 'lockfile', force = force })
+end, {
+  nargs = '*',
+  bang = true,
+  complete = get_plugin_names,
+  desc = 'Sync plugins to lockfile versions (use ! to skip confirmation)',
+})
+
 -- ==============================================================
 -- 插件管理引擎(PackUtils)(暴露给全局, 供 plugins/*.lua 调用)
 -- ==============================================================
@@ -384,7 +401,8 @@ end
 PackUtils.sync(active_specs)
 
 -- 正式下载/注册插件(仅启用的)
-vim.pack.add(active_specs)
+-- add 对新插件已优先用 lock 文件 rev; 若 lock 无记录才回退到 version spec 匹配最新 tag
+vim.pack.add(active_specs, { confirm = false })
 
 -- 递归加载 plugins/ 下所有 Lua 文件(含子目录 init.lua)
 local function load_plugin_dir(dir, prefix)
