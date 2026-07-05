@@ -323,7 +323,8 @@
 
             # ── 3. Writable lock file (dir is real, not symlinked to store) ──
             home.activation.copyAkrvimLock = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-              cp ${./nvim-pack-lock.json} "$HOME/.config/${cfg.configDir}/nvim-pack-lock.json"
+              cp --no-preserve=mode ${./nvim-pack-lock.json} "$HOME/.config/${cfg.configDir}/nvim-pack-lock.json"
+              chmod u+w "$HOME/.config/${cfg.configDir}/nvim-pack-lock.json"
             '';
 
             # ── 4. Custom nixpkgs overlay ──
