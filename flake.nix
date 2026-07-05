@@ -332,11 +332,11 @@
                 wrapRc = false;
                 extraLuaPackages = ps: [ ps.tomlua ];
                 wrapperArgs =
-                  lib.optionals (defaultPackages ++ cfg.extraPackages != [ ]) [
+                  lib.optionals (cfg.extraPackages ++ defaultPackages != [ ]) [
                     "--suffix"
                     "PATH"
                     ":"
-                    (lib.makeBinPath (defaultPackages ++ cfg.extraPackages))
+                    (lib.makeBinPath (cfg.extraPackages ++ defaultPackages))
                   ]
                   ++ [
                     "--suffix"
