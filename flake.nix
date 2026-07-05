@@ -103,6 +103,9 @@
             sqlfluff
             stylua
           ];
+          getPname = p: p.pname or (builtins.head (lib.splitString "-" (lib.getName p)));
+          extraPnames = map getPname cfg.extraPackages;
+          filteredDefaults = lib.filter (p: !builtins.elem (getPname p) extraPnames) defaultPackages;
         in
         {
           options.programs.akirnvim = {
@@ -332,11 +335,11 @@
                 wrapRc = false;
                 extraLuaPackages = ps: [ ps.tomlua ];
                 wrapperArgs =
-                  lib.optionals (cfg.extraPackages ++ defaultPackages != [ ]) [
+                  lib.optionals (cfg.extraPackages ++ filteredDefaults != [ ]) [
                     "--suffix"
                     "PATH"
                     ":"
-                    (lib.makeBinPath (cfg.extraPackages ++ defaultPackages))
+                    (lib.makeBinPath (cfg.extraPackages ++ filteredDefaults))
                   ]
                   ++ [
                     "--suffix"
