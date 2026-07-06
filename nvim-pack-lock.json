@@ -79,7 +79,7 @@
       "src": "https://github.com/brianhuster/live-preview.nvim"
     },
     "mini.files": {
-      "rev": "266df5bd14c980b30eaa9c159b745467d2129459",
+      "rev": "057c16f0cafe59c9e1bf9d894723d6ae074b76fd",
       "src": "https://github.com/nvim-mini/mini.files"
     },
     "mini.icons": {
@@ -143,7 +143,7 @@
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-tree.lua": {
-      "rev": "8e8be709c9a93e1ebefde7964884a8b564bfd3e0",
+      "rev": "7ff7040bf6c246671eb55cb1727de4fd9f92a106",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
