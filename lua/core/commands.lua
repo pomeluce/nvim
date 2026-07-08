@@ -75,3 +75,12 @@ register('SetHL', function(opts)
     vim.api.nvim_set_hl(0, group, opt)
   end
 end, { nargs = 1, desc = 'set highlight groups' })
+
+-- 高亮复制:把选区/整文件以富文本 HTML 写入剪贴板,粘贴到 Word 等保留语法颜色
+register('CopyHighlighted', function(opts)
+  local s, e
+  if opts.range > 0 then
+    s, e = opts.line1, opts.line2
+  end
+  require('configs.hlyank').copy({ start_row = s, end_row = e })
+end, { range = true, desc = 'copy highlighted code (rich HTML) to clipboard' })

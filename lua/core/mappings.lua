@@ -146,3 +146,15 @@ map('n', '<leader>sh', '<cmd>NeovimProjectHistory<cr>', { desc = 'Select project
 
 -- swtich
 map('n', '`', '<cmd>Switch<cr>', { desc = 'Switch segments of text with predefined replacements' })
+
+-- 高亮复制选区到剪贴板(富文本 HTML)
+map('v', '<leader>y', function()
+  -- 退出可视模式以固定 '< / '> 标记为刚结束的选区.
+  -- 否则在回调执行时仍处于可视模式,首次触发 '< / '> 可能是
+  -- 陈旧/未设置状态(返回 0), 导致 copy() 收到空范围并报"范围为空".
+  vim.cmd('normal! \27')
+  require('configs.hlyank').copy({
+    start_row = vim.fn.line("'<"),
+    end_row = vim.fn.line("'>"),
+  })
+end, { desc = 'Copy highlighted code (rich HTML) to clipboard' })
