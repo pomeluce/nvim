@@ -6,7 +6,7 @@
       "version": "2.0.0 - 3.0.0"
     },
     "base16-nvim": {
-      "rev": "21233d5fd574439ae1e2f5e4bfbc574214f4ab3d",
+      "rev": "012273e4bbf3e143224a272ad2efd10b69a000ba",
       "src": "https://github.com/RRethy/base16-nvim"
     },
     "blink-cmp-avante": {
@@ -47,7 +47,7 @@
       "src": "https://github.com/Bekaboo/dropbar.nvim"
     },
     "flash.nvim": {
-      "rev": "fcea7ff883235d9024dc41e638f164a450c14ca2",
+      "rev": "b6346946d10d07998efee029fb0f7a593806d0cd",
       "src": "https://github.com/folke/flash.nvim"
     },
     "friendly-snippets": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "kulala.nvim": {
-      "rev": "5a2883ce52bc5feb6eb1f0ddd19de06bb4033144",
+      "rev": "a9e17ae0236e886371671a7a9f01f070201a9cc1",
       "src": "https://github.com/mistweaverco/kulala.nvim"
     },
     "live-preview.nvim": {
@@ -79,11 +79,11 @@
       "src": "https://github.com/brianhuster/live-preview.nvim"
     },
     "mini.files": {
-      "rev": "057c16f0cafe59c9e1bf9d894723d6ae074b76fd",
+      "rev": "0765a2502d3577b2b00d21f8f607f9bd7c8d89fc",
       "src": "https://github.com/nvim-mini/mini.files"
     },
     "mini.icons": {
-      "rev": "24dbea2195c477e57d581215839a6ab915f34b14",
+      "rev": "98faae31e9be1cc054ae63485e58ceb185efcad0",
       "src": "https://github.com/nvim-mini/mini.icons"
     },
     "neogen": {
@@ -131,7 +131,7 @@
       "src": "https://github.com/mfussenegger/nvim-jdtls"
     },
     "nvim-lspconfig": {
-      "rev": "d224a1920728ba129880efc700d4a0180ac4ecbb",
+      "rev": "d5b6e3db4c17b0146f63a2fc47e2027a754b2cb1",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -143,7 +143,7 @@
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-tree.lua": {
-      "rev": "7ff7040bf6c246671eb55cb1727de4fd9f92a106",
+      "rev": "cf18a662cd5f200361b6fedfb794eed583e075e1",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
@@ -208,7 +208,7 @@
       "src": "https://github.com/linux-cultist/venv-selector.nvim"
     },
     "vimcdoc": {
-      "rev": "5f39ac13995385ca7647708af91888bf86c1d592",
+      "rev": "81b49a67aa3dc1c170463d875c0a34598f9e1b4d",
       "src": "https://github.com/yianwillis/vimcdoc"
     }
   }
