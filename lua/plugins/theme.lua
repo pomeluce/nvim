@@ -55,6 +55,8 @@ vim.api.nvim_create_autocmd('UIEnter', {
     set_hl('TabLine', { fg = palette.base04 })
 
     local groups = {
+      'BlinkCmpMenu',
+      'BlinkCmpMenuBorder',
       'DiagnosticFloatingOk',
       'DiagnosticFloatingInfo',
       'DiagnosticFloatingWarn',
