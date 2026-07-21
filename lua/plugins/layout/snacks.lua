@@ -10,7 +10,14 @@ vim.api.nvim_create_autocmd('VimEnter', {
           layout = { layout = { width = 0.5, height = 0.6, preview = { size = 0.6 } } },
           matcher = { frecency = true, cwd_bonus = true, history_bonus = true },
           formatters = { icon_width = 3 },
+          icons = { git = { staged = '✓', added = '✓', modified = '~', deleted = '', ignored = ' ', renamed = '+', unmerged = '', untracked = '?' } },
           win = { input = { keys = { ['<leader>c'] = { 'close', mode = { 'i' } } } } },
+          sources = {
+            explorer = {
+              layout = { layout = { width = 30, min_width = 30 } },
+              win = { list = { keys = { ['<BS>'] = function() end } } },
+            },
+          },
         },
         dashboard = {
           enabled = true,
@@ -44,6 +51,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
 
       local map = vim.keymap.set
       map('n', '<leader>ff', function() Snacks.picker.smart({ multi = { 'buffers', 'files' } }) end, { desc = 'Smart file picker' })
+      map('n', '<leader>fe', function() Snacks.explorer() end, { desc = 'File explorer' })
       map('n', '<leader>fb', function() Snacks.picker.buffers({ sort_lastused = true }) end, { desc = 'Find buffer' })
       map('n', '<leader>fo', Snacks.picker.recent, { desc = 'Find recent file' })
       map('n', '<leader>fw', Snacks.picker.grep, { desc = 'Live grep in files' })

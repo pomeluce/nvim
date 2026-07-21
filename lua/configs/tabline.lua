@@ -11,6 +11,23 @@ return {
         self.title = ''
         return true
       end
+      -- snacks explorer 作为左侧 split 侧栏时, 同样在 tabline 占位
+      local ok, Snacks = pcall(require, 'snacks')
+      if ok and Snacks and Snacks.picker then
+        local explorer = Snacks.picker.get({ source = 'explorer' })[1]
+        local root = explorer and explorer.layout and explorer.layout.root
+        local rwin = root and root.win
+        if
+          rwin
+          and vim.api.nvim_win_is_valid(rwin)
+          and vim.api.nvim_win_get_tabpage(rwin) == vim.api.nvim_get_current_tabpage()
+          and vim.api.nvim_win_get_config(rwin).relative == ''
+        then
+          self.winid = rwin
+          self.title = ''
+          return true
+        end
+      end
     end,
     provider = function(self)
       local title = self.title
