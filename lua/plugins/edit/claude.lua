@@ -4,42 +4,11 @@ vim.api.nvim_create_autocmd('VimEnter', {
     PackUtils.load({ name = 'claudecode.nvim' }, function()
       local map = vim.keymap.set
 
-      local function select_model()
-        local models = require('utils').read_json(os.getenv('HOME') .. '/.claude/models.json') or {}
-        local transformed = {}
-        for i, m in ipairs(models) do
-          local nm = tostring(m.name or '')
-          local mdl = tostring(m.model or '')
-          table.insert(transformed, { idx = i, source = 1, text = nm, name = mdl })
-        end
-        Snacks.picker({
-          title = 'Toggle Claude Model',
-          layout = 'select',
-          items = transformed,
-          format = function(item)
-            local pad = 10
-            local label = ('%-' .. pad .. 's'):format(item.text)
-            return { { label, 'SnacksPickerLabel' }, { item.name, 'SnacksPickerList' } }
-          end,
-          confirm = function(picker, item)
-            picker:close()
-            vim.system({ 'ccs', item.text }, { text = true }, function(res)
-              if res.code == 0 then
-                vim.notify('Switch to model: ' .. item.text .. '/' .. item.name, vim.log.levels.INFO)
-              else
-                vim.notify('Switch to model fail: ' .. (res.stderr or ''), vim.log.levels.WARN)
-              end
-            end)
-          end,
-        })
-      end
-
       require('claudecode').setup({ terminal_cmd = vim.fn.exepath('claude'), terminal = { split_width_percentage = 0.40 } })
       map('n', '<leader>ac', '<cmd>ClaudeCode<cr>', { desc = 'Toggle Claude' })
       map('n', '<leader>af', '<cmd>ClaudeCodeFocus<cr>', { desc = 'Focus Claude' })
       map('n', '<leader>ar', '<cmd>ClaudeCode --resume<cr>', { desc = 'Resume Claude' })
       map('n', '<leader>aC', '<cmd>ClaudeCode --continue<cr>', { desc = 'Continue Claude' })
-      map('n', '<leader>am', select_model, { desc = 'Select Claude model' })
       map('n', '<leader>aq', '<cmd>ClaudeCodeClose<cr>', { desc = 'Close Claude' })
       map('n', '<leader>ab', '<cmd>ClaudeCodeAdd %<cr>', { desc = 'Add current buffer' })
       map('v', '<leader>as', '<cmd>ClaudeCodeSend<cr>', { desc = 'Send to Claude' })
