@@ -10,6 +10,7 @@ local terminals = {}
 local tabs = {} -- 有序 Terminal 对象数组
 local active_idx = nil
 local term_timer = nil -- ensure_terminal 的轮询 timer, 同一时刻只保留一个, 避免并发抢焦点
+local sync_timer = nil -- tab 栏与终端窗口的状态同步 timer
 
 -- 独立的 tab 栏浮动窗口(带边框, 在终端窗口正上方)
 local tabbar_win = nil
@@ -49,7 +50,36 @@ end
 -- tab 栏: 独立的带边框浮动窗口
 ---------------------------------------------------------------------------
 
+-- 停止状态同步轮询
+local function stop_sync()
+  if sync_timer and not sync_timer:is_closing() then
+    sync_timer:stop()
+    sync_timer:close()
+  end
+  sync_timer = nil
+end
+
+-- 启动状态同步轮询: tab 栏显示期间, 若没有任何 tab 终端窗口仍有效(被外部关闭/失焦/diff 界面等), 同步隐藏 tab 栏
+local function start_sync()
+  if sync_timer then return end -- 已在运行
+  local timer = vim.uv.new_timer()
+  if not timer then return end
+  sync_timer = timer
+  timer:start(
+    100,
+    100,
+    vim.schedule_wrap(function()
+      if not tabbar_win or not api.nvim_win_is_valid(tabbar_win) then return stop_sync() end
+      for _, t in ipairs(tabs) do
+        if t.window and api.nvim_win_is_valid(t.window) then return end
+      end
+      M._close_tabbar()
+    end)
+  )
+end
+
 function M._close_tabbar()
+  stop_sync()
   if tabbar_win and api.nvim_win_is_valid(tabbar_win) then api.nvim_win_close(tabbar_win, true) end
   tabbar_win = nil
 end
@@ -128,6 +158,7 @@ function M._open_tabbar(term)
     api.nvim_win_set_config(tabbar_win, win_opts)
   end
   M._render_tabbar()
+  start_sync()
 end
 
 -- 依据当前 tab 数量决定 tab 栏开关: >=2 显示并刷新, 否则关闭
