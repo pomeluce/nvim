@@ -17,7 +17,7 @@ local tabbar_win = nil
 local tabbar_buf = nil
 local tabbar_ns = api.nvim_create_namespace('term_tabbar')
 
-local FLOAT_OPTS = { width = 100, height = 30, border = 'rounded' }
+local FLOAT_OPTS = { width = 120, height = 36, border = 'rounded' }
 -- ensure_terminal 轮询上限(次), 每 10ms 一次 → 最多约 200ms
 local MAX_ENSURE_ATTEMPTS = 20
 
