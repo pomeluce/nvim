@@ -300,23 +300,23 @@ default = true   # 标记为默认运行时
 
 # 命令运行配置（通过 file_key 映射执行命令）
 [file.run_cmd]
-"python" = "python3 %"
-"lua"    = "lua %"
+"python" = "python3 {file}"
+"lua"    = "lua {file}"
 ```
 
 ### 配置项参考
 
-| 配置项                           | 类型       | 默认值  | 说明                                              |
-| -------------------------------- | ---------- | ------- | ------------------------------------------------- |
-| `mason.enable`                   | `boolean`  | `false` | 启用 Mason 自动管理 LSP/DAP/Formatter             |
-| `session.projects`               | `string[]` | `[]`    | neovim-project 项目列表                           |
-| `session.ignore_dir`             | `string[]` | `[]`    | session 自动保存时忽略的目录                      |
-| `lsp.jdtls.runtimes[].name`      | `string`   | —       | JavaSE 运行时名称（如 `JavaSE-1.8`、`JavaSE-21`） |
-| `lsp.jdtls.runtimes[].path`      | `string`   | —       | JDK 安装路径                                      |
-| `lsp.jdtls.runtimes[].default`   | `boolean`  | `false` | 是否为默认运行时                                  |
-| `lsp.jdtls.maven.userSettings`   | `string`   | —       | Maven user settings.xml 路径                      |
-| `lsp.jdtls.maven.globalSettings` | `string`   | —       | Maven global settings.xml 路径                    |
-| `file.run_cmd`                   | `table`    | `{}`    | 按文件类型映射的运行命令                          |
+| 配置项                           | 类型       | 默认值  | 说明                                                        |
+| -------------------------------- | ---------- | ------- | ----------------------------------------------------------- |
+| `mason.enable`                   | `boolean`  | `false` | 启用 Mason 自动管理 LSP/DAP/Formatter                       |
+| `session.projects`               | `string[]` | `[]`    | neovim-project 项目列表                                     |
+| `session.ignore_dir`             | `string[]` | `[]`    | session 自动保存时忽略的目录                                |
+| `lsp.jdtls.runtimes[].name`      | `string`   | —       | JavaSE 运行时名称（如 `JavaSE-1.8`、`JavaSE-21`）           |
+| `lsp.jdtls.runtimes[].path`      | `string`   | —       | JDK 安装路径                                                |
+| `lsp.jdtls.runtimes[].default`   | `boolean`  | `false` | 是否为默认运行时                                            |
+| `lsp.jdtls.maven.userSettings`   | `string`   | —       | Maven user settings.xml 路径                                |
+| `lsp.jdtls.maven.globalSettings` | `string`   | —       | Maven global settings.xml 路径                              |
+| `file.run_cmd`                   | `table`    | `{}`    | 按文件类型映射的运行命令(`{file}` 为路径占位符, 省略则追加) |
 
 ### Header 文件头模板
 
@@ -535,10 +535,24 @@ end)
 
 ### 终端
 
-| 快捷键       | 功能         |
-| ------------ | ------------ |
-| `<c-t>`      | 浮动终端开关 |
-| `<leader>rf` | 运行当前文件 |
+| 快捷键       | 功能                  |
+| ------------ | --------------------- |
+| `<c-t>`      | 浮动终端开关          |
+| `<A-o>`      | 进入终端 tab 管理模式 |
+| `<leader>rf` | 运行当前文件          |
+
+浮动终端支持多 tab 管理。终端可见时按 `<A-o>` 进入 tab 管理模式(tab 栏左侧会显示 `TAB` 标记),之后用单键操作,`<Esc>` 退出(按其他单字符键也会退出,方向键/功能键等特殊键则直接发给终端)。子模式只占用 `<A-o>` 一个组合,避免与 shell 的 `Alt` 快捷键(如 `<A-r>` revert-line、`<A-数字>` digit-argument)冲突。
+
+`<leader>rf` 对 Java 仅支持无 `package` 的单文件。带 `package` 的项目请使用 `<leader>jr` (`:JavaRunMain`),或通过 `file.run_cmd.java` 配置自定义运行命令。
+
+| 按键      | 功能                |
+| --------- | ------------------- |
+| `n`       | 新建 tab            |
+| `w`       | 关闭当前 tab        |
+| `l` / `h` | 下一个 / 上一个 tab |
+| `r`       | 重命名当前 tab      |
+| `1-9`     | 跳转到第 N 个 tab   |
+| `<Esc>`   | 退出管理模式        |
 
 ### Git
 

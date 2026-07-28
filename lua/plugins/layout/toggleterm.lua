@@ -7,7 +7,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
         highlights = { FloatBorder = { link = 'FloatBorder' } },
         float_opts = { width = 100, height = 30, title_pos = 'center', border = 'rounded' },
       }
-      if require('utils').is_win then opts.shell = 'pwsh.exe --noLog' end
+      if require('utils').platform.is_win then opts.shell = 'pwsh.exe -NoLogo -NoProfile' end
 
       require('toggleterm').setup(opts)
 
@@ -19,20 +19,27 @@ vim.api.nvim_create_autocmd('UIEnter', {
       vim.api.nvim_set_hl(0, 'TermTabActive', { fg = p.base0E, bold = true })
       vim.api.nvim_set_hl(0, 'TermTab', { fg = p.base04 })
       vim.api.nvim_set_hl(0, 'TermTabSep', { fg = p.base02 })
+      vim.api.nvim_set_hl(0, 'TermTabMode', { fg = p.base08, bold = true })
 
-      -- 默认浮动终端: 开关 + 多 tab 管理(Alt 组合, n/t 模式)
+      -- <C-t>: 浮动终端开关(常驻); <A-o>: 进入 tab 管理子模式(仅终端可见时绑定)
       map({ 'n', 't' }, '<C-t>', term.toggle_default, { desc = 'Toggle float terminal' })
-      map({ 'n', 't' }, '<A-n>', term.new_tab, { desc = 'Term: new tab' })
-      map({ 'n', 't' }, '<A-w>', term.close_tab, { desc = 'Term: close tab' })
-      map({ 'n', 't' }, '<A-l>', term.next_tab, { desc = 'Term: next tab' })
-      map({ 'n', 't' }, '<A-h>', term.prev_tab, { desc = 'Term: prev tab' })
-      map({ 'n', 't' }, '<A-r>', function() term.rename_tab() end, { desc = 'Term: rename tab' })
-      for i = 1, 9 do
-        map({ 'n', 't' }, string.format('<A-%d>', i), function() term.goto_tab(i) end, { desc = 'Term: goto tab ' .. i })
+
+      local saved_a_o
+      local function bind_term_keys()
+        saved_a_o = {
+          n = term.get_global_map('n', '<A-o>'),
+          t = term.get_global_map('t', '<A-o>'),
+        }
+        map({ 'n', 't' }, '<A-o>', term.enter_tabmode, { desc = 'Term: tab mode (n/w/l/h/r/1-9)' })
       end
+      local function unbind_term_keys()
+        term.restore_global_map('n', '<A-o>', saved_a_o and saved_a_o.n)
+        term.restore_global_map('t', '<A-o>', saved_a_o and saved_a_o.t)
+      end
+      term.set_hooks(bind_term_keys, unbind_term_keys)
 
       -- 覆盖插件自带 :TermNew, 纳入 tab 系统(:ToggleTerm 保持原义)
-      vim.api.nvim_create_user_command('TermNew', function() term.new_tab() end, { nargs = '*', desc = 'New terminal tab' })
+      vim.api.nvim_create_user_command('TermNew', function() term.new_tab() end, { nargs = 0, desc = 'New terminal tab' })
       vim.api.nvim_create_user_command('TermRename', function(o) term.rename_tab(o.args) end, { nargs = '*', desc = 'Rename current terminal tab' })
 
       map('n', '<leader>rf', term.runFile, { desc = 'Run current buffer file' })

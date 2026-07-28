@@ -6,7 +6,7 @@
       "version": "2.0.0 - 3.0.0"
     },
     "base16-nvim": {
-      "rev": "898823add4424b5e857ba094e6c50e1b1d9c7962",
+      "rev": "cf82c4be16334c7cdf9883296eacfba50ff93b26",
       "src": "https://github.com/RRethy/base16-nvim"
     },
     "blink-cmp-avante": {
@@ -31,7 +31,7 @@
       "src": "https://github.com/coder/claudecode.nvim"
     },
     "codediff.nvim": {
-      "rev": "2253030fc17c8356a2ff1026f25cb9b570bdd91f",
+      "rev": "d3eb933df1de9e246186b33f61e40eb7752a92b2",
       "src": "https://github.com/esmuellert/codediff.nvim"
     },
     "colorful-menu.nvim": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "kulala.nvim": {
-      "rev": "7f83b6100321c848ca87ac9df414ebe6141e3f5f",
+      "rev": "e4e8615dc07d9423f3dd52ad5af962db09d26a52",
       "src": "https://github.com/mistweaverco/kulala.nvim"
     },
     "live-preview.nvim": {
@@ -131,7 +131,7 @@
       "src": "https://github.com/mfussenegger/nvim-jdtls"
     },
     "nvim-lspconfig": {
-      "rev": "d592c1e6ad9a0a01b3d5ed3f0345d68407167181",
+      "rev": "7ab79bb1b57160a537f427ac8a6026102f12b701",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -147,7 +147,7 @@
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "a45a920ec04cda5624f6dea0ff6454c81c3ad2d5",
+      "rev": "61df84986b4b4ec469ee745a182e433d49f8c27e",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
