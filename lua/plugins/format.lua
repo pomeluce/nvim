@@ -11,6 +11,27 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
         return vim.fs.root(dir, files) ~= nil
       end
 
+      local function project_file_contains(root_files, config_files, pattern, ctx)
+        local root = vim.fs.root(ctx.dirname, root_files)
+        if not root then return false end
+
+        local dir = ctx.dirname
+        while dir do
+          for _, name in ipairs(config_files) do
+            local path = vim.fs.joinpath(dir, name)
+            if vim.fn.filereadable(path) == 1 then
+              local ok, lines = pcall(vim.fn.readfile, path)
+              if ok and string.find(table.concat(lines, '\n'), pattern) then return true end
+            end
+          end
+          if dir == root then break end
+          local parent = vim.fs.dirname(dir)
+          if not parent or parent == dir then break end
+          dir = parent
+        end
+        return false
+      end
+
       local conform = require('conform')
       local cfg = vim.fn.stdpath('config') .. '/lua/configs/fmt'
 
@@ -21,7 +42,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
           dockerfile = { 'dockerfmt' },
           html = { 'prettierd' },
           http = { 'kulala-fmt' },
-          java = { 'spotless_gradle', 'spotless_maven', 'google-java-format' },
+          java = { 'spotless_gradle', 'spotless_maven', 'clang-format', stop_after_first = true },
           javascript = { 'prettierd' },
           javascriptreact = { 'prettierd' },
           json = { 'prettierd' },
@@ -55,6 +76,13 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
             stdin = false,
           },
           cbfmt = { command = 'cbfmt', args = { '-w', '--config', vim.fn.expand(cfg .. '/cbfmt.toml'), '$FILENAME' } },
+          ['clang-format'] = {
+            args = function(_, ctx)
+              local args = { '-assume-filename', '$FILENAME' }
+              if not root_file({ '.clang-format', '_clang-format' }, ctx.buf) then vim.list_extend(args, { '-style=file:' .. vim.fn.expand(cfg .. '/java.clang-format') }) end
+              return args
+            end,
+          },
           nixfmt = { command = 'nixfmt', args = {}, stdin = true },
           prettierd = vim.tbl_deep_extend('force', require('conform.formatters.prettierd'), { env = { PRETTIERD_DEFAULT_CONFIG = vim.fn.expand(cfg .. '/prettierrc.json') } }),
           rustfmt = {
@@ -74,6 +102,19 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
               return { '-i', shiftwidth }
             end,
             stdin = true,
+          },
+          spotless_gradle = {
+            condition = function(_, ctx)
+              return project_file_contains(
+                { 'gradlew' },
+                { 'build.gradle', 'build.gradle.kts', 'settings.gradle', 'settings.gradle.kts', 'gradle/libs.versions.toml' },
+                'spotless',
+                ctx
+              )
+            end,
+          },
+          spotless_maven = {
+            condition = function(_, ctx) return project_file_contains({ 'mvnw' }, { 'pom.xml' }, 'spotless', ctx) end,
           },
           sqlfluff = {
             command = 'sqlfluff',

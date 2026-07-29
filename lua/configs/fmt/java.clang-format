@@ -1,0 +1,36 @@
+---
+Language: Java
+BasedOnStyle: Google
+ColumnLimit: 180
+AlignAfterOpenBracket: BlockIndent
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: All
+AllowShortEnumsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLoopsOnASingleLine: true
+BinPackArguments: false
+BinPackParameters: OnePerLine
+BreakAfterJavaFieldAnnotations: true
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: false
+InsertNewlineAtEOF: true
+IndentWidth: 2
+ContinuationIndentWidth: 4
+TabWidth: 2
+UseTab: Never
+BreakBeforeBraces: Allman
+MaxEmptyLinesToKeep: 1
+PenaltyBreakAssignment: 100
+ReflowComments: Never
+SpaceBeforeParens: ControlStatements
+JavaImportGroups:
+  - java
+  - javax
+  - jakarta
+  - org
+  - com
+SortIncludes: CaseSensitive
+SortJavaStaticImport: Before
+...
