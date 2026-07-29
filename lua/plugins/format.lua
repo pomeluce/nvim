@@ -59,7 +59,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
           typescript = { 'prettierd' },
           typescriptreact = { 'prettierd' },
           vue = { 'prettierd' },
-          xml = { 'lsp' },
+          xml = { lsp_format = 'fallback' },
           yaml = { 'prettierd' },
           zsh = { 'beautysh' },
           ['_'] = { 'trim_whitespace' },
@@ -171,7 +171,8 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
               break
             end
           end
-          if not real_formatter then
+          local lsp_formatter = not vim.tbl_isempty(vim.lsp.get_clients({ bufnr = args.buf, method = 'textDocument/formatting' }))
+          if not real_formatter and not lsp_formatter then
             local view = vim.fn.winsaveview()
             vim.cmd('silent! normal! gg=G')
             vim.fn.winrestview(view)
