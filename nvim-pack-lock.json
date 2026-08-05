@@ -31,7 +31,7 @@
       "src": "https://github.com/coder/claudecode.nvim"
     },
     "codediff.nvim": {
-      "rev": "d3eb933df1de9e246186b33f61e40eb7752a92b2",
+      "rev": "31510a9b34c032b6fe98fc158d4066702f68cff2",
       "src": "https://github.com/esmuellert/codediff.nvim"
     },
     "colorful-menu.nvim": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "kulala.nvim": {
-      "rev": "e4e8615dc07d9423f3dd52ad5af962db09d26a52",
+      "rev": "7c10bd7b56f11dca25e5e948f817ca4eee1cb669",
       "src": "https://github.com/mistweaverco/kulala.nvim"
     },
     "live-preview.nvim": {
@@ -79,7 +79,7 @@
       "src": "https://github.com/brianhuster/live-preview.nvim"
     },
     "mini.files": {
-      "rev": "fe78cd12e5501a7a56413096c20167568ec2ac8e",
+      "rev": "f6d1367483b6c0695b5084c04f7cd83bf2353a3e",
       "src": "https://github.com/nvim-mini/mini.files"
     },
     "mini.icons": {
@@ -131,7 +131,7 @@
       "src": "https://github.com/mfussenegger/nvim-jdtls"
     },
     "nvim-lspconfig": {
-      "rev": "7ab79bb1b57160a537f427ac8a6026102f12b701",
+      "rev": "43ed3797b266e1ee8d222e491379ad471c9d3146",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -143,15 +143,15 @@
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-tree.lua": {
-      "rev": "4213bd6eabac38b16dd6615002b6243b23cf3bf6",
+      "rev": "b2aadda94b107480c48e548d6db51c6840b7b33c",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "61df84986b4b4ec469ee745a182e433d49f8c27e",
+      "rev": "7b6cc8949f9999c5ed91436cbe24aa5f99c42025",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
-      "rev": "b311b30818951d01f7b4bf650521b868b3fece16",
+      "rev": "f3061339b8eaf9fda873600bc425b8d2d8502533",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-context"
     },
     "nvim-treesitter-textobjects": {
