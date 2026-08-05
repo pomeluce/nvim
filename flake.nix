@@ -227,17 +227,27 @@
                   };
 
                   header = lib.mkOption {
-                    type = lib.types.attrsOf (
-                      lib.types.either lib.types.str (lib.types.attrsOf lib.types.str)
-                    );
+                    type = lib.types.submodule {
+                      options = {
+                        env = lib.mkOption {
+                          type = lib.types.attrsOf lib.types.str;
+                          default = { };
+                          description = "Placeholder variable overrides for header templates (e.g. { USER = \"name\"; }), taking precedence over environment variables.";
+                        };
+                        tmpl = lib.mkOption {
+                          type = lib.types.attrsOf lib.types.str;
+                          default = { };
+                          example = lib.literalExpression ''
+                            {
+                              python = "#!/usr/bin/env python3\n# author: {USER}";
+                            }
+                          '';
+                          description = "Custom header templates keyed by language (e.g. python, lua).";
+                        };
+                      };
+                    };
                     default = { };
-                    example = lib.literalExpression ''
-                      {
-                        python = "#!/usr/bin/env python3\n# author: {USER}";
-                        env.USER = "your-name";
-                      }
-                    '';
-                    description = "Custom header templates keyed by language (e.g. python, lua); the special `env` attrset overrides placeholder variables such as { USER = \"name\"; }.";
+                    description = "File header templates (`tmpl`) and placeholder variable overrides (`env`).";
                   };
 
                   file = lib.mkOption {

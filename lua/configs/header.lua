@@ -326,7 +326,7 @@ function M.callback(args)
   -- 合并用户配置和默认模板
   local settings = require('settings')
   local header = settings.header or {}
-  local templates = vim.tbl_deep_extend('force', {}, M.defaults, header)
+  local templates = vim.tbl_deep_extend('force', {}, M.defaults, header.tmpl or {})
 
   -- 获取模板
   local tpl = templates[ft]

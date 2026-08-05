@@ -26,8 +26,7 @@ local utils = require('utils')
 ---@class settings.File
 ---@field run_cmd table<string, string>
 
----@class settings.Header
----@field env? table<string, string> 占位符变量覆盖, 优先于环境变量 (如 {USER})
+---@class settings.Header.Tmpl
 ---@field python? string
 ---@field lua? string
 ---@field javascript? string
@@ -43,6 +42,10 @@ local utils = require('utils')
 ---@field swift? string
 ---@field zig? string
 
+---@class settings.Header
+---@field env? table<string, string> 占位符变量覆盖, 优先于环境变量 (如 {USER})
+---@field tmpl? settings.Header.Tmpl 各语言文件头模板
+
 ---@class settings.Root
 ---@field header settings.Header
 ---@field session settings.Session
@@ -54,7 +57,7 @@ local tomlua = require('tomlua')
 
 ---@type settings.Root
 local defaults = {
-  header = { env = {} },
+  header = { env = {}, tmpl = {} },
   session = {
     projects = {},
     ignore_dir = {},

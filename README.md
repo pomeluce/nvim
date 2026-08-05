@@ -72,7 +72,7 @@ nvim
               lsp.jdtls.runtimes = [
                 { name = "JavaSE-21"; path = "/usr/lib/jvm/java-21-openjdk"; default = true; }
               ];
-              header.python = "#!/usr/bin/env python3\n# author: {USER}";
+              header.tmpl.python = "#!/usr/bin/env python3\n# author: {USER}";
               header.env.USER = "your-name"; # 覆盖 {USER}, 优先于 $USER 环境变量
             };
           };
@@ -376,10 +376,10 @@ default = true   # 标记为默认运行时
 | Go     | `go.mod`                               | `.`               |
 | C#     | `*.csproj`, `*.sln`                    | `.`               |
 
-**自定义模板：** 在 `settings.toml` 中添加 `[header]` 节覆盖任意语言模板：
+**自定义模板：** 在 `settings.toml` 中添加 `[header.tmpl]` 节覆盖任意语言模板：
 
 ```toml
-[header]
+[header.tmpl]
 python = '''\
 # custom header
 # author: {USER}
