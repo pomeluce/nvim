@@ -27,6 +27,7 @@ local utils = require('utils')
 ---@field run_cmd table<string, string>
 
 ---@class settings.Header
+---@field env? table<string, string> 占位符变量覆盖, 优先于环境变量 (如 {USER})
 ---@field python? string
 ---@field lua? string
 ---@field javascript? string
@@ -53,7 +54,7 @@ local tomlua = require('tomlua')
 
 ---@type settings.Root
 local defaults = {
-  header = {},
+  header = { env = {} },
   session = {
     projects = {},
     ignore_dir = {},

@@ -260,12 +260,13 @@ end
 
 ---替换模板中的占位符
 ---@param tpl string 模板字符串
----@param extra? { PACKAGE?: string, CLASS?: string }
+---@param extra? { PACKAGE?: string, CLASS?: string, env?: table<string, string> }
 ---@return string
 local function replace_placeholders(tpl, extra)
   extra = extra or {}
+  local env = extra.env or {}
   local filename = vim.fn.fnamemodify(vim.fn.expand('%:t'), ':r')
-  local user = os.getenv('USER') or os.getenv('USERNAME') or 'Your Name'
+  local user = env.USER or os.getenv('USER') or os.getenv('USERNAME') or 'Your Name'
 
   local frt = get_file_creation_time()
   local function date_for(fmt) return frt and os.date(fmt, frt) or os.date(fmt) end
@@ -290,6 +291,12 @@ local function replace_placeholders(tpl, extra)
     :gsub('{%s*DATE%s*}', today)
     :gsub('{%s*TIME:([^}]+)%s*}', function(fmt) return date_for(fmt:gsub('^%s+', ''):gsub('%s+$', '')) end)
     :gsub('{%s*TIME%s*}', time)
+
+  -- 用户自定义/覆盖占位符 (settings.header.env): 在内置占位符之后应用,
+  -- 可覆盖 {USER} 等内置变量, 或扩展任意自定义占位符 (如 {COMPANY})
+  for key, val in pairs(env) do
+    tpl = tpl:gsub('{%s*' .. vim.pesc(key) .. '%s*}', tostring(val))
+  end
 
   -- PACKAGE 为空时清理多余空行和前导空行
   if package == '' then
@@ -318,7 +325,8 @@ function M.callback(args)
 
   -- 合并用户配置和默认模板
   local settings = require('settings')
-  local templates = vim.tbl_deep_extend('force', {}, M.defaults, settings.header or {})
+  local header = settings.header or {}
+  local templates = vim.tbl_deep_extend('force', {}, M.defaults, header)
 
   -- 获取模板
   local tpl = templates[ft]
@@ -328,8 +336,8 @@ function M.callback(args)
   local filepath = vim.fn.expand('%:p')
   local package = M.derive_package(ft, filepath)
 
-  -- 替换占位符
-  local rendered = replace_placeholders(tpl, { PACKAGE = package })
+  -- 替换占位符 (header.env 提供占位符变量覆盖)
+  local rendered = replace_placeholders(tpl, { PACKAGE = package, env = header.env })
   local content = vim.split(rendered, '\n', { plain = true })
   vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, content)
 end
