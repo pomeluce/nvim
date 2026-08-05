@@ -227,14 +227,17 @@
                   };
 
                   header = lib.mkOption {
-                    type = lib.types.attrsOf lib.types.str;
+                    type = lib.types.attrsOf (
+                      lib.types.either lib.types.str (lib.types.attrsOf lib.types.str)
+                    );
                     default = { };
                     example = lib.literalExpression ''
                       {
                         python = "#!/usr/bin/env python3\n# author: {USER}";
+                        env.USER = "your-name";
                       }
                     '';
-                    description = "Custom header templates keyed by language (e.g. python, lua).";
+                    description = "Custom header templates keyed by language (e.g. python, lua); the special `env` attrset overrides placeholder variables such as { USER = \"name\"; }.";
                   };
 
                   file = lib.mkOption {
