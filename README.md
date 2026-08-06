@@ -617,16 +617,19 @@ end)
 
 ### Java
 
-| 快捷键        | 命令               | 功能                |
-| ------------- | ------------------ | ------------------- |
-| `<leader>jc`  | `JavaCompile`      | jdtls 编译工作区    |
-| `<leader>ju`  | `JavaUpdateConfig` | 刷新项目配置        |
-| `<leader>jr`  | `JavaRunMain`      | 运行 main class     |
-| `<leader>jd`  | `JavaDebugMain`    | DAP 调试 main class |
-| `<leader>js`  | `JavaStopMain`     | 停止运行            |
-| `<leader>jl`  | `JavaToggleLogs`   | 切换运行日志        |
-| `<leader>jtc` | `JavaTestClass`    | 运行测试类          |
-| `<leader>jtm` | `JavaTestMethod`   | 运行测试方法        |
+| 快捷键        | 命令                  | 功能                |
+| ------------- | --------------------- | ------------------- |
+| `<leader>jc`  | `JavaCompile`         | jdtls 编译工作区    |
+| `<leader>ju`  | `JavaUpdateConfig`    | 刷新项目配置        |
+| `<leader>jo`  | `JavaOrganizeImports` | 整理 imports        |
+| `<leader>jr`  | `JavaRunMain`         | 运行 main class     |
+| `<leader>jd`  | `JavaDebugMain`       | DAP 调试 main class |
+| `<leader>js`  | `JavaStopMain`        | 停止运行            |
+| `<leader>jl`  | `JavaToggleLogs`      | 切换运行日志        |
+| `<leader>jtc` | `JavaTestClass`       | 运行测试类          |
+| `<leader>jtm` | `JavaTestMethod`      | 运行测试方法        |
+| `<leader>jv`  | —                     | 提取变量            |
+| `<leader>jm`  | —                     | 提取选区为方法      |
 
 ### Claude Code
 

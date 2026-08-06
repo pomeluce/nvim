@@ -147,7 +147,7 @@ local function buf_del(bufnr)
     elseif choice == 2 then
       vim.api.nvim_buf_delete(bufnr, { force = true })
     end
-    -- choice == 3 (Cancel) 时不做任何操作
+  -- choice == 3 (Cancel) 时不做任何操作
   else
     vim.api.nvim_buf_delete(bufnr, {})
   end
@@ -212,6 +212,20 @@ function M.close_buf(bufnr)
 
   if not vim.api.nvim_buf_is_valid(bufnr) then return end
 
+  if vim.b[bufnr].transient then
+    local origin = vim.b[bufnr].transient_origin
+    if not safe_set_buf(origin) then
+      local tab_bufs = get_tab_bufs()
+      for i = #tab_bufs, 1, -1 do
+        local candidate = tab_bufs[i]
+        if candidate ~= bufnr and should_include_buf(candidate) and safe_set_buf(candidate) then break end
+      end
+    end
+    if vim.api.nvim_buf_is_valid(bufnr) then vim.api.nvim_buf_delete(bufnr, { force = true }) end
+    vim.cmd('redrawtabline')
+    return
+  end
+
   -- 如果是当前 tab 的最后一个 buffer 且有多个 tab, 先切换到其他 tab 再关闭
   if #vim.api.nvim_list_tabpages() > 1 then
     local bufs = get_tab_bufs()
@@ -239,7 +253,7 @@ function M.close_buf(bufnr)
     if win_config.zindex then
       vim.cmd('bw')
       return
-      -- handle listed bufs
+    -- handle listed bufs
     elseif curBufIndex and #vim.t.bufs > 1 then
       -- 先清理无效 buffer
       clean_invalid_bufs()
@@ -263,7 +277,7 @@ function M.close_buf(bufnr)
       else
         vim.cmd('enew')
       end
-      -- handle unlisted
+    -- handle unlisted
     elseif not vim.bo[bufnr].buflisted then
       local tmpbufnr = vim.t.bufs[#vim.t.bufs]
       if tmpbufnr and vim.api.nvim_buf_is_valid(tmpbufnr) then

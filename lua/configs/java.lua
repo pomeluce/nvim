@@ -1,312 +1,342 @@
 local M = {}
-local _cache -- 首次调用缓存 config + api, 后续 buffer 只做 start_or_attach
+local projects = {}
+local dap_initialized = false
+local definition_origins = {}
 
----@param root_dir string Java 项目根目录
-function M.setup(root_dir)
-  if _cache then
-    require('jdtls').start_or_attach(_cache.config)
-    return _cache.api
+function M.set_definition_origin(tabpage, bufnr) definition_origins[tabpage] = bufnr end
+
+function M.take_definition_origin(tabpage)
+  local bufnr = definition_origins[tabpage]
+  definition_origins[tabpage] = nil
+  return bufnr
+end
+
+local function load_config(path)
+  if vim.fn.filereadable(path) ~= 1 then return {} end
+  local ok, config = pcall(dofile, path)
+  if not ok then
+    vim.notify(('Failed to load Java config %s:\n%s'):format(path, config), vim.log.levels.ERROR)
+    return {}
   end
-  -- java-debug bundles ($VSC_JAVA_DEBUG)
+  if type(config) ~= 'table' then
+    vim.notify('Java config must return a table: ' .. path, vim.log.levels.ERROR)
+    return {}
+  end
+  return config
+end
+
+local function collect_bundles()
   local bundles = {}
-  local vsc_java_debug = os.getenv('VSC_JAVA_DEBUG')
-  if vsc_java_debug then
-    bundles = vim.fn.glob(vsc_java_debug .. '/server/com.microsoft.java.debug.plugin-*.jar', false, true)
-  else
-    vim.notify_once('$VSC_JAVA_DEBUG not set, DAP disabled', vim.log.levels.WARN)
+  local debug_dir = os.getenv('VSC_JAVA_DEBUG')
+  local test_dir = os.getenv('VSC_JAVA_TEST')
+  local debug_bundles = debug_dir and vim.fn.glob(debug_dir .. '/server/com.microsoft.java.debug.plugin-*.jar', false, true) or {}
+  local test_bundles = test_dir and vim.fn.glob(test_dir .. '/server/*.jar', false, true) or {}
+  vim.list_extend(bundles, debug_bundles)
+  vim.list_extend(bundles, test_bundles)
+  return bundles, #debug_bundles > 0, #test_bundles > 0
+end
+
+local function java_cmd(root_dir)
+  local cmd = { 'jdtls', '-data', vim.fn.stdpath('cache') .. '/jdtls/' .. vim.fn.sha256(root_dir):sub(1, 16) }
+  local lombok = os.getenv('JAVA_LOMBOK')
+  if lombok and vim.fn.filereadable(lombok) == 1 then table.insert(cmd, 2, '--jvm-arg=-javaagent:' .. lombok) end
+  return cmd
+end
+
+local function project_client(root_dir)
+  for _, client in ipairs(vim.lsp.get_clients({ name = 'jdtls' })) do
+    if vim.fs.normalize(client.config.root_dir or '') == vim.fs.normalize(root_dir) then return client end
   end
+end
 
-  -- vscode-java-test bundles ($VSC_JAVA_TEST)
-  local vsc_java_test = os.getenv('VSC_JAVA_TEST')
-  if vsc_java_test then
-    local test_jars = vim.fn.glob(vsc_java_test .. '/server/*.jar', false, true)
-    if #test_jars > 0 then vim.list_extend(bundles, test_jars) end
-  else
-    vim.notify_once('$VSC_JAVA_TEST not set, test support disabled', vim.log.levels.WARN)
+local function buffer_client(bufnr) return vim.lsp.get_clients({ name = 'jdtls', bufnr = bufnr })[1] end
+
+local function split_args(value)
+  if type(value) == 'table' then return value end
+  if type(value) ~= 'string' or value == '' then return {} end
+  return require('dap.utils').splitstr(value)
+end
+
+local function maven_java_version(bufnr)
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  local pom = vim.fs.find('pom.xml', { path = vim.fs.dirname(filename), upward = true, type = 'file' })[1]
+  if not pom then return end
+  local file = io.open(pom, 'r')
+  if not file then return end
+  local content = file:read('*a')
+  file:close()
+  return content:match('<java%.version>%s*([^<%s]+)%s*</java%.version>')
+    or content:match('<maven%.compiler%.release>%s*([^<%s]+)%s*</maven%.compiler%.release>')
+    or content:match('<maven%.compiler%.source>%s*([^<%s]+)%s*</maven%.compiler%.source>')
+    or content:match('<source>%s*([^<$%s][^<]*)%s*</source>')
+    or content:match('<target>%s*([^<$%s][^<]*)%s*</target>')
+end
+
+local function maven_root_java_version(root_dir)
+  local pom = root_dir .. '/pom.xml'
+  if vim.fn.filereadable(pom) ~= 1 then return end
+  local file = io.open(pom, 'r')
+  if not file then return end
+  local content = file:read('*a')
+  file:close()
+  return content:match('<java%.version>%s*([^<%s]+)%s*</java%.version>')
+    or content:match('<maven%.compiler%.release>%s*([^<%s]+)%s*</maven%.compiler%.release>')
+    or content:match('<maven%.compiler%.source>%s*([^<%s]+)%s*</maven%.compiler%.source>')
+end
+
+local function project_runtimes(root_dir, runtimes)
+  local result = vim.deepcopy(runtimes)
+  local version = maven_root_java_version(root_dir)
+  if not version then return result end
+  local aliases = { ['8'] = '1.8', ['1.8'] = '8' }
+  local matched = false
+  for _, runtime in ipairs(result) do
+    local runtime_version = runtime.name:match('^JavaSE%-(.+)$')
+    local selected = runtime_version == version or runtime_version == aliases[version]
+    runtime.default = selected or nil
+    matched = matched or selected
   end
+  if not matched then vim.notify(('No JavaSE-%s runtime configured for %s'):format(version, root_dir), vim.log.levels.WARN) end
+  return result
+end
 
-  -- Lombok ($JAVA_LOMBOK)
-  local lombok_jar = os.getenv('JAVA_LOMBOK') or ''
-
-  -- jdtls 启动命令
-  local jdtls_cmd = { 'jdtls' }
-  if lombok_jar ~= '' then
-    jdtls_cmd = { 'env', 'JAVA_TOOL_OPTIONS=-javaagent:' .. lombok_jar, 'jdtls' }
-  else
-    vim.notify_once('$JAVA_LOMBOK not set, Lombok support disabled', vim.log.levels.WARN)
-  end
-
-  -- 全局 LSP 配置 (after/lsp/jdtls.lua)
-  local global_config = {}
-  local lsp_path = vim.fn.stdpath('config') .. '/after/lsp/jdtls.lua'
-  if vim.fn.filereadable(lsp_path) == 1 then
-    local ok, cfg = pcall(dofile, lsp_path)
-    if ok then global_config = cfg end
-  end
-
-  -- 项目级配置 (.nvim/jdtls.lua)
-  local project_path = root_dir .. '/.nvim/jdtls.lua'
-  local project_config = {}
-  if vim.fn.filereadable(project_path) == 1 then
-    local ok, cfg = pcall(dofile, project_path)
-    if ok then project_config = cfg end
-  end
-
-  -- DAP 适配器 + main class 解析(仅执行一次, 不再由 on_attach 触发)
-  require('jdtls').setup_dap({ hotcodereplace = 'auto' })
-  vim.defer_fn(function() require('jdtls.dap').setup_dap_main_class_configs() end, 5000)
-  local function on_attach() end
-
-  -- jdtls config + start
-  local config = vim.tbl_deep_extend('force', {
-    cmd = jdtls_cmd,
-    root_dir = root_dir,
-    init_options = { bundles = bundles },
-    settings = { java = { configuration = { runtimes = {}, maven = {} } } },
-    on_attach = on_attach,
-  }, global_config, project_config)
-
-  require('jdtls').start_or_attach(config)
-
-  -- java_home(compliance?): 按版本精确匹配 → default → 第一个 runtime
-  -- compliance 来自 jdtls 的 compiler.compliance, e.g. "1.8" → 匹配 "JavaSE-1.8"
-  local runtimes = require('settings').lsp.jdtls.runtimes or {}
-  local function java_home(compliance)
-    if compliance then
-      local ee_name = 'JavaSE-' .. compliance
-      for _, rt in ipairs(runtimes) do
-        if rt.name == ee_name then return rt.path end
-      end
+local function status_handler(root_dir)
+  local ready = false
+  return function(err, result)
+    if err then
+      vim.notify('Java LSP status error: ' .. (err.message or vim.inspect(err)), vim.log.levels.ERROR)
+      return
     end
-    for _, rt in ipairs(runtimes) do
-      if rt.default then return rt.path end
-    end
-    return runtimes[1] and runtimes[1].path or nil
-  end
-
-  -- helper: find current jdtls LSP client
-  local function jdtls_client()
-    return vim.tbl_filter(function(c) return c.name == 'jdtls' end, vim.lsp.get_clients())[1]
-  end
-
-  -- JavaRunner
-  local runner = { runs = {}, curr_run = nil, log_win = -1 }
-
-  function runner:launch(cfg)
-    -- 优先级: compliance 精确匹配 → jdtls javaExec → default runtime → 系统 java
-    local jh_default = java_home()
-    local function do_launch(java_bin)
-      local cmd_str = java_bin
-      if cfg.classPaths and #cfg.classPaths > 0 then cmd_str = cmd_str .. ' -cp ' .. table.concat(cfg.classPaths, ':') end
-      if cfg.vmArgs and cfg.vmArgs ~= '' then cmd_str = cmd_str .. ' ' .. cfg.vmArgs end
-      cmd_str = cmd_str .. ' ' .. cfg.mainClass
-      if cfg.args and cfg.args ~= '' then cmd_str = cmd_str .. ' ' .. cfg.args end
-      local run = self.runs[cfg.mainClass]
-      if run then
-        if run.is_running then vim.fn.jobstop(run.job_id) end
-      else
-        run = { buf = vim.api.nvim_create_buf(false, true), term_chan = nil, job_id = nil, is_running = false }
-        vim.api.nvim_buf_set_name(run.buf, 'Java: ' .. cfg.mainClass)
-        run.term_chan = vim.api.nvim_open_term(run.buf, {
-          on_input = function(_, _, _, data)
-            if run.job_id then vim.fn.chansend(run.job_id, data) end
-          end,
-        })
-        self.runs[cfg.mainClass] = run
+    if not result then return end
+    if result.type == 'ServiceReady' then
+      if not ready then
+        ready = true
+        vim.notify('Java LSP ready: ' .. vim.fs.basename(root_dir), vim.log.levels.INFO)
       end
-      self.curr_run = run
-      self:show_log(run.buf)
-      vim.fn.chansend(run.term_chan, cmd_str .. '\r\n')
-      run.is_running = true
-      run.job_id = vim.fn.jobstart(cmd_str, {
+    elseif result.type == 'ERROR' then
+      vim.notify(result.message or result.type, vim.log.levels.ERROR)
+    end
+  end
+end
+
+local function new_runner(root_dir, java_home)
+  local runner = { runs = {}, current = nil, log_win = nil }
+
+  function runner:show(buf)
+    if self.log_win and vim.api.nvim_win_is_valid(self.log_win) then
+      vim.api.nvim_win_set_buf(self.log_win, buf)
+    else
+      vim.cmd('botright 15split')
+      self.log_win = vim.api.nvim_get_current_win()
+      vim.api.nvim_win_set_buf(self.log_win, buf)
+      vim.wo[self.log_win].number = false
+      vim.wo[self.log_win].relativenumber = false
+      vim.wo[self.log_win].signcolumn = 'no'
+    end
+  end
+
+  function runner:toggle()
+    if self.log_win and vim.api.nvim_win_is_valid(self.log_win) then
+      vim.api.nvim_win_hide(self.log_win)
+      self.log_win = nil
+    elseif self.current then
+      self:show(self.current.buf)
+    end
+  end
+
+  function runner:stop()
+    if self.current and self.current.job_id then vim.fn.jobstop(self.current.job_id) end
+  end
+
+  function runner:launch(config, bufnr)
+    local run = self.runs[config.mainClass]
+    if not run then
+      local buf = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_buf_set_name(buf, 'Java: ' .. config.mainClass)
+      run = { buf = buf }
+      local channel = vim.api.nvim_open_term(buf, {
+        on_input = function(_, _, _, data)
+          if run.job_id then vim.fn.chansend(run.job_id, data) end
+        end,
+      })
+      run.channel = channel
+      self.runs[config.mainClass] = run
+    elseif run.job_id then
+      vim.fn.jobstop(run.job_id)
+    end
+
+    local function start_process(matched_home, resolved_java)
+      local default_home = java_home()
+      local java = resolved_java or (matched_home and (matched_home .. '/bin/java')) or (default_home and (default_home .. '/bin/java')) or 'java'
+      local command = { java }
+      vim.list_extend(command, split_args(config.vmArgs))
+      if config.classPaths and #config.classPaths > 0 then vim.list_extend(command, { '-cp', table.concat(config.classPaths, package.config:sub(1, 1) == '\\' and ';' or ':') }) end
+      table.insert(command, config.mainClass)
+      vim.list_extend(command, split_args(config.args))
+
+      self.current = run
+      self:show(run.buf)
+      local channel = assert(run.channel)
+      vim.fn.chansend(channel, table.concat(command, ' ') .. '\r\n')
+      run.job_id = vim.fn.jobstart(command, {
+        cwd = root_dir,
         pty = true,
         on_stdout = function(_, data)
-          if data then vim.fn.chansend(run.term_chan, data) end
+          if data then vim.fn.chansend(channel, data) end
         end,
         on_stderr = function(_, data)
-          if data then vim.fn.chansend(run.term_chan, data) end
+          if data then vim.fn.chansend(channel, data) end
         end,
         on_exit = function(_, code)
           vim.schedule(function()
-            vim.fn.chansend(run.term_chan, string.format('\r\nProcess finished with exit code: %d\r\n', code))
-            run.is_running = false
+            vim.fn.chansend(channel, ('\r\nProcess finished with exit code %d\r\n'):format(code))
             run.job_id = nil
           end)
         end,
       })
     end
 
-    -- 从 jdtls 查项目 compliance 做精确匹配
-    local client = jdtls_client()
-    if client then
-      client:request('workspace/executeCommand', {
-        command = 'java.project.getSettings',
-        arguments = {
-          vim.uri_from_bufnr(0),
-          { 'org.eclipse.jdt.core.compiler.compliance' },
-        },
-      }, function(err, settings)
-        local java_bin = nil
-        if settings and settings['org.eclipse.jdt.core.compiler.compliance'] then
-          local jh_matched = java_home(settings['org.eclipse.jdt.core.compiler.compliance'])
-          if jh_matched then java_bin = jh_matched .. '/bin/java' end
-        end
-        -- jh_matched > javaExec > jh_default > java
-        java_bin = java_bin or cfg.javaExec or (jh_default and (jh_default .. '/bin/java')) or 'java'
-        do_launch(java_bin)
-      end, 0)
-    else
-      local java_bin = cfg.javaExec or (jh_default and (jh_default .. '/bin/java')) or 'java'
-      do_launch(java_bin)
+    local declared_version = maven_java_version(bufnr)
+    local declared_home = java_home(declared_version)
+    if declared_home then
+      vim.notify(('Java %s runtime: %s'):format(declared_version, declared_home), vim.log.levels.INFO)
+      start_process(declared_home)
+      return
     end
+
+    local client = buffer_client(bufnr)
+    if not client then
+      vim.notify('No jdtls client attached; using the configured default JDK', vim.log.levels.WARN)
+      return start_process()
+    end
+    local commands = (client.server_capabilities.executeCommandProvider or {}).commands or {}
+    if config.projectName and vim.tbl_contains(commands, 'vscode.java.resolveJavaExecutable') then
+      client:request('workspace/executeCommand', {
+        command = 'vscode.java.resolveJavaExecutable',
+        arguments = { config.mainClass, config.projectName },
+      }, function(err, java_exec)
+        if not err and type(java_exec) == 'string' and java_exec ~= '' then
+          vim.schedule(function()
+            vim.notify('Java runtime: ' .. java_exec, vim.log.levels.INFO)
+            start_process(nil, java_exec)
+          end)
+          return
+        end
+        vim.schedule(function() vim.notify('jdtls could not resolve the main class JDK; trying project compliance', vim.log.levels.WARN) end)
+        local fallback_config = vim.deepcopy(config)
+        fallback_config.projectName = nil
+        self:launch(fallback_config, bufnr)
+      end, bufnr)
+      return
+    end
+    client:request('workspace/executeCommand', {
+      command = 'java.project.getSettings',
+      arguments = { vim.uri_from_bufnr(bufnr), { 'org.eclipse.jdt.core.compiler.compliance' } },
+    }, function(err, result)
+      local compliance = result and result['org.eclipse.jdt.core.compiler.compliance']
+      if err or not compliance then vim.notify('Could not resolve project Java version; using the configured fallback JDK', vim.log.levels.WARN) end
+      vim.schedule(function()
+        local home = java_home(compliance)
+        if home then vim.notify(('Java %s runtime: %s'):format(compliance or 'default', home), vim.log.levels.INFO) end
+        start_process(home)
+      end)
+    end, bufnr)
   end
 
   function runner:start()
-    local dap = require('dap')
-    local cfgs = dap.configurations.java or {}
-    if #cfgs == 0 then
-      require('jdtls.dap').setup_dap_main_class_configs({ verbose = true })
-      vim.defer_fn(function()
-        local c = dap.configurations.java or {}
-        if #c > 0 then
-          self:start()
-        else
-          vim.notify('No main class found', vim.log.levels.ERROR)
-        end
-      end, 3000)
+    local bufnr = vim.api.nvim_get_current_buf()
+    if not dap_initialized then
+      vim.notify('VSC_JAVA_DEBUG is required to discover main classes', vim.log.levels.ERROR)
       return
     end
-    local items = {}
-    for _, c in ipairs(cfgs) do
-      table.insert(items, { name = c.name or c.mainClass, cfg = c })
-    end
-    local function pick(i)
-      if i then self:launch(i.cfg) end
-    end
-    if #items == 1 then
-      pick(items[1])
-    else
-      vim.ui.select(items, { prompt = 'Select main class:', format_item = function(v) return v.name end }, function(item)
-        if item then pick(item) end
-      end)
-    end
-  end
-
-  function runner:show_log(buf)
-    if self.log_win and vim.api.nvim_win_is_valid(self.log_win) then
-      vim.api.nvim_win_set_buf(self.log_win, buf)
-    else
-      vim.cmd('sp | winc J | res 15 | buffer ' .. (buf or ''))
-      self.log_win = vim.api.nvim_get_current_win()
-      vim.wo[self.log_win].number = false
-      vim.wo[self.log_win].relativenumber = false
-      vim.wo[self.log_win].signcolumn = 'no'
-    end
-    vim.cmd('wincmd k')
-  end
-
-  function runner:toggle_log()
-    if self.log_win and vim.api.nvim_win_is_valid(self.log_win) then
-      vim.api.nvim_win_hide(self.log_win)
-    elseif self.curr_run then
-      self:show_log(self.curr_run.buf)
-    end
-  end
-
-  function runner:stop()
-    if self.curr_run and self.curr_run.is_running then
-      vim.fn.jobstop(self.curr_run.job_id)
-      vim.fn.jobwait({ self.curr_run.job_id }, 1000)
-      self.curr_run.is_running = false
-      self.curr_run.job_id = nil
-    end
-  end
-
-  -- 用户命令
-  local jdtls_mod = require('jdtls')
-  local function create_cmd(name, fn, opts)
-    pcall(vim.api.nvim_del_user_command, name)
-    vim.api.nvim_create_user_command(name, fn, opts or {})
-  end
-  create_cmd('JavaRunMain', function() runner:start() end, { desc = 'Run Java main class' })
-  create_cmd('JavaStopMain', function() runner:stop() end, { desc = 'Stop running Java main class' })
-  create_cmd('JavaToggleLogs', function() runner:toggle_log() end, { desc = 'Toggle Java run log window' })
-  create_cmd('JavaCompile', function()
-    -- resolve 正确的 JDK → 临时替换 runtimes → 编译 → 在回调中恢复
-    local function do_compile(after)
-      jdtls_mod.compile('full', function()
-        vim.schedule(function()
-          vim.cmd('copen')
-          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            if vim.bo[buf].buftype == 'quickfix' then vim.bo[buf].buflisted = false end
+    local configurations = vim.tbl_filter(function(config) return not config.cwd or vim.fs.normalize(config.cwd) == root_dir end, require('dap').configurations.java or {})
+    if #configurations == 0 then
+      require('jdtls.dap').setup_dap_main_class_configs({
+        verbose = true,
+        on_ready = function(configs)
+          if #configs > 0 then
+            self:start()
+          else
+            vim.notify('No main class found', vim.log.levels.ERROR)
           end
-          if after then after() end
-        end)
-      end)
-    end
-
-    local client = jdtls_client()
-    if not client then
-      do_compile()
+        end,
+      })
       return
     end
-
-    client:request('workspace/executeCommand', {
-      command = 'java.project.getSettings',
-      arguments = {
-        vim.uri_from_bufnr(0),
-        { 'org.eclipse.jdt.core.compiler.compliance' },
-      },
-    }, function(_, settings)
-      local compliance = settings and settings['org.eclipse.jdt.core.compiler.compliance']
-      local jh_matched = compliance and java_home(compliance)
-      if jh_matched then
-        local saved = vim.deepcopy(runtimes)
-        -- restore: 编译完成后恢复原始 runtimes, 带 pcall 防 client 已销毁
-        local function restore()
-          vim.schedule(function()
-            pcall(function()
-              local c = jdtls_client()
-              if c then c:notify('workspace/didChangeConfiguration', {
-                settings = { java = { configuration = { runtimes = saved } } },
-              }) end
-            end)
-          end)
-        end
-        local compile_rt = {}
-        for _, rt in ipairs(runtimes) do
-          if rt.path == jh_matched then table.insert(compile_rt, { name = rt.name, path = rt.path, default = true }) end
-        end
-        client:notify('workspace/didChangeConfiguration', {
-          settings = { java = { configuration = { runtimes = compile_rt } } },
-        })
-        -- 等 jdtls 处理完配置变更再编译, restore 在 compile 回调中执行
-        vim.defer_fn(function() do_compile(restore) end, 500)
-      else
-        do_compile()
-      end
-    end, 0)
-  end, { desc = 'Build Java workspace' })
-  create_cmd('JavaUpdateConfig', function() jdtls_mod.update_project_config() end, { desc = 'Update jdtls project config' })
-  create_cmd('JavaDebugMain', function()
-    local dap = require('dap')
-    if not dap.configurations.java or #dap.configurations.java == 0 then
-      require('jdtls').dap.setup_dap_main_class_configs({ verbose = true })
-      vim.defer_fn(function()
-        if dap.configurations.java and #dap.configurations.java > 0 then
-          dap.continue()
-        else
-          vim.notify('No main class found', vim.log.levels.ERROR)
-        end
-      end, 2000)
-    else
-      dap.continue()
+    if #configurations == 1 then
+      self:launch(configurations[1], bufnr)
+      return
     end
-  end, { desc = 'Debug Java main class' })
-  create_cmd('JavaTestClass', function() jdtls_mod.test_class() end, { desc = 'Run Java test class' })
-  create_cmd('JavaTestMethod', function() jdtls_mod.test_nearest_method() end, { desc = 'Run Java test method' })
-  local api = { jdtls = jdtls_mod, runner = runner, java_home = java_home, root_dir = root_dir }
-  _cache = { config = config, api = api }
+    vim.ui.select(configurations, {
+      prompt = 'Select main class:',
+      format_item = function(item) return item.name or item.mainClass end,
+    }, function(item)
+      if item then self:launch(item, bufnr) end
+    end)
+  end
+
+  return runner
+end
+
+---@param root_dir string
+function M.setup(root_dir)
+  root_dir = vim.fs.normalize(root_dir)
+  local cached = projects[root_dir]
+  if cached then
+    require('jdtls').start_or_attach(cached.config)
+    return cached.api
+  end
+
+  local root_settings = require('settings')
+  local lsp_settings = root_settings.lsp or {}
+  local settings = lsp_settings.jdtls or {}
+  local runtimes = project_runtimes(root_dir, settings.runtimes or {})
+  local function java_home(compliance)
+    if compliance then
+      local version = tostring(compliance)
+      local aliases = { ['8'] = '1.8', ['1.8'] = '8' }
+      for _, runtime in ipairs(runtimes) do
+        local runtime_version = runtime.name:match('^JavaSE%-(.+)$')
+        if runtime_version == version or runtime_version == aliases[version] then return runtime.path end
+      end
+    end
+    for _, runtime in ipairs(runtimes) do
+      if runtime.default then return runtime.path end
+    end
+    return runtimes[1] and runtimes[1].path or nil
+  end
+
+  local bundles, has_debug, has_test = collect_bundles()
+  local global = load_config(vim.fn.stdpath('config') .. '/after/lsp/jdtls.lua')
+  local project = load_config(root_dir .. '/.nvim/jdtls.lua')
+  local config = vim.tbl_deep_extend('force', {
+    cmd = java_cmd(root_dir),
+    root_dir = root_dir,
+    init_options = { bundles = bundles },
+    settings = { java = { configuration = { maven = settings.maven or {} } } },
+  }, global, project)
+  config.settings = config.settings or {}
+  config.settings.java = config.settings.java or {}
+  config.settings.java.configuration = config.settings.java.configuration or {}
+  config.settings.java.configuration.runtimes = runtimes
+  config.handlers = config.handlers or {}
+  config.handlers['language/status'] = status_handler(root_dir)
+
+  if has_debug and not dap_initialized then
+    require('jdtls').setup_dap({ hotcodereplace = 'auto' })
+    dap_initialized = true
+  end
+  require('jdtls').start_or_attach(config)
+
+  local runner = new_runner(root_dir, java_home)
+  local api = {
+    root_dir = root_dir,
+    runner = runner,
+    client = function() return project_client(root_dir) end,
+    has_debug = has_debug,
+    has_test = has_test,
+  }
+  projects[root_dir] = { config = config, api = api }
   return api
 end
 

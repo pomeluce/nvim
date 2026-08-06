@@ -275,27 +275,29 @@ local function replace_placeholders(tpl, extra)
   local time = date_for('%H:%M:%S')
   local package = extra.PACKAGE or ''
   local class = extra.CLASS or filename
+  local function replace(pattern, value)
+    tpl = tpl:gsub(pattern, function() return tostring(value) end)
+  end
 
   -- {PACKAGE} 特殊处理：为空时整行移除
   tpl = tpl:gsub('([^\n]*{%s*PACKAGE%s*}[^\n]*\n?)', function(line)
     if package == '' then return '' end
-    return line:gsub('{%s*PACKAGE%s*}', package)
+    return line:gsub('{%s*PACKAGE%s*}', function() return package end)
   end)
 
   -- 其余占位符直接替换
-  tpl = tpl
-    :gsub('{%s*CLASS%s*}', class)
-    :gsub('{%s*FILE_NAME%s*}', filename)
-    :gsub('{%s*USER%s*}', user)
-    :gsub('{%s*DATE:([^}]+)%s*}', function(fmt) return date_for(fmt:gsub('^%s+', ''):gsub('%s+$', '')) end)
-    :gsub('{%s*DATE%s*}', today)
-    :gsub('{%s*TIME:([^}]+)%s*}', function(fmt) return date_for(fmt:gsub('^%s+', ''):gsub('%s+$', '')) end)
-    :gsub('{%s*TIME%s*}', time)
+  replace('{%s*CLASS%s*}', class)
+  replace('{%s*FILE_NAME%s*}', filename)
+  replace('{%s*USER%s*}', user)
+  tpl = tpl:gsub('{%s*DATE:([^}]+)%s*}', function(fmt) return date_for(fmt:gsub('^%s+', ''):gsub('%s+$', '')) end)
+  replace('{%s*DATE%s*}', today)
+  tpl = tpl:gsub('{%s*TIME:([^}]+)%s*}', function(fmt) return date_for(fmt:gsub('^%s+', ''):gsub('%s+$', '')) end)
+  replace('{%s*TIME%s*}', time)
 
   -- 用户自定义/覆盖占位符 (settings.header.env): 在内置占位符之后应用,
   -- 可覆盖 {USER} 等内置变量, 或扩展任意自定义占位符 (如 {COMPANY})
   for key, val in pairs(env) do
-    tpl = tpl:gsub('{%s*' .. vim.pesc(key) .. '%s*}', tostring(val))
+    replace('{%s*' .. vim.pesc(key) .. '%s*}', val)
   end
 
   -- PACKAGE 为空时清理多余空行和前导空行
@@ -315,6 +317,9 @@ end
 
 ---@param args vim.api.keyset.create_autocmd.callback_args
 function M.callback(args)
+  if vim.bo[args.buf].buftype ~= '' then return end
+  local name = vim.api.nvim_buf_get_name(args.buf)
+  if name == '' or name:match('^[%a][%w+.-]*://') then return end
   local lines = vim.api.nvim_buf_get_lines(args.buf, 0, -1, false)
   local is_empty = #lines == 1 and lines[1] == ''
   if not is_empty then return end
