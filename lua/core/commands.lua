@@ -4,7 +4,7 @@ local register = vim.api.nvim_create_user_command
 register('IntelliSave', function()
   local dir = vim.fn.expand('%:p:h')
   -- 如果目录不存在, 创建目录,  如果路径以 nvim-pack: 开头则不进行处理
-  if (not vim.startswith(dir, 'nvim-pack:')) and vim.fn.empty(vim.fn.glob(dir)) == 1 then vim.fn.system('mkdir -p ' .. dir) end
+  if (not vim.startswith(dir, 'nvim-pack:')) and vim.fn.isdirectory(dir) == 0 then vim.fn.mkdir(dir, 'p') end
   -- 写入文件
   vim.cmd('w')
 end, { nargs = 0, desc = 'file intelligence saving' })
@@ -44,20 +44,20 @@ end, { nargs = 1, range = true, desc = 'replace word with confirm' })
 register('SetTab', function(opts)
   local tab_len = opts.args
   if vim.fn.empty(tab_len) == 0 then
-    vim.o.shiftwidth = tonumber(tab_len)
-    vim.o.softtabstop = tonumber(tab_len)
-    vim.o.tabstop = tonumber(tab_len)
+    vim.bo.shiftwidth = tonumber(tab_len)
+    vim.bo.softtabstop = tonumber(tab_len)
+    vim.bo.tabstop = tonumber(tab_len)
   else
     local l_tab_len = vim.fn.input('input shiftwidth: ')
     if vim.fn.empty(l_tab_len) == 0 then
-      vim.o.shiftwidth = tonumber(l_tab_len)
-      vim.o.softtabstop = tonumber(l_tab_len)
-      vim.o.tabstop = tonumber(l_tab_len)
+      vim.bo.shiftwidth = tonumber(l_tab_len)
+      vim.bo.softtabstop = tonumber(l_tab_len)
+      vim.bo.tabstop = tonumber(l_tab_len)
     end
   end
 
   vim.cmd('redraw!')
-  print('shiftwidth: ' .. vim.o.shiftwidth)
+  print('shiftwidth: ' .. vim.bo.shiftwidth)
 end, { nargs = '?', desc = 'set tab width' })
 
 -- 设置高亮

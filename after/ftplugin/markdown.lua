@@ -86,8 +86,6 @@ else
   vim.schedule(function() require('render-markdown').setup(opts) end)
 end
 
-vim.lsp.enable('marksman')
-
 local function open_url()
   local line = vim.fn.getline('.')
   local cursor_col = vim.fn.col('.')

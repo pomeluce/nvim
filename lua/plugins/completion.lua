@@ -3,7 +3,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter', 'LspAttach' }, {
   callback = function()
     PackUtils.load({
       name = 'blink.cmp',
-      deps = { 'colorful-menu.nvim', 'blink-copilot', 'LuaSnip', 'friendly-snippets', 'blink-cmp-words', 'blink-cmp-avante' },
+      deps = { 'colorful-menu.nvim', 'blink-copilot', 'LuaSnip', 'friendly-snippets', 'blink-cmp-words' },
     }, function()
       require('blink.cmp').setup({
         completion = {
@@ -45,7 +45,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter', 'LspAttach' }, {
         },
         cmdline = { keymap = { preset = 'inherit' }, completion = { menu = { auto_show = true } } },
         sources = {
-          default = { 'lsp', 'snippets', 'copilot', 'path', 'buffer', 'avante' },
+          default = { 'lsp', 'snippets', 'copilot', 'path', 'buffer' },
           providers = {
             lsp = {
               name = 'lsp',
@@ -59,7 +59,6 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter', 'LspAttach' }, {
             },
             snippets = { should_show_items = function(ctx) return ctx.trigger.initial_kind ~= 'trigger_character' end },
             copilot = { name = 'copilot', module = 'blink-copilot', async = true, opts = { kind_hl = 'BlickCmpItemKindCopilot' } },
-            avante = { name = 'avante', module = 'blink-cmp-avante', opts = {} },
             thesaurus = {
               name = 'blink-cmp-words',
               module = 'blink-cmp-words.thesaurus',

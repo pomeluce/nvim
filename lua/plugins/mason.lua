@@ -18,25 +18,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
       -- 加载 mason-lspconfig
       require('mason-lspconfig').setup({
         -- 自动安装列表
-        ensure_installed = {
-          'basedpyright',
-          'bashls',
-          'clangd',
-          'cmake',
-          'cssls',
-          'emmet_language_server',
-          'html',
-          'jsonls',
-          'kotlin_language_server',
-          'lua_ls',
-          'marksman',
-          'nil_ls',
-          'rust_analyzer',
-          'tailwindcss',
-          'taplo',
-          'ts_ls',
-          'vue_ls',
-        },
+        ensure_installed = require('configs.lsp-servers').mason_servers(),
         -- 自动安装
         automatic_installation = true,
       })

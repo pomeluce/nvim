@@ -39,7 +39,7 @@ vim.filetype.add({
     ['.*'] = {
       function(path, buf)
         if vim.bo[buf].filetype ~= 'bigfile' and path and vim.fn.getfsize(path) > vim.g.bigfile_size then
-          vim.opt.cursorline = false
+          vim.wo.cursorline = false
           return 'bigfile'
         else
           return nil
@@ -62,12 +62,16 @@ local foldGroup = vim.api.nvim_create_augroup('PersistFolds', { clear = true })
 vim.api.nvim_create_autocmd('BufWinLeave', {
   group = foldGroup,
   pattern = '*',
-  command = 'silent! mkview',
+  callback = function(args)
+    if vim.bo[args.buf].buftype == '' and vim.api.nvim_buf_get_name(args.buf) ~= '' then vim.cmd('silent! mkview') end
+  end,
 })
 vim.api.nvim_create_autocmd('BufWinEnter', {
   group = foldGroup,
   pattern = '*',
-  command = 'silent! loadview',
+  callback = function(args)
+    if vim.bo[args.buf].buftype == '' and vim.api.nvim_buf_get_name(args.buf) ~= '' then vim.cmd('silent! loadview') end
+  end,
 })
 
 -- 修改终端 buffer 名称
@@ -100,4 +104,3 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('RedoNL', { clear = true }),
   callback = function(args) vim.bo[args.buf].fileformat = 'unix' end,
 })
-

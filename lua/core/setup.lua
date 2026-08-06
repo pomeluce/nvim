@@ -357,7 +357,6 @@ function PackUtils.load(P, config_fn)
   -- 插件级操作: 整个生命周期只需做一次的动作 (检查编译和挂载)
   if not PackUtils.plugin_loaded[P.name] then
     PackUtils.check_health(P.name, P.build_cmd)
-    pcall(function() vim.cmd.packadd(P.name) end)
 
     if P.deps then
       for _, dep in ipairs(P.deps) do
@@ -365,21 +364,26 @@ function PackUtils.load(P, config_fn)
         if not dep_ok then vim.notify('Warning: ' .. P.name .. ' dependency [' .. dep .. '] missing', vim.log.levels.WARN) end
       end
     end
+    pcall(function() vim.cmd.packadd(P.name) end)
     -- 标记该仓库已挂载
     PackUtils.plugin_loaded[P.name] = true
   end
 
-  -- ⭐ is_initialized 提前设置: config_fn 即使失败也不影响状态一致性
-  PackUtils.is_initialized[call_id] = true
-
   -- loaded: boolean | function → boolean, false 时只 packadd 但不执行 config_fn
-  if not resolve_flag(P.loaded) then return end
+  if not resolve_flag(P.loaded) then
+    PackUtils.is_initialized[call_id] = true
+    return
+  end
 
   -- 保护 Setup 执行: 自由地 require, 如有拼写错误, 这里的 pcall 会完美捕获并报错
   if config_fn then
     local setup_ok, err = pcall(config_fn)
-    if not setup_ok then vim.notify('Error: ' .. P.name .. ' setup failed:\n' .. tostring(err), vim.log.levels.ERROR) end
+    if not setup_ok then
+      vim.notify('Error: ' .. P.name .. ' setup failed:\n' .. tostring(err), vim.log.levels.ERROR)
+      return
+    end
   end
+  PackUtils.is_initialized[call_id] = true
 end
 
 -- ==============================================================
@@ -406,7 +410,14 @@ vim.pack.add(active_specs, { confirm = false })
 
 -- 递归加载 plugins/ 下所有 Lua 文件(含子目录 init.lua)
 local function load_plugin_dir(dir, prefix)
+  local entries = {}
   for name, type in vim.fs.dir(dir) do
+    entries[#entries + 1] = { name = name, type = type }
+  end
+  table.sort(entries, function(a, b) return a.name < b.name end)
+
+  for _, entry in ipairs(entries) do
+    local name, type = entry.name, entry.type
     if type == 'directory' then
       -- 子目录加载 init.lua(如 plugins/tools/ → require('plugins.tools'))
       if vim.fn.filereadable(dir .. '/' .. name .. '/init.lua') == 1 then
