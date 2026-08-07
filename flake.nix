@@ -482,6 +482,7 @@
               ];
 
             shellHook = ''
+              unset NVIM_APPNAME
               export LUA_CPATH="${pkgs'.luajitPackages.tomlua}/lib/lua/5.1/?.so;$LUA_CPATH"
               if [ -z "$AKIRVIM_DEV_LINKED" ]; then
                 export AKIRVIM_DEV_LINKED=1
