@@ -18,7 +18,15 @@ function M.new(root_dir, runtimes, has_debug)
     discovery_running = false,
     discovery_complete = false,
     discovery_waiters = {},
+    log_buffer_attach = nil,
   }
+
+  function runner:set_log_buffer_attach(callback)
+    self.log_buffer_attach = callback
+    for _, run in pairs(self.runs) do
+      if vim.api.nvim_buf_is_valid(run.buf) then callback(run.buf) end
+    end
+  end
 
   function runner:configurations()
     return vim.tbl_filter(function(config) return not config.cwd or vim.fs.normalize(config.cwd) == root_dir end, require('dap').configurations.java or {})
@@ -102,6 +110,7 @@ function M.new(root_dir, runtimes, has_debug)
       local buf = vim.api.nvim_create_buf(false, true)
       vim.api.nvim_buf_set_name(buf, 'Java: ' .. config.mainClass)
       run = { buf = buf }
+      if self.log_buffer_attach then self.log_buffer_attach(buf) end
       local channel = vim.api.nvim_open_term(buf, {
         on_input = function(_, _, _, data)
           if run.job_id then vim.fn.chansend(run.job_id, data) end

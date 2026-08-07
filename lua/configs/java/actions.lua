@@ -1,5 +1,18 @@
 local M = {}
 local definition_origins = {}
+local keys = {
+  compile = '<leader>jc',
+  update_config = '<leader>ju',
+  organize_imports = '<leader>jo',
+  run = '<leader>jr',
+  stop = '<leader>js',
+  toggle_logs = '<leader>jl',
+  debug = '<leader>jd',
+  test_class = '<leader>jtc',
+  test_method = '<leader>jtm',
+  extract_variable = '<leader>jv',
+  extract_method = '<leader>jm',
+}
 
 local function set_definition_origin(tabpage, bufnr) definition_origins[tabpage] = bufnr end
 
@@ -26,10 +39,36 @@ local function command(bufnr, name, callback, description)
   vim.api.nvim_buf_create_user_command(bufnr, name, callback, { desc = description })
 end
 
+local function attach_log_buffer(bufnr, java)
+  command(bufnr, 'JavaStopMain', function() java.runner:stop() end, 'Stop the running Java main class')
+  command(bufnr, 'JavaToggleLogs', function() java.runner:toggle() end, 'Toggle Java run output')
+  vim.keymap.set('n', keys.stop, '<cmd>JavaStopMain<cr>', {
+    buffer = bufnr,
+    desc = 'Java: Stop main class',
+    silent = true,
+  })
+  vim.keymap.set('n', keys.toggle_logs, '<cmd>JavaToggleLogs<cr>', {
+    buffer = bufnr,
+    desc = 'Java: Toggle output',
+    silent = true,
+  })
+  vim.keymap.set('n', 'q', '<cmd>JavaToggleLogs<cr>', {
+    buffer = bufnr,
+    desc = 'Java: Close output',
+    silent = true,
+  })
+end
+
 local function goto_definition(bufnr)
+  local client = vim.lsp.get_clients({ name = 'jdtls', bufnr = bufnr })[1]
+  if not client then
+    vim.notify('No jdtls client attached', vim.log.levels.WARN)
+    return
+  end
+
   local origin = vim.api.nvim_get_current_buf()
-  local params = vim.lsp.util.make_position_params(0, 'utf-8')
-  vim.lsp.buf_request(bufnr, 'textDocument/definition', params, function(_, result, ctx)
+  local params = vim.lsp.util.make_position_params(0, client.offset_encoding)
+  client:request('textDocument/definition', params, function(_, result)
     if not result or vim.tbl_isempty(result) then
       vim.notify('No definition found', vim.log.levels.INFO)
       return
@@ -40,17 +79,18 @@ local function goto_definition(bufnr)
       set_definition_origin(vim.api.nvim_get_current_tabpage(), origin)
     end
     if #locations == 1 then
-      local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
       vim.lsp.util.show_document(locations[1], client.offset_encoding, { reuse_win = true, focus = true })
     else
       Snacks.picker.lsp_definitions()
     end
-  end)
+  end, bufnr)
 end
 
 function M.attach(bufnr, java)
   local jdtls = require('jdtls')
   local map = vim.keymap.set
+
+  java.runner:set_log_buffer_attach(function(log_bufnr) attach_log_buffer(log_bufnr, java) end)
 
   map('n', 'gd', function() goto_definition(bufnr) end, { buffer = bufnr, desc = 'Java: Goto definition' })
 
@@ -59,9 +99,13 @@ function M.attach(bufnr, java)
       if not items or #items == 0 then return end
       vim.schedule(function()
         vim.cmd('botright copen')
-        for _, buffer in ipairs(vim.api.nvim_list_bufs()) do
-          if vim.bo[buffer].buftype == 'quickfix' then vim.bo[buffer].buflisted = false end
-        end
+        local quickfix_buf = vim.api.nvim_get_current_buf()
+        vim.keymap.set('n', 'q', '<cmd>cclose<cr>', {
+          buffer = quickfix_buf,
+          desc = 'Java: Close compile results',
+          silent = true,
+        })
+        vim.bo[quickfix_buf].buflisted = false
       end)
     end)
   end, 'Build Java workspace')
@@ -86,18 +130,23 @@ function M.attach(bufnr, java)
     end
   end, 'Run the nearest Java test')
 
-  map('n', '<leader>jc', '<cmd>JavaCompile<cr>', { buffer = bufnr, desc = 'Java: Compile' })
-  map('n', '<leader>ju', '<cmd>JavaUpdateConfig<cr>', { buffer = bufnr, desc = 'Java: Update project' })
-  map('n', '<leader>jo', '<cmd>JavaOrganizeImports<cr>', { buffer = bufnr, desc = 'Java: Organize imports' })
-  map('n', '<leader>jr', '<cmd>JavaRunMain<cr>', { buffer = bufnr, desc = 'Java: Run main class' })
-  map('n', '<leader>js', '<cmd>JavaStopMain<cr>', { buffer = bufnr, desc = 'Java: Stop main class' })
-  map('n', '<leader>jl', '<cmd>JavaToggleLogs<cr>', { buffer = bufnr, desc = 'Java: Toggle output' })
-  map('n', '<leader>jd', '<cmd>JavaDebugMain<cr>', { buffer = bufnr, desc = 'Java: Debug main class' })
-  map('n', '<leader>jtc', '<cmd>JavaTestClass<cr>', { buffer = bufnr, desc = 'Java: Test class' })
-  map('n', '<leader>jtm', '<cmd>JavaTestMethod<cr>', { buffer = bufnr, desc = 'Java: Test method' })
-  map('n', '<leader>jv', jdtls.extract_variable, { buffer = bufnr, desc = 'Java: Extract variable' })
-  map('v', '<leader>jv', function() jdtls.extract_variable({ visual = true }) end, { buffer = bufnr, desc = 'Java: Extract variable' })
-  map('v', '<leader>jm', function() jdtls.extract_method({ visual = true }) end, { buffer = bufnr, desc = 'Java: Extract method' })
+  local mappings = {
+    { mode = 'n', lhs = keys.compile, rhs = '<cmd>JavaCompile<cr>', desc = 'Java: Compile' },
+    { mode = 'n', lhs = keys.update_config, rhs = '<cmd>JavaUpdateConfig<cr>', desc = 'Java: Update project' },
+    { mode = 'n', lhs = keys.organize_imports, rhs = '<cmd>JavaOrganizeImports<cr>', desc = 'Java: Organize imports' },
+    { mode = 'n', lhs = keys.run, rhs = '<cmd>JavaRunMain<cr>', desc = 'Java: Run main class' },
+    { mode = 'n', lhs = keys.stop, rhs = '<cmd>JavaStopMain<cr>', desc = 'Java: Stop main class' },
+    { mode = 'n', lhs = keys.toggle_logs, rhs = '<cmd>JavaToggleLogs<cr>', desc = 'Java: Toggle output' },
+    { mode = 'n', lhs = keys.debug, rhs = '<cmd>JavaDebugMain<cr>', desc = 'Java: Debug main class' },
+    { mode = 'n', lhs = keys.test_class, rhs = '<cmd>JavaTestClass<cr>', desc = 'Java: Test class' },
+    { mode = 'n', lhs = keys.test_method, rhs = '<cmd>JavaTestMethod<cr>', desc = 'Java: Test method' },
+    { mode = 'n', lhs = keys.extract_variable, rhs = jdtls.extract_variable, desc = 'Java: Extract variable' },
+    { mode = 'v', lhs = keys.extract_variable, rhs = function() jdtls.extract_variable({ visual = true }) end, desc = 'Java: Extract variable' },
+    { mode = 'v', lhs = keys.extract_method, rhs = function() jdtls.extract_method({ visual = true }) end, desc = 'Java: Extract method' },
+  }
+  for _, mapping in ipairs(mappings) do
+    map(mapping.mode, mapping.lhs, mapping.rhs, { buffer = bufnr, desc = mapping.desc })
+  end
 end
 
 return M
