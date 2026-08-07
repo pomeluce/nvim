@@ -11,7 +11,64 @@ local function split_args(value)
 end
 
 function M.new(root_dir, runtimes, has_debug)
-  local runner = { runs = {}, current = nil, log_win = nil }
+  local runner = {
+    runs = {},
+    current = nil,
+    log_win = nil,
+    discovery_running = false,
+    discovery_complete = false,
+    discovery_waiters = {},
+  }
+
+  function runner:configurations()
+    return vim.tbl_filter(function(config) return not config.cwd or vim.fs.normalize(config.cwd) == root_dir end, require('dap').configurations.java or {})
+  end
+
+  function runner:discover(bufnr, opts)
+    if not has_debug then return end
+    opts = opts or {}
+    local callback = opts.on_ready
+    local configurations = self:configurations()
+    if self.discovery_complete and not opts.force then
+      if callback then callback(configurations) end
+      return
+    end
+    if callback then table.insert(self.discovery_waiters, callback) end
+    if self.discovery_running then return end
+
+    self.discovery_running = true
+    vim.api.nvim_buf_call(bufnr, function()
+      require('jdtls.dap').setup_dap_main_class_configs({
+        verbose = opts.verbose,
+        on_ready = function()
+          self.discovery_running = false
+          self.discovery_complete = true
+          local waiters = self.discovery_waiters
+          self.discovery_waiters = {}
+          local discovered = self:configurations()
+          for _, waiter in ipairs(waiters) do
+            waiter(discovered)
+          end
+        end,
+      })
+    end)
+  end
+
+  function runner:warm_up(client_id)
+    if not has_debug then return end
+    vim.schedule(function()
+      local client = vim.lsp.get_client_by_id(client_id)
+      if not client then return end
+      for bufnr in pairs(client.attached_buffers or {}) do
+        local valid = vim.api.nvim_buf_is_valid(bufnr)
+        local name = valid and vim.api.nvim_buf_get_name(bufnr) or ''
+        if valid and vim.bo[bufnr].filetype == 'java' and not vim.startswith(name, 'jdt://') then
+          self:discover(bufnr)
+          return
+        end
+      end
+    end)
+  end
 
   function runner:show(buf)
     if self.log_win and vim.api.nvim_win_is_valid(self.log_win) then
@@ -140,12 +197,13 @@ function M.new(root_dir, runtimes, has_debug)
       vim.notify('VSC_JAVA_DEBUG is required to discover main classes', vim.log.levels.ERROR)
       return
     end
-    local configurations = vim.tbl_filter(function(config) return not config.cwd or vim.fs.normalize(config.cwd) == root_dir end, require('dap').configurations.java or {})
+    local configurations = self:configurations()
     if #configurations == 0 then
-      require('jdtls.dap').setup_dap_main_class_configs({
+      self:discover(bufnr, {
         verbose = true,
-        on_ready = function(configs)
-          if #configs > 0 then
+        force = true,
+        on_ready = function(discovered)
+          if #discovered > 0 then
             self:start()
           else
             vim.notify('No main class found', vim.log.levels.ERROR)
@@ -164,6 +222,28 @@ function M.new(root_dir, runtimes, has_debug)
     }, function(item)
       if item then self:launch(item, bufnr) end
     end)
+  end
+
+  function runner:debug()
+    local bufnr = vim.api.nvim_get_current_buf()
+    if not has_debug then
+      vim.notify('VSC_JAVA_DEBUG is not configured or contains no debug bundle', vim.log.levels.ERROR)
+      return
+    end
+
+    local function continue(configurations)
+      if #configurations > 0 then
+        require('dap').continue()
+      else
+        vim.notify('No main class found', vim.log.levels.ERROR)
+      end
+    end
+    local configurations = self:configurations()
+    if #configurations > 0 then
+      continue(configurations)
+    else
+      self:discover(bufnr, { verbose = true, force = true, on_ready = continue })
+    end
   end
 
   return runner

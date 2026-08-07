@@ -43,9 +43,9 @@ local function project_client(root_dir)
   end
 end
 
-local function status_handler(root_dir)
+local function status_handler(root_dir, on_ready)
   local ready = false
-  return function(err, result)
+  return function(err, result, ctx)
     if err then
       vim.notify('Java LSP status error: ' .. (err.message or vim.inspect(err)), vim.log.levels.ERROR)
       return
@@ -55,6 +55,7 @@ local function status_handler(root_dir)
       if not ready then
         ready = true
         vim.notify('Java LSP ready: ' .. vim.fs.basename(root_dir), vim.log.levels.INFO)
+        on_ready(ctx.client_id)
       end
     elseif result.type == 'ERROR' then
       vim.notify(result.message or result.type, vim.log.levels.ERROR)
@@ -76,6 +77,7 @@ function M.setup(root_dir)
   local settings = lsp_settings.jdtls or {}
   local runtimes = Runtime.project_runtimes(root_dir, settings.runtimes or {})
   local bundles, has_debug, has_test = collect_bundles()
+  local runner = Runner.new(root_dir, runtimes, has_debug)
   local project = load_config(root_dir .. '/.nvim/jdtls.lua')
   local base = vim.deepcopy(vim.lsp.config.jdtls or {})
   local config = vim.tbl_deep_extend(
@@ -90,7 +92,7 @@ function M.setup(root_dir)
     project,
     {
       settings = { java = { configuration = { runtimes = runtimes } } },
-      handlers = { ['language/status'] = status_handler(root_dir) },
+      handlers = { ['language/status'] = status_handler(root_dir, function(client_id) runner:warm_up(client_id) end) },
     }
   )
 
@@ -102,7 +104,7 @@ function M.setup(root_dir)
 
   local api = {
     root_dir = root_dir,
-    runner = Runner.new(root_dir, runtimes, has_debug),
+    runner = runner,
     client = function() return project_client(root_dir) end,
     has_debug = has_debug,
     has_test = has_test,

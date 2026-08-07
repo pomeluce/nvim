@@ -70,22 +70,7 @@ function M.attach(bufnr, java)
   command(bufnr, 'JavaRunMain', function() java.runner:start() end, 'Run a Java main class')
   command(bufnr, 'JavaStopMain', function() java.runner:stop() end, 'Stop the running Java main class')
   command(bufnr, 'JavaToggleLogs', function() java.runner:toggle() end, 'Toggle Java run output')
-  command(bufnr, 'JavaDebugMain', function()
-    if not java.has_debug then
-      vim.notify('VSC_JAVA_DEBUG is not configured or contains no debug bundle', vim.log.levels.ERROR)
-      return
-    end
-    require('jdtls.dap').setup_dap_main_class_configs({
-      verbose = true,
-      on_ready = function(configs)
-        if #configs > 0 then
-          require('dap').continue()
-        else
-          vim.notify('No main class found', vim.log.levels.ERROR)
-        end
-      end,
-    })
-  end, 'Debug a Java main class')
+  command(bufnr, 'JavaDebugMain', function() java.runner:debug() end, 'Debug a Java main class')
   command(bufnr, 'JavaTestClass', function()
     if java.has_test then
       jdtls.test_class()
