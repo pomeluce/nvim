@@ -319,26 +319,27 @@ end
 ---@field build_cmd? string|string[] 构建命令
 ---@param P PackUtils.PluginSpec
 ---@param config_fn? function 可选配置函数
+---@return boolean loaded 插件是否已经完成本次加载配置
 function PackUtils.load(P, config_fn)
   -- 生成如 "@/home/.../lua/plugins/theme.lua:24" 这样绝对唯一的 call_id
   local info = debug.getinfo(2, 'Sl')
   local call_id = (info.source or 'unknown') .. ':' .. (info.currentline or 0)
 
   -- 精准拦截: 如果[这一行代码]已经执行过, 直接跳过
-  if PackUtils.is_initialized[call_id] then return end
+  if PackUtils.is_initialized[call_id] then return true end
 
   P.name = PackUtils.get_name(P.name)
 
   -- specs 中 enabled = false 的插件, 完全跳过
   if PackUtils.disabled_specs and PackUtils.disabled_specs[P.name] then
     PackUtils.is_initialized[call_id] = true
-    return
+    return true
   end
 
   -- enabled: boolean | function → boolean, false 时完全跳过(不 packadd、不 config)
   if not resolve_flag(P.enabled) then
     PackUtils.is_initialized[call_id] = true
-    return
+    return true
   end
 
   -- deps 规范化
@@ -351,7 +352,7 @@ function PackUtils.load(P, config_fn)
   -- 磁盘中找不到, 说明它正在异步克隆下载, 直接静默退出
   if not PackUtils.get_root(P.name) then
     vim.notify('Plugin not found on disk: ' .. P.name, vim.log.levels.DEBUG)
-    return
+    return false
   end
 
   -- 插件级操作: 整个生命周期只需做一次的动作 (检查编译和挂载)
@@ -364,7 +365,11 @@ function PackUtils.load(P, config_fn)
         if not dep_ok then vim.notify('Warning: ' .. P.name .. ' dependency [' .. dep .. '] missing', vim.log.levels.WARN) end
       end
     end
-    pcall(function() vim.cmd.packadd(P.name) end)
+    local plugin_ok, plugin_err = pcall(function() vim.cmd.packadd(P.name) end)
+    if not plugin_ok then
+      vim.notify('Plugin load failed: ' .. P.name .. '\n' .. tostring(plugin_err), vim.log.levels.ERROR)
+      return false
+    end
     -- 标记该仓库已挂载
     PackUtils.plugin_loaded[P.name] = true
   end
@@ -372,7 +377,7 @@ function PackUtils.load(P, config_fn)
   -- loaded: boolean | function → boolean, false 时只 packadd 但不执行 config_fn
   if not resolve_flag(P.loaded) then
     PackUtils.is_initialized[call_id] = true
-    return
+    return true
   end
 
   -- 保护 Setup 执行: 自由地 require, 如有拼写错误, 这里的 pcall 会完美捕获并报错
@@ -380,10 +385,11 @@ function PackUtils.load(P, config_fn)
     local setup_ok, err = pcall(config_fn)
     if not setup_ok then
       vim.notify('Error: ' .. P.name .. ' setup failed:\n' .. tostring(err), vim.log.levels.ERROR)
-      return
+      return false
     end
   end
   PackUtils.is_initialized[call_id] = true
+  return true
 end
 
 -- ==============================================================

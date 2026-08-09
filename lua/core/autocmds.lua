@@ -102,5 +102,7 @@ vim.api.nvim_create_autocmd('FileType', {
 -- 转换换行符
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('RedoNL', { clear = true }),
-  callback = function(args) vim.bo[args.buf].fileformat = 'unix' end,
+  callback = function(args)
+    if vim.bo[args.buf].buftype == '' and vim.bo[args.buf].modifiable then vim.bo[args.buf].fileformat = 'unix' end
+  end,
 })

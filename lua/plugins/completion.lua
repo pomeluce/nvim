@@ -1,7 +1,9 @@
-vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter', 'LspAttach' }, {
-  once = true,
+local completion_group = vim.api.nvim_create_augroup('CompletionSetup', { clear = true })
+
+vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile', 'InsertEnter', 'CmdlineEnter', 'LspAttach' }, {
+  group = completion_group,
   callback = function()
-    PackUtils.load({
+    local loaded = PackUtils.load({
       name = 'blink.cmp',
       deps = { 'colorful-menu.nvim', 'blink-copilot', 'LuaSnip', 'friendly-snippets', 'blink-cmp-words' },
     }, function()
@@ -95,6 +97,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdlineEnter', 'LspAttach' }, {
       require('luasnip.loaders.from_vscode').lazy_load({ paths = { './snippets' } })
       vim.api.nvim_set_hl(0, 'BlickCmpItemKindCopilot', { fg = '#60B5FF' })
     end)
+    if loaded then vim.api.nvim_clear_autocmds({ group = completion_group }) end
   end,
 })
 
