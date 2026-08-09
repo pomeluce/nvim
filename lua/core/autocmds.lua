@@ -57,20 +57,27 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
   end,
 })
 
--- 自动保存/恢复折叠信息
+-- 保存折叠状态; 整个 buffer reload 时跳过旧 view, 避免按旧行号恢复折叠.
 local foldGroup = vim.api.nvim_create_augroup('PersistFolds', { clear = true })
+vim.api.nvim_create_autocmd('BufReadPre', {
+  group = foldGroup,
+  callback = function(args) vim.b[args.buf].skip_fold_view = vim.b[args.buf].fold_view_initialized == true end,
+})
 vim.api.nvim_create_autocmd('BufWinLeave', {
   group = foldGroup,
-  pattern = '*',
   callback = function(args)
     if vim.bo[args.buf].buftype == '' and vim.api.nvim_buf_get_name(args.buf) ~= '' then vim.cmd('silent! mkview') end
   end,
 })
 vim.api.nvim_create_autocmd('BufWinEnter', {
   group = foldGroup,
-  pattern = '*',
   callback = function(args)
-    if vim.bo[args.buf].buftype == '' and vim.api.nvim_buf_get_name(args.buf) ~= '' then vim.cmd('silent! loadview') end
+    if vim.b[args.buf].skip_fold_view then
+      vim.b[args.buf].skip_fold_view = false
+    elseif vim.bo[args.buf].buftype == '' and vim.api.nvim_buf_get_name(args.buf) ~= '' then
+      vim.cmd('silent! loadview')
+    end
+    vim.b[args.buf].fold_view_initialized = true
   end,
 })
 
