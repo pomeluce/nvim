@@ -1,6 +1,6 @@
 {
   "nodes": {
-    "apkgs": {
+    "akpkgs": {
       "inputs": {
         "flake-parts": "flake-parts",
         "nixpkgs": [
@@ -125,7 +125,7 @@
     },
     "root": {
       "inputs": {
-        "apkgs": "apkgs",
+        "akpkgs": "akpkgs",
         "flake-parts": "flake-parts_2",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs"

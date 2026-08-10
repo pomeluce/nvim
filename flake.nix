@@ -8,7 +8,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    apkgs = {
+    akpkgs = {
       url = "github:pomeluce/nixpkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -19,7 +19,7 @@
       self,
       flake-parts,
       home-manager,
-      apkgs,
+      akpkgs,
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
@@ -38,7 +38,7 @@
           ...
         }:
         let
-          cfg = config.programs.akironvim;
+          cfg = config.programs.akvim;
           defaultPackages = with pkgs; [
             # Core tools
             bat
@@ -108,21 +108,21 @@
           filteredDefaults = lib.filter (p: !builtins.elem (getPname p) extraPnames) defaultPackages;
         in
         {
-          options.programs.akironvim = {
+          options.programs.akvim = {
             enable = lib.mkEnableOption "AkironVim Neovim configuration";
 
             package = lib.mkOption {
               type = lib.types.package;
               default = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
-              defaultText = lib.literalExpression "inputs.nvim.packages.\${pkgs.stdenv.hostPlatform.system}.default";
-              description = "The akironvim package to link into the Home Manager configuration directory.";
+              defaultText = lib.literalExpression "inputs.akvim.packages.\${pkgs.stdenv.hostPlatform.system}.default";
+              description = "The akiron-vim package to link into the Home Manager configuration directory.";
             };
 
             configDir = lib.mkOption {
               type = lib.types.str;
-              default = "akironvim";
-              example = "akironvim";
-              description = "Path relative to ~/.config where akironvim is linked (used as NVIM_APPNAME).";
+              default = "akvim";
+              example = "akvim";
+              description = "Path relative to ~/.config where akvim is linked (used as NVIM_APPNAME).";
             };
 
             extraPackages = lib.mkOption {
@@ -341,7 +341,7 @@
             '';
 
             # ── 4. Custom nixpkgs overlay ──
-            nixpkgs.overlays = [ apkgs.overlays.default ];
+            nixpkgs.overlays = [ akpkgs.overlays.default ];
 
             # ── 5. Wrapped Neovim (avoids init.lua generation) ──
             home.packages = [
@@ -391,9 +391,9 @@
       perSystem =
         { pkgs, system, ... }:
         let
-          pkgs' = pkgs.extend apkgs.overlays.default;
-          akironvimPackage = pkgs.stdenvNoCC.mkDerivation {
-            pname = "akironvim";
+          pkgs' = pkgs.extend akpkgs.overlays.default;
+          akvimPackage = pkgs.stdenvNoCC.mkDerivation {
+            pname = "akiron-vim";
             version = "2026.06.28";
             src = self;
 
@@ -416,7 +416,7 @@
             config.allowUnfree = true;
           };
 
-          packages.default = akironvimPackage;
+          packages.default = akvimPackage;
 
           devShells.default = pkgs'.mkShell {
             packages =
@@ -484,8 +484,8 @@
             shellHook = ''
               unset NVIM_APPNAME
               export LUA_CPATH="${pkgs'.luajitPackages.tomlua}/lib/lua/5.1/?.so;$LUA_CPATH"
-              if [ -z "$AKIRONVIM_DEV_LINKED" ]; then
-                export AKIRONVIM_DEV_LINKED=1
+              if [ -z "$AKVIM_DEV_LINKED" ]; then
+                export AKVIM_DEV_LINKED=1
                 if [ -d ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
                   echo "WARNING: ~/.config/nvim is a real directory, not linking."
                 else
@@ -495,16 +495,16 @@
               fi
               echo "AkironVim dev environment"
               echo "  nvim -> uses repo files directly (for dev/debug)"
-              echo "  akvim -> flake-managed (~/.config/akironvim/)"
+              echo "  akvim -> flake-managed (~/.config/akvim/)"
             '';
           };
 
           checks = {
-            package-build = pkgs.runCommand "akironvim-package-build-check" { } ''
-              test -f ${akironvimPackage}/init.lua
-              test -d ${akironvimPackage}/lua
-              test -d ${akironvimPackage}/after
-              test -d ${akironvimPackage}/snippets
+            package-build = pkgs.runCommand "akiron-vim-package-build-check" { } ''
+              test -f ${akvimPackage}/init.lua
+              test -d ${akvimPackage}/lua
+              test -d ${akvimPackage}/after
+              test -d ${akvimPackage}/snippets
               touch $out
             '';
 
@@ -514,11 +514,11 @@
                 modules = [
                   self.homeManagerModules.default
                   {
-                    home.username = "akironvim-test";
-                    home.homeDirectory = "/home/akironvim-test";
+                    home.username = "akiron-vim-test";
+                    home.homeDirectory = "/home/akiron-vim-test";
                     home.stateVersion = "26.11";
 
-                    programs.akironvim.enable = true;
+                    programs.akvim.enable = true;
                   }
                 ];
               }).activationPackage;

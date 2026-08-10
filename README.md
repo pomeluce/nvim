@@ -52,15 +52,15 @@ nvim
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    nvim.url = "github:pomeluce/nvim";
+    akvim.url = "github:pomeluce/nvim";
   };
 
-  outputs = { nixpkgs, home-manager, nvim, ... }: {
+  outputs = { nixpkgs, home-manager, akvim, ... }: {
     homeConfigurations.user = home-manager.lib.homeManagerConfiguration {
       modules = [
-        nvim.homeManagerModules.default
+        akvim.homeManagerModules.default
         {
-          programs.akironvim = {
+          programs.akvim = {
             enable = true;
 
             # 按需追加系统包
@@ -83,7 +83,7 @@ nvim
 }
 ```
 
-应用后使用 `akvim` 命令启动（等价于 `NVIM_APPNAME=akironvim nvim`），配置目录 `~/.config/akironvim/`。依赖（包括 `tomlua` Lua 库）由 `wrapNeovimUnstable` 自动注入，无需手动安装。
+应用后使用 `akvim` 命令启动（等价于 `NVIM_APPNAME=akvim nvim`），配置目录 `~/.config/akvim/`。依赖（包括 `tomlua` Lua 库）由 `wrapNeovimUnstable` 自动注入，无需手动安装。
 
 > **开发调试：** 在仓库目录下运行 `nix develop` 进入开发环境，仓库会自动链接到 `~/.config/nvim`，直接用 `nvim` 修改配置、 `:PkUpdate` 更新插件。退出 shell 后链接自动清理。
 
@@ -215,7 +215,7 @@ DAP 和 Formatter 也通过 Mason 的 `automatic_installation = true` 自动管�
 
 ## 环境变量
 
-以下环境变量被配置引用。**flake 用户**由 `programs.akironvim.env` 自动推导（无需手动设置）；**手动安装的 NixOS 用户**在 `home.sessionVariables` 中设置；**非 NixOS 用户**在 shell 配置（`.zshrc` / `.bashrc`）中设置。
+以下环境变量被配置引用。**flake 用户**由 `programs.akvim.env` 自动推导（无需手动设置）；**手动安装的 NixOS 用户**在 `home.sessionVariables` 中设置；**非 NixOS 用户**在 shell 配置（`.zshrc` / `.bashrc`）中设置。
 
 | 变量                | 用途                             | 示例值                          | 必须     |
 | ------------------- | -------------------------------- | ------------------------------- | -------- |
@@ -230,7 +230,7 @@ DAP 和 Formatter 也通过 Mason 的 `automatic_installation = true` 自动管�
 
 ### NixOS 设置示例
 
-使用 flake 模块时，环境变量由 `programs.akironvim` 自动推导，无需手动设置：
+使用 flake 模块时，环境变量由 `programs.akvim` 自动推导，无需手动设置：
 
 ```nix
 # 通过 flake 自动注入（默认值）：
@@ -240,7 +240,7 @@ DAP 和 Formatter 也通过 Mason 的 `automatic_installation = true` 自动管�
 # VSC_FIREFOX_DEBUG → vscode-extensions 路径
 
 # 如需覆盖：
-programs.akironvim.env.JAVA_LOMBOK = "/custom/path/lombok.jar";
+programs.akvim.env.JAVA_LOMBOK = "/custom/path/lombok.jar";
 ```
 
 不使用 flake 时手动设置：

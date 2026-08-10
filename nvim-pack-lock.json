@@ -6,7 +6,7 @@
       "version": "2.0.0 - 3.0.0"
     },
     "base16-nvim": {
-      "rev": "cf82c4be16334c7cdf9883296eacfba50ff93b26",
+      "rev": "09944b3120451d2881dc8cfb13c85c11949f477d",
       "src": "https://github.com/RRethy/base16-nvim"
     },
     "blink-cmp-avante": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "kulala.nvim": {
-      "rev": "7c10bd7b56f11dca25e5e948f817ca4eee1cb669",
+      "rev": "6216c08d8479c06c19220839b7db72ed0a8bf950",
       "src": "https://github.com/mistweaverco/kulala.nvim"
     },
     "live-preview.nvim": {
