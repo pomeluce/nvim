@@ -62,7 +62,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
         group = vim.api.nvim_create_augroup('UfoReload', { clear = true }),
         callback = function(args)
           local buf = args.buf
-          if vim.bo[buf].buftype ~= '' then return end
+          if vim.bo[buf].buftype ~= '' or not vim.b[buf].skip_fold_view then return end
           folds_pending[buf] = true
           vim.schedule(function()
             if folds_pending[buf] and recompute_folds(buf) then folds_pending[buf] = nil end
