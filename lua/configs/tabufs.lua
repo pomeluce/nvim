@@ -3,9 +3,11 @@ local M = {}
 local api = vim.api
 
 --- 获取当前 tab 的 buffer 列表
+--- @return number[]
 local function get_tab_bufs() return vim.t.bufs or {} end
 
 --- 设置当前 tab 的 buffer 列表
+--- @param bufs number[]
 local function set_tab_bufs(bufs) vim.t.bufs = bufs end
 
 local cur_buf = api.nvim_get_current_buf
@@ -17,6 +19,11 @@ local excluded_buftypes = {
   ['prompt'] = true,
   ['popup'] = true,
   ['nofile'] = true,
+}
+
+--- 允许显示在 buffer 栏中的特殊 nofile buffer
+local included_nofile_names = {
+  ['health://'] = true,
 }
 
 --- 不应该包含在切换列表中的 filetype
@@ -52,7 +59,6 @@ local excluded_filetypes = {
   ['lazy'] = true,
   ['mason'] = true,
   ['lspinfo'] = true,
-  ['checkhealth'] = true,
   ['help'] = true,
   ['man'] = true,
   ['qf'] = true,
@@ -74,7 +80,8 @@ local function should_include_buf(bufnr)
 
   -- 检查 buftype
   local buftype = vim.api.nvim_get_option_value('buftype', { buf = bufnr }) or ''
-  if excluded_buftypes[buftype] then return false end
+  local bufname = vim.api.nvim_buf_get_name(bufnr)
+  if excluded_buftypes[buftype] and not (buftype == 'nofile' and included_nofile_names[bufname]) then return false end
 
   -- 检查 filetype
   local filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr }) or ''
@@ -98,7 +105,8 @@ local function safe_set_buf(bufnr)
   return ok
 end
 
---- 清理 vim.t.bufs 中无效的 buffer
+--- 清理当前 tab 列表中的无效 buffer
+--- @return number[]
 local function clean_invalid_bufs()
   local bufs = get_tab_bufs()
   local cleaned = {}
@@ -109,12 +117,17 @@ local function clean_invalid_bufs()
   return cleaned
 end
 
---- 获取 buffer 在 vim.t.bufs 中的索引
+--- 获取当前 tab 的有序 buffer 列表，供 tabline 和切换逻辑共用
+--- @return number[]
+function M.get_bufs() return clean_invalid_bufs() end
+
+--- 获取 buffer 在列表中的索引
 --- @param bufnr number
+--- @param bufs number[]|nil
 --- @return number|nil
-local function buf_index(bufnr)
+local function buf_index(bufnr, bufs)
   if not bufnr then return nil end
-  local bufs = get_tab_bufs()
+  bufs = bufs or get_tab_bufs()
   for i, value in ipairs(bufs) do
     if value == bufnr then return i end
   end
@@ -123,7 +136,8 @@ end
 
 --- 初始化当前 tab 的 buffer 列表
 local function init_tab_bufs()
-  if not vim.t.bufs then vim.t.bufs = vim.tbl_filter(function(buf) return vim.api.nvim_buf_is_valid(buf) and vim.fn.buflisted(buf) == 1 end, api.nvim_list_bufs()) end
+  if vim.t.bufs then return end
+  set_tab_bufs(vim.tbl_filter(function(buf) return api.nvim_buf_is_valid(buf) and vim.fn.buflisted(buf) == 1 end, api.nvim_list_bufs()))
 end
 
 init_tab_bufs()
@@ -153,56 +167,116 @@ local function buf_del(bufnr)
   end
 end
 
---- 切换到下一个 buffer
-function M.next_buf()
-  local bufs = clean_invalid_bufs()
+--- 按偏移量切换当前 tab 中的 buffer
+--- @param offset 1|-1
+local function switch_buf(offset)
+  local bufs = M.get_bufs()
   if #bufs == 0 then return end
 
-  local curbuf = cur_buf()
-  local curbufIndex = buf_index(curbuf)
+  local current_index = buf_index(cur_buf(), bufs)
 
-  -- 如果当前 buffer 不在列表中或无效, 切换到第一个有效 buffer
-  if not curbufIndex then
+  -- 当前 buffer 可能是未参与列表的侧栏或临时窗口。
+  if not current_index then
     for _, bufnr in ipairs(bufs) do
       if safe_set_buf(bufnr) then return end
     end
     return
   end
 
-  -- 查找下一个有效 buffer
   for i = 1, #bufs do
-    local nextIndex = (curbufIndex + i - 1) % #bufs + 1
-    if nextIndex ~= curbufIndex then
-      local nextBuf = bufs[nextIndex]
-      if safe_set_buf(nextBuf) then return end
-    end
+    local index = (current_index - 1 + offset * i) % #bufs + 1
+    if index ~= current_index and safe_set_buf(bufs[index]) then return end
   end
 end
 
+--- 切换到下一个 buffer
+function M.next_buf() switch_buf(1) end
+
 --- 切换到上一个 buffer
-function M.prev_buf()
-  local bufs = clean_invalid_bufs()
-  if #bufs == 0 then return end
+function M.prev_buf() switch_buf(-1) end
 
-  local curbuf = cur_buf()
-  local curbufIndex = buf_index(curbuf)
+--- 关闭 transient buffer，并尽量返回来源 buffer
+--- @param bufnr number
+--- @return boolean handled
+local function close_transient_buf(bufnr)
+  if not vim.b[bufnr].transient then return false end
 
-  -- 如果当前 buffer 不在列表中或无效, 切换到第一个有效 buffer
-  if not curbufIndex then
-    for _, bufnr in ipairs(bufs) do
-      if safe_set_buf(bufnr) then return end
+  local origin = vim.b[bufnr].transient_origin
+  if not safe_set_buf(origin) then
+    local bufs = get_tab_bufs()
+    for i = #bufs, 1, -1 do
+      local candidate = bufs[i]
+      if candidate ~= bufnr and should_include_buf(candidate) and safe_set_buf(candidate) then break end
     end
-    return
   end
+  if api.nvim_buf_is_valid(bufnr) then api.nvim_buf_delete(bufnr, { force = true }) end
+  vim.cmd('redrawtabline')
+  return true
+end
 
-  -- 查找上一个有效 buffer
+--- 多 tab 时沿用原有策略：当前 tab buffer 较少时切走后再删除
+--- @param bufnr number
+--- @return boolean handled
+local function close_buf_with_multiple_tabs(bufnr)
+  local tabs = api.nvim_list_tabpages()
+  if #tabs <= 1 then return false end
+
+  local bufs = get_tab_bufs()
+  if #bufs <= 2 then
+    local current_tab = api.nvim_get_current_tabpage()
+    local target_tab
+    for _, tab in ipairs(tabs) do
+      if tab ~= current_tab then target_tab = tab end
+    end
+    vim.cmd('tabnext ' .. target_tab)
+    if api.nvim_tabpage_is_valid(current_tab) then buf_del(bufnr) end
+    vim.cmd('redrawtabline')
+  end
+  return true
+end
+
+--- 切换到列表中目标 buffer 之前的有效 buffer
+--- @param bufnr number
+--- @return boolean
+local function switch_to_previous_buf(bufnr)
+  local bufs = M.get_bufs()
+  local current_index = buf_index(bufnr, bufs)
+  if not current_index then return false end
+
   for i = 1, #bufs do
-    local prevIndex = ((curbufIndex - i - 1) % #bufs + #bufs) % #bufs + 1
-    if prevIndex ~= curbufIndex then
-      local prevBuf = bufs[prevIndex]
-      if safe_set_buf(prevBuf) then return end
-    end
+    local index = (current_index - i - 1) % #bufs + 1
+    if index ~= current_index and safe_set_buf(bufs[index]) then return true end
   end
+  return false
+end
+
+--- 关闭普通 buffer 前切换到合适的窗口或 buffer
+--- @param bufnr number
+local function close_regular_buf(bufnr)
+  local bufhidden = vim.bo[bufnr].bufhidden
+  local bufs = M.get_bufs()
+  local index = buf_index(bufnr, bufs)
+  local win_config = api.nvim_win_get_config(0)
+
+  if win_config.zindex then
+    vim.cmd('bw')
+    return
+  elseif index and #bufs > 1 then
+    if not switch_to_previous_buf(bufnr) then vim.cmd('enew') end
+  elseif not vim.bo[bufnr].buflisted then
+    local fallback = bufs[#bufs]
+    if fallback and api.nvim_buf_is_valid(fallback) then
+      local winid = vim.fn.bufwinid(fallback)
+      api.nvim_set_current_win(winid ~= -1 and winid or 0)
+      safe_set_buf(fallback)
+    end
+    vim.cmd('bw' .. bufnr)
+    return
+  else
+    vim.cmd('enew')
+  end
+
+  if bufhidden ~= 'delete' then buf_del(bufnr) end
 end
 
 --- 关闭 buffer
@@ -210,89 +284,14 @@ end
 function M.close_buf(bufnr)
   bufnr = bufnr or cur_buf()
 
-  if not vim.api.nvim_buf_is_valid(bufnr) then return end
-
-  if vim.b[bufnr].transient then
-    local origin = vim.b[bufnr].transient_origin
-    if not safe_set_buf(origin) then
-      local tab_bufs = get_tab_bufs()
-      for i = #tab_bufs, 1, -1 do
-        local candidate = tab_bufs[i]
-        if candidate ~= bufnr and should_include_buf(candidate) and safe_set_buf(candidate) then break end
-      end
-    end
-    if vim.api.nvim_buf_is_valid(bufnr) then vim.api.nvim_buf_delete(bufnr, { force = true }) end
-    vim.cmd('redrawtabline')
-    return
-  end
-
-  -- 如果是当前 tab 的最后一个 buffer 且有多个 tab, 先切换到其他 tab 再关闭
-  if #vim.api.nvim_list_tabpages() > 1 then
-    local bufs = get_tab_bufs()
-    local is_last_buf = #bufs <= 2
-    if is_last_buf then
-      local cur_tab = vim.api.nvim_get_current_tabpage()
-      local target_tab = nil
-      for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
-        if tab ~= cur_tab then target_tab = tab end
-      end
-      vim.cmd('tabnext ' .. target_tab)
-      if vim.api.nvim_tabpage_is_valid(cur_tab) then buf_del(bufnr) end
-      vim.cmd('redrawtabline')
-    end
-    return
-  end
+  if not api.nvim_buf_is_valid(bufnr) then return end
+  if close_transient_buf(bufnr) then return end
+  if close_buf_with_multiple_tabs(bufnr) then return end
 
   if vim.bo[bufnr].buftype == 'terminal' then
     vim.cmd(vim.bo[bufnr].buflisted and 'set nobl | enew' or 'hide')
   else
-    local curBufIndex = buf_index(bufnr)
-    local bufhidden = vim.bo[bufnr].bufhidden
-    -- force close floating wins or nonbuflisted
-    local win_config = api.nvim_win_get_config(0)
-    if win_config.zindex then
-      vim.cmd('bw')
-      return
-    -- handle listed bufs
-    elseif curBufIndex and #vim.t.bufs > 1 then
-      -- 先清理无效 buffer
-      clean_invalid_bufs()
-
-      -- 查找下一个有效的 buffer 来切换
-      local targetBuf = nil
-      for i = 1, #vim.t.bufs do
-        local idx = ((curBufIndex - i - 1) % #vim.t.bufs + #vim.t.bufs) % #vim.t.bufs + 1
-        if idx ~= curBufIndex then
-          local buf = vim.t.bufs[idx]
-          if vim.api.nvim_buf_is_valid(buf) then
-            targetBuf = buf
-            break
-          end
-        end
-      end
-
-      if targetBuf then
-        -- 使用安全的方式切换 buffer
-        if not safe_set_buf(targetBuf) then vim.cmd('enew') end
-      else
-        vim.cmd('enew')
-      end
-    -- handle unlisted
-    elseif not vim.bo[bufnr].buflisted then
-      local tmpbufnr = vim.t.bufs[#vim.t.bufs]
-      if tmpbufnr and vim.api.nvim_buf_is_valid(tmpbufnr) then
-        local winid = vim.fn.bufwinid(tmpbufnr)
-        winid = winid ~= -1 and winid or 0
-        api.nvim_set_current_win(winid)
-        safe_set_buf(tmpbufnr)
-      end
-      vim.cmd('bw' .. bufnr)
-      return
-    else
-      vim.cmd('enew')
-    end
-
-    if not (bufhidden == 'delete') then buf_del(bufnr) end
+    close_regular_buf(bufnr)
   end
 
   vim.cmd('redrawtabline')
@@ -319,108 +318,128 @@ end
 --- @param buf number buffer number
 --- @return boolean
 function M.empty_buf(buf)
-  if not vim.api.nvim_buf_is_valid(buf) then return false end
+  if not api.nvim_buf_is_valid(buf) then return false end
 
-  local name = vim.api.nvim_buf_get_name(buf)
+  local name = api.nvim_buf_get_name(buf)
   if name ~= '' then return false end
-  if vim.api.nvim_get_option_value('modified', { buf = buf }) then return false end
+  if api.nvim_get_option_value('modified', { buf = buf }) then return false end
   local allowed_buftypes = { [''] = true, ['nofile'] = true }
   local allowed_filetypes = { [''] = true }
-  local buftype = vim.api.nvim_get_option_value('buftype', { buf = buf }) or ''
-  local filetype = vim.api.nvim_get_option_value('filetype', { buf = buf }) or ''
+  local buftype = api.nvim_get_option_value('buftype', { buf = buf }) or ''
+  local filetype = api.nvim_get_option_value('filetype', { buf = buf }) or ''
   if not allowed_buftypes[buftype] then return false end
   if not allowed_filetypes[filetype] then return false end
 
   return true
 end
 
--- 初始化 autocmds
-if not vim.b.tabuf_load then
-  vim.b.tabuf_load = true
+--- 维护当前 tab 的 buffer 列表
+--- @param args vim.api.keyset.create_autocmd.callback_args
+local function track_buf(args)
+  if not api.nvim_buf_is_valid(args.buf) then return end
 
-  --- 监听 BufAdd, BufEnter, TabNew 事件来维护 buffer 列表
-  vim.api.nvim_create_autocmd({ 'BufAdd', 'BufEnter', 'TabNew' }, {
-    group = vim.api.nvim_create_augroup('SetTabufs', { clear = true }),
-    callback = function(args)
-      -- 确保 buffer 有效
-      if not vim.api.nvim_buf_is_valid(args.buf) then return end
+  local bufs = get_tab_bufs()
+  if not vim.tbl_contains(bufs, args.buf) then
+    local should_add = args.event == 'BufAdd' or args.event == 'BufEnter'
+    if args.event == 'TabNew' then should_add = cur_buf() == args.buf end
+    if should_add and should_include_buf(args.buf) then table.insert(bufs, args.buf) end
+  end
 
-      local bufs = get_tab_bufs()
-      local is_curbuf = cur_buf() == args.buf
+  -- 新文件替换启动时的空 buffer 后，不再保留这个占位项。
+  if args.event == 'BufAdd' and #bufs > 0 then
+    local first_buf = bufs[1]
+    if api.nvim_buf_is_valid(first_buf) then
+      local name = api.nvim_buf_get_name(first_buf)
+      local modified = api.nvim_get_option_value('modified', { buf = first_buf })
+      if name == '' and not modified then table.remove(bufs, 1) end
+    end
+  end
 
-      -- 如果 buffer 不在列表中, 根据事件类型决定是否添加
-      if not vim.tbl_contains(bufs, args.buf) then
-        local should_add = false
-        if args.event == 'BufEnter' then
-          should_add = should_include_buf(args.buf)
-        elseif args.event == 'BufAdd' then
-          should_add = should_include_buf(args.buf)
-        elseif args.event == 'TabNew' then
-          should_add = is_curbuf and should_include_buf(args.buf)
-        end
+  set_tab_bufs(bufs)
 
-        if should_add then table.insert(bufs, args.buf) end
+  -- 某些特殊 buffer（如 health://）在 BufEnter 后才设置名称和选项。
+  if args.event == 'BufAdd' or args.event == 'BufEnter' then
+    local bufnr = args.buf
+    local tab = api.nvim_get_current_tabpage()
+    vim.schedule(function()
+      if not api.nvim_tabpage_is_valid(tab) or not api.nvim_buf_is_valid(bufnr) or not should_include_buf(bufnr) then return end
+      local tab_bufs = vim.t[tab].bufs or {}
+      if not vim.tbl_contains(tab_bufs, bufnr) then
+        table.insert(tab_bufs, bufnr)
+        vim.t[tab].bufs = tab_bufs
+        vim.cmd('redrawtabline')
       end
+    end)
+  end
+end
 
-      -- 处理 BufAdd 事件: 如果第一个 buffer 是空 buffer, 移除它
-      if args.event == 'BufAdd' and #bufs > 0 then
-        local first_buf = bufs[1]
-        if vim.api.nvim_buf_is_valid(first_buf) then
-          local first_name = vim.api.nvim_buf_get_name(first_buf)
-          local first_modified = vim.api.nvim_get_option_value('modified', { buf = first_buf })
-          if #first_name == 0 and not first_modified then table.remove(bufs, 1) end
-        end
+--- FileType 确定后，移除应被排除的工具 buffer
+--- @param bufnr number
+local function remove_excluded_buf(bufnr)
+  if should_include_buf(bufnr) then return end
+
+  local bufs = get_tab_bufs()
+  for i = #bufs, 1, -1 do
+    if bufs[i] == bufnr then table.remove(bufs, i) end
+  end
+  set_tab_bufs(bufs)
+end
+
+--- 从所有 tab 的列表中移除已删除的 buffer
+--- @param bufnr number
+local function remove_buf_from_tabs(bufnr)
+  for _, tab in ipairs(api.nvim_list_tabpages()) do
+    local bufs = vim.t[tab].bufs
+    if bufs then
+      for i = #bufs, 1, -1 do
+        if bufs[i] == bufnr then table.remove(bufs, i) end
       end
+      vim.t[tab].bufs = bufs
+    end
+  end
+end
 
-      set_tab_bufs(bufs)
-    end,
+--- 删除当前 tab 在 BufDelete 后留下的空 buffer
+local function close_current_empty_buf()
+  local tab = api.nvim_get_current_tabpage()
+  local wins = api.nvim_tabpage_list_wins(tab)
+  if #wins ~= 1 then return end
+
+  local bufnr = api.nvim_win_get_buf(wins[1])
+  if M.empty_buf(bufnr) then M.close_buf(bufnr) end
+end
+
+--- TabClosed 后清理遗留的空 buffer
+local function close_all_empty_bufs()
+  for _, bufnr in ipairs(api.nvim_list_bufs()) do
+    if M.empty_buf(bufnr) then M.close_buf(bufnr) end
+  end
+end
+
+local function setup_autocmds()
+  local group = api.nvim_create_augroup('Tabufs', { clear = true })
+
+  api.nvim_create_autocmd({ 'BufAdd', 'BufEnter', 'TabNew' }, {
+    group = group,
+    callback = track_buf,
   })
 
-  --- 监听 BufDelete 事件来从所有 tab 的 buffer 列表中删除此 buffer
-  vim.api.nvim_create_autocmd('BufDelete', {
-    group = vim.api.nvim_create_augroup('UpTabufs', { clear = true }),
-    callback = function(args)
-      -- 从所有 tab 的 buffer 列表中删除此 buffer
-      for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
-        local tab_bufs = vim.t[tab].bufs
-        if tab_bufs then
-          for i = #tab_bufs, 1, -1 do
-            if tab_bufs[i] == args.buf then table.remove(tab_bufs, i) end
-          end
-          vim.t[tab].bufs = tab_bufs
-        end
-      end
-      -- 同时更新当前 tab 的 bufs
-      if vim.t.bufs then
-        for i = #vim.t.bufs, 1, -1 do
-          if vim.t.bufs[i] == args.buf then table.remove(vim.t.bufs, i) end
-        end
-      end
-    end,
+  api.nvim_create_autocmd('FileType', {
+    group = group,
+    callback = function(args) remove_excluded_buf(args.buf) end,
   })
 
-  --- 监听 BufDelete 和 TabClosed 事件来清理空 buffer
-  vim.api.nvim_create_autocmd({ 'BufDelete', 'TabClosed' }, {
-    group = vim.api.nvim_create_augroup('CloseEmpytBuf', { clear = true }),
-    callback = function(args)
-      -- tab > 1: delete last buffer, close empty tab
-      local function _del_empty_bf_close()
-        local tab = vim.api.nvim_get_current_tabpage()
-        local wins = vim.api.nvim_tabpage_list_wins(tab)
-        if #wins ~= 1 then return end
-        local buf = vim.api.nvim_win_get_buf(wins[1])
-        if M.empty_buf(buf) then M.close_buf(buf) end
-      end
-      -- tab close: delete empty buf
-      local function _del_empty_tb_close()
-        local bufs = vim.api.nvim_list_bufs()
-        for _, buf in ipairs(bufs) do
-          if M.empty_buf(buf) then M.close_buf(buf) end
-        end
-      end
-      vim.schedule(args.event == 'BufDelete' and _del_empty_bf_close or _del_empty_tb_close)
-    end,
+  api.nvim_create_autocmd('BufDelete', {
+    group = group,
+    callback = function(args) remove_buf_from_tabs(args.buf) end,
+  })
+
+  api.nvim_create_autocmd({ 'BufDelete', 'TabClosed' }, {
+    group = group,
+    callback = function(args) vim.schedule(args.event == 'BufDelete' and close_current_empty_buf or close_all_empty_bufs) end,
   })
 end
+
+setup_autocmds()
 
 return M

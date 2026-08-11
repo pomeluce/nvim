@@ -1,5 +1,6 @@
 -- local palette = require('catppuccin.palettes').get_palette('mocha')
 local palette = require('base16-colorscheme').colors
+local tabufs = require('configs.tabufs')
 
 return {
   {
@@ -134,7 +135,9 @@ return {
       {
         provider = '  ',
         hl = function(self) return { fg = self.is_active and palette.base04 or palette.base06 } end,
-      }
+      },
+      tabufs.get_bufs,
+      false
     ),
     { provider = '%=' },
   },
