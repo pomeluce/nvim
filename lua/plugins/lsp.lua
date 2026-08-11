@@ -21,6 +21,49 @@ end
 
 local map = vim.keymap.set
 local hlword = require('configs.hlword')
+local document_highlight_method = vim.lsp.protocol.Methods.textDocument_documentHighlight
+local document_highlight_handler = vim.lsp.handlers[document_highlight_method]
+local highlight_group = vim.api.nvim_create_augroup('LspReferenceHighlight', { clear = true })
+
+-- LSP responses can arrive after their source buffer has been deleted.
+vim.lsp.handlers[document_highlight_method] = function(err, result, ctx, config)
+  if not vim.api.nvim_buf_is_valid(ctx.bufnr) then return end
+  return document_highlight_handler(err, result, ctx, config)
+end
+
+local function setup_reference_highlight(bufnr)
+  vim.api.nvim_clear_autocmds({ group = highlight_group, buffer = bufnr })
+
+  vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+    group = highlight_group,
+    buffer = bufnr,
+    callback = function(ev)
+      if has_document_highlight(ev.buf) then
+        vim.lsp.buf.document_highlight()
+      else
+        hlword.highlight_word()
+      end
+    end,
+  })
+
+  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+    group = highlight_group,
+    buffer = bufnr,
+    callback = function(ev)
+      if vim.api.nvim_buf_is_valid(ev.buf) then vim.lsp.util.buf_clear_references(ev.buf) end
+      hlword.clear_word()
+    end,
+  })
+
+  vim.api.nvim_create_autocmd('LspDetach', {
+    group = highlight_group,
+    buffer = bufnr,
+    callback = function(ev)
+      if vim.api.nvim_buf_is_valid(ev.buf) then vim.lsp.util.buf_clear_references(ev.buf) end
+      hlword.clear_word()
+    end,
+  })
+end
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(event)
@@ -57,32 +100,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     -- 高亮光标单词
-    local group = vim.api.nvim_create_augroup('HLCurrsorWord', { clear = true })
-    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-      group = group,
-      callback = function(ev)
-        if has_document_highlight(ev.buf) then
-          vim.lsp.buf.document_highlight()
-        else
-          hlword.highlight_word()
-        end
-      end,
-    })
-    vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-      group = group,
-      callback = function()
-        vim.lsp.buf.clear_references()
-        hlword.clear_word()
-      end,
-    })
-    -- LSP 断连清除所有高亮
-    vim.api.nvim_create_autocmd('LspDetach', {
-      group = vim.api.nvim_create_augroup('DetachLSP', { clear = true }),
-      callback = function()
-        hlword.clear_word()
-        vim.lsp.buf.clear_references()
-      end,
-    })
+    setup_reference_highlight(event.buf)
 
     -- 重命名
     local opts = function(desc) return { buffer = event.buf, desc = desc } end
