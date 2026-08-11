@@ -31,7 +31,7 @@
       "src": "https://github.com/coder/claudecode.nvim"
     },
     "codediff.nvim": {
-      "rev": "31510a9b34c032b6fe98fc158d4066702f68cff2",
+      "rev": "e08a35a56a52c290398ebfaec33c34cfcf2d0f3c",
       "src": "https://github.com/esmuellert/codediff.nvim"
     },
     "colorful-menu.nvim": {
@@ -39,7 +39,7 @@
       "src": "https://github.com/xzbdmw/colorful-menu.nvim"
     },
     "conform.nvim": {
-      "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
+      "rev": "95141076dd44181bc2140193ea5c539e143ec3ea",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "dropbar.nvim": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "kulala.nvim": {
-      "rev": "6216c08d8479c06c19220839b7db72ed0a8bf950",
+      "rev": "81cbb767749bfe23666e8ff099306044a2743012",
       "src": "https://github.com/mistweaverco/kulala.nvim"
     },
     "live-preview.nvim": {
@@ -131,7 +131,7 @@
       "src": "https://github.com/mfussenegger/nvim-jdtls"
     },
     "nvim-lspconfig": {
-      "rev": "43ed3797b266e1ee8d222e491379ad471c9d3146",
+      "rev": "4267d26e60323a45e18f8e7a63a964cc8f53ca4e",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
