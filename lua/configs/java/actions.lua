@@ -7,6 +7,10 @@ local keys = {
   run = '<leader>jr',
   stop = '<leader>js',
   toggle_logs = '<leader>jl',
+  next_log = 'gt',
+  previous_log = 'gT',
+  next_log_tab = '<Tab>',
+  previous_log_tab = '<S-Tab>',
   debug = '<leader>jd',
   test_class = '<leader>jtc',
   test_method = '<leader>jtm',
@@ -39,9 +43,15 @@ local function command(bufnr, name, callback, description)
   vim.api.nvim_buf_create_user_command(bufnr, name, callback, { desc = description })
 end
 
-local function attach_log_buffer(bufnr, java)
+local function attach_runner_commands(bufnr, java)
   command(bufnr, 'JavaStopMain', function() java.runner:stop() end, 'Stop the running Java main class')
   command(bufnr, 'JavaToggleLogs', function() java.runner:toggle() end, 'Toggle Java run output')
+  command(bufnr, 'JavaNextLog', function() java.runner:switch_log(1) end, 'Show the next Java run output')
+  command(bufnr, 'JavaPreviousLog', function() java.runner:switch_log(-1) end, 'Show the previous Java run output')
+end
+
+local function attach_log_buffer(bufnr, java)
+  attach_runner_commands(bufnr, java)
   vim.keymap.set('n', keys.stop, '<cmd>JavaStopMain<cr>', {
     buffer = bufnr,
     desc = 'Java: Stop main class',
@@ -50,6 +60,26 @@ local function attach_log_buffer(bufnr, java)
   vim.keymap.set('n', keys.toggle_logs, '<cmd>JavaToggleLogs<cr>', {
     buffer = bufnr,
     desc = 'Java: Toggle output',
+    silent = true,
+  })
+  vim.keymap.set('n', keys.next_log, '<cmd>JavaNextLog<cr>', {
+    buffer = bufnr,
+    desc = 'Java: Next output',
+    silent = true,
+  })
+  vim.keymap.set('n', keys.previous_log, '<cmd>JavaPreviousLog<cr>', {
+    buffer = bufnr,
+    desc = 'Java: Previous output',
+    silent = true,
+  })
+  vim.keymap.set('n', keys.next_log_tab, '<cmd>JavaNextLog<cr>', {
+    buffer = bufnr,
+    desc = 'Java: Next output',
+    silent = true,
+  })
+  vim.keymap.set('n', keys.previous_log_tab, '<cmd>JavaPreviousLog<cr>', {
+    buffer = bufnr,
+    desc = 'Java: Previous output',
     silent = true,
   })
   vim.keymap.set('n', 'q', '<cmd>JavaToggleLogs<cr>', {
@@ -112,8 +142,7 @@ function M.attach(bufnr, java)
   command(bufnr, 'JavaUpdateConfig', jdtls.update_project_config, 'Update Maven/Gradle project config')
   command(bufnr, 'JavaOrganizeImports', jdtls.organize_imports, 'Organize Java imports')
   command(bufnr, 'JavaRunMain', function() java.runner:start() end, 'Run a Java main class')
-  command(bufnr, 'JavaStopMain', function() java.runner:stop() end, 'Stop the running Java main class')
-  command(bufnr, 'JavaToggleLogs', function() java.runner:toggle() end, 'Toggle Java run output')
+  attach_runner_commands(bufnr, java)
   command(bufnr, 'JavaDebugMain', function() java.runner:debug() end, 'Debug a Java main class')
   command(bufnr, 'JavaTestClass', function()
     if java.has_test then

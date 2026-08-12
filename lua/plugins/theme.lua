@@ -40,6 +40,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
     set_hl('BlinkCmpLabelMatch', { fg = palette.base0D, bold = true })
     set_hl('BlinkCmpMenuSelection', { fg = palette.base00, bg = palette.base0D })
     set_hl('Comment', { fg = palette.base04 })
+    set_hl('JavaRunnerTab', { fg = palette.base04, bg = palette.base01 })
     set_hl('NonText', { fg = palette.base04 })
     set_hl('NvimTreeCursorLine', { link = 'CursorLine' })
     set_hl('NvimTreeFolderIcon', { fg = palette.base0D })

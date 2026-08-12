@@ -632,6 +632,7 @@ Codex Agent 使用独立于 `<C-t>` tab 组的单实例浮动终端，尺寸与�
 | `<leader>jd`  | `JavaDebugMain`       | DAP 调试 main class |
 | `<leader>js`  | `JavaStopMain`        | 停止运行            |
 | `<leader>jl`  | `JavaToggleLogs`      | 切换运行日志        |
+| `gt` / `gT`、`Tab` / `Shift-Tab` | `JavaNextLog` / `JavaPreviousLog` | 在运行日志面板切换 Main 标签 |
 | `<leader>jtc` | `JavaTestClass`       | 运行测试类          |
 | `<leader>jtm` | `JavaTestMethod`      | 运行测试方法        |
 | `<leader>jv`  | —                     | 提取变量            |

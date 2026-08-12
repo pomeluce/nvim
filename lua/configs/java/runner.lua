@@ -13,6 +13,7 @@ end
 function M.new(root_dir, runtimes, has_debug)
   local runner = {
     runs = {},
+    run_order = {},
     current = nil,
     log_win = nil,
     discovery_running = false,
@@ -26,6 +27,60 @@ function M.new(root_dir, runtimes, has_debug)
     for _, run in pairs(self.runs) do
       if vim.api.nvim_buf_is_valid(run.buf) then callback(run.buf) end
     end
+  end
+
+  function runner:update_winbar()
+    if not self.log_win or not vim.api.nvim_win_is_valid(self.log_win) then return end
+
+    local run_order = self:valid_run_order()
+    local labels = {}
+    local counts = {}
+    for _, main_class in ipairs(run_order) do
+      local label = main_class:match('([^.]+)$') or main_class
+      labels[main_class] = label
+      counts[label] = (counts[label] or 0) + 1
+    end
+
+    local tabs = {}
+    for _, main_class in ipairs(run_order) do
+      local run = self.runs[main_class]
+      if run and vim.api.nvim_buf_is_valid(run.buf) then
+        local label = labels[main_class]
+        if counts[label] > 1 then label = main_class end
+        label = label:gsub('%%', '%%%%')
+        local highlight = run == self.current and '%#TabLineSel#' or '%#JavaRunnerTab#'
+        tabs[#tabs + 1] = ('%s %s '):format(highlight, label)
+      end
+    end
+    vim.wo[self.log_win].winbar = table.concat(tabs, '%#WinBar# ') .. '%#WinBar#'
+  end
+
+  function runner:valid_run_order()
+    self.run_order = vim.tbl_filter(function(main_class)
+      local run = self.runs[main_class]
+      if run and vim.api.nvim_buf_is_valid(run.buf) then return true end
+      self.runs[main_class] = nil
+      return false
+    end, self.run_order)
+    return self.run_order
+  end
+
+  function runner:switch_log(offset)
+    local run_order = self:valid_run_order()
+    if #run_order == 0 then return end
+
+    local current_index
+    for index, main_class in ipairs(run_order) do
+      if self.runs[main_class] == self.current then
+        current_index = index
+        break
+      end
+    end
+    local target_index = current_index and (current_index - 1 + offset) % #run_order + 1 or (offset < 0 and #run_order or 1)
+    local target = self.runs[run_order[target_index]]
+    if not target then return end
+    self.current = target
+    self:show(target.buf)
   end
 
   function runner:configurations()
@@ -89,6 +144,7 @@ function M.new(root_dir, runtimes, has_debug)
       vim.wo[self.log_win].relativenumber = false
       vim.wo[self.log_win].signcolumn = 'no'
     end
+    self:update_winbar()
   end
 
   function runner:toggle()
@@ -118,6 +174,7 @@ function M.new(root_dir, runtimes, has_debug)
       })
       run.channel = channel
       self.runs[config.mainClass] = run
+      self.run_order[#self.run_order + 1] = config.mainClass
     elseif run.job_id then
       vim.fn.jobstop(run.job_id)
     end
@@ -135,7 +192,8 @@ function M.new(root_dir, runtimes, has_debug)
       self:show(run.buf)
       local channel = assert(run.channel)
       vim.fn.chansend(channel, table.concat(command, ' ') .. '\r\n')
-      run.job_id = vim.fn.jobstart(command, {
+      local job_id
+      job_id = vim.fn.jobstart(command, {
         cwd = root_dir,
         pty = true,
         on_stdout = function(_, data)
@@ -147,10 +205,11 @@ function M.new(root_dir, runtimes, has_debug)
         on_exit = function(_, code)
           vim.schedule(function()
             vim.fn.chansend(channel, ('\r\nProcess finished with exit code %d\r\n'):format(code))
-            run.job_id = nil
+            if run.job_id == job_id then run.job_id = nil end
           end)
         end,
       })
+      run.job_id = job_id
     end
 
     local declared_version = Runtime.buffer_version(bufnr)
