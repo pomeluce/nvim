@@ -1,6 +1,7 @@
 local Runtime = require('configs.java.runtime')
 
 local M = {}
+local java_icon = ''
 
 local function buffer_client(bufnr) return vim.lsp.get_clients({ name = 'jdtls', bufnr = bufnr })[1] end
 
@@ -49,7 +50,7 @@ function M.new(root_dir, runtimes, has_debug)
         if counts[label] > 1 then label = main_class end
         label = label:gsub('%%', '%%%%')
         local highlight = run == self.current and '%#TabLineSel#' or '%#JavaRunnerTab#'
-        tabs[#tabs + 1] = ('%s %s '):format(highlight, label)
+        tabs[#tabs + 1] = ('%s %s %s '):format(highlight, java_icon, label)
       end
     end
     vim.wo[self.log_win].winbar = table.concat(tabs, '%#WinBar# ') .. '%#WinBar#'
