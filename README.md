@@ -434,6 +434,7 @@ USER = "tom"
 │   ├── settings.lua        # settings.toml 解析器
 │   └── utils.lua           # 工具函数
 ├── snippets/               # 代码片段
+├── types/                  # 项目配置可复用的 LuaLS 类型声明
 ├── init.lua                # 入口
 └── settings.toml           # 用户配置
 ```
@@ -623,20 +624,39 @@ Codex Agent 使用独立于 `<C-t>` tab 组的单实例浮动终端，尺寸与�
 
 ### Java
 
-| 快捷键        | 命令                  | 功能                |
-| ------------- | --------------------- | ------------------- |
-| `<leader>jc`  | `JavaCompile`         | jdtls 编译工作区    |
-| `<leader>ju`  | `JavaUpdateConfig`    | 刷新项目配置        |
-| `<leader>jo`  | `JavaOrganizeImports` | 整理 imports        |
-| `<leader>jr`  | `JavaRunMain`         | 运行 main class     |
-| `<leader>jd`  | `JavaDebugMain`       | DAP 调试 main class |
-| `<leader>js`  | `JavaStopMain`        | 停止运行            |
-| `<leader>jl`  | `JavaToggleLogs`      | 切换运行日志        |
+| 快捷键                           | 命令                              | 功能                         |
+| -------------------------------- | --------------------------------- | ---------------------------- |
+| `<leader>jc`                     | `JavaCompile`                     | jdtls 编译工作区             |
+| `<leader>ju`                     | `JavaUpdateConfig`                | 刷新项目配置                 |
+| `<leader>jo`                     | `JavaOrganizeImports`             | 整理 imports                 |
+| `<leader>jr`                     | `JavaRunMain`                     | 运行 main class              |
+| `<leader>jd`                     | `JavaDebugMain`                   | DAP 调试 main class          |
+| `<leader>js`                     | `JavaStopMain`                    | 停止运行                     |
+| `<leader>jl`                     | `JavaToggleLogs`                  | 切换运行日志                 |
 | `gt` / `gT`、`Tab` / `Shift-Tab` | `JavaNextLog` / `JavaPreviousLog` | 在运行日志面板切换 Main 标签 |
-| `<leader>jtc` | `JavaTestClass`       | 运行测试类          |
-| `<leader>jtm` | `JavaTestMethod`      | 运行测试方法        |
-| `<leader>jv`  | —                     | 提取变量            |
-| `<leader>jm`  | —                     | 提取选区为方法      |
+| `<leader>jtc`                    | `JavaTestClass`                   | 运行测试类                   |
+| `<leader>jtm`                    | `JavaTestMethod`                  | 运行测试方法                 |
+| `<leader>jv`                     | —                                 | 提取变量                     |
+| `<leader>jm`                     | —                                 | 提取选区为方法               |
+
+项目可以通过独立的 `.nvim/java-launch.lua` 为 `JavaRunMain` 和 `JavaDebugMain` 配置类似 IDEA 的 VM Options 与环境变量。`vmOptions`、`envFile` 和 `env` 对所有 Main 生效，`mainClass` 可以按完整类名追加或覆盖配置：
+
+```lua
+---@type JavaLaunchConfig
+return {
+  vmOptions = { '-Xms512m', '-Xmx2g', '-Dspring.profiles.active=dev' },
+  envFile = '.env.local',
+  env = { LOG_LEVEL = 'debug' },
+  mainClass = {
+    ['com.example.Application'] = {
+      vmOptions = { '-Dserver.port=8081', '-Dfile.encoding=UTF-8' },
+      env = { FEATURE_FLAG = 'true' },
+    },
+  },
+}
+```
+
+VM Options 可以使用字符串或字符串数组；`envFile` 支持项目相对路径或路径数组，并通过 shell 的 `set -a; source ...; set +a` 语义加载。直接配置的 `env` 优先于 `envFile`，Main 专属配置优先于公共配置。该文件不会参与 jdtls LSP 配置合并，也不会在项目加载或 Main 扫描时读取；每次 Run 或 Debug 真正启动前都会重新加载配置及 `envFile`，修改后重新启动 Main 即可生效，无需重启 Neovim，已运行的进程不受影响。
 
 ### Claude Code
 

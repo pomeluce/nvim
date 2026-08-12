@@ -330,6 +330,7 @@
                   "${cfg.configDir}/lua".source = "${cfg.package}/lua";
                   "${cfg.configDir}/after".source = "${cfg.package}/after";
                   "${cfg.configDir}/snippets".source = "${cfg.package}/snippets";
+                  "${cfg.configDir}/types".source = "${cfg.package}/types";
                   "${cfg.configDir}/settings.toml".source = settingsFile;
                 }
               ];
@@ -404,7 +405,7 @@
               runHook preInstall
 
               mkdir -p $out
-              cp -R init.lua lua after snippets $out/
+              cp -R init.lua lua after snippets types $out/
 
               runHook postInstall
             '';
@@ -505,6 +506,7 @@
               test -d ${akvimPackage}/lua
               test -d ${akvimPackage}/after
               test -d ${akvimPackage}/snippets
+              test -d ${akvimPackage}/types
               touch $out
             '';
 

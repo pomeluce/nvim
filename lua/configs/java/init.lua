@@ -77,8 +77,8 @@ function M.setup(root_dir)
   local settings = lsp_settings.jdtls or {}
   local runtimes = Runtime.project_runtimes(root_dir, settings.runtimes or {})
   local bundles, has_debug, has_test = collect_bundles()
-  local runner = Runner.new(root_dir, runtimes, has_debug)
   local project = load_config(root_dir .. '/.nvim/jdtls.lua')
+  local runner = Runner.new(root_dir, runtimes, has_debug)
   local base = vim.deepcopy(vim.lsp.config.jdtls or {})
   local config = vim.tbl_deep_extend(
     'force',

@@ -11,7 +11,10 @@ return {
     ---@diagnostic disable-next-line: param-type-mismatch
     client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
       runtime = { version = 'LuaJIT', path = { 'lua/?.lua', 'lua/?/init.lua' } },
-      workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
+      workspace = {
+        checkThirdParty = false,
+        library = { vim.env.VIMRUNTIME, vim.fs.joinpath(vim.fn.stdpath('config'), 'types') },
+      },
     })
   end,
   settings = {

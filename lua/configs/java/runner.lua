@@ -1,17 +1,13 @@
 local Runtime = require('configs.java.runtime')
+local Launch = require('configs.java.launch')
 
 local M = {}
 local java_icon = ''
 
 local function buffer_client(bufnr) return vim.lsp.get_clients({ name = 'jdtls', bufnr = bufnr })[1] end
 
-local function split_args(value)
-  if type(value) == 'table' then return value end
-  if type(value) ~= 'string' or value == '' then return {} end
-  return require('dap.utils').splitstr(value)
-end
-
 function M.new(root_dir, runtimes, has_debug)
+  local launch = Launch.new(root_dir)
   local runner = {
     runs = {},
     run_order = {},
@@ -183,11 +179,12 @@ function M.new(root_dir, runtimes, has_debug)
     local function start_process(matched_home, resolved_java)
       local default_home = Runtime.java_home(runtimes)
       local java = resolved_java or (matched_home and (matched_home .. '/bin/java')) or (default_home and (default_home .. '/bin/java')) or 'java'
+      local vm_args, env = launch:resolve(config)
       local command = { java }
-      vim.list_extend(command, split_args(config.vmArgs))
+      vim.list_extend(command, Launch.split_args(vm_args))
       if config.classPaths and #config.classPaths > 0 then vim.list_extend(command, { '-cp', table.concat(config.classPaths, package.config:sub(1, 1) == '\\' and ';' or ':') }) end
       table.insert(command, config.mainClass)
-      vim.list_extend(command, split_args(config.args))
+      vim.list_extend(command, Launch.split_args(config.args))
 
       self.current = run
       self:show(run.buf)
@@ -196,6 +193,7 @@ function M.new(root_dir, runtimes, has_debug)
       local job_id
       job_id = vim.fn.jobstart(command, {
         cwd = root_dir,
+        env = env,
         pty = true,
         on_stdout = function(_, data)
           if data then vim.fn.chansend(channel, data) end
@@ -300,18 +298,30 @@ function M.new(root_dir, runtimes, has_debug)
       return
     end
 
-    local function continue(configurations)
-      if #configurations > 0 then
-        require('dap').continue()
-      else
+    local function start_debug(config)
+      local debug_config = vim.deepcopy(config)
+      debug_config.vmArgs, debug_config.env = launch:resolve(debug_config)
+      require('dap').run(debug_config)
+    end
+    local function select_config(configurations)
+      if #configurations == 0 then
         vim.notify('No main class found', vim.log.levels.ERROR)
+      elseif #configurations == 1 then
+        start_debug(configurations[1])
+      else
+        vim.ui.select(configurations, {
+          prompt = 'Select main class to debug:',
+          format_item = function(item) return item.name or item.mainClass end,
+        }, function(item)
+          if item then start_debug(item) end
+        end)
       end
     end
     local configurations = self:configurations()
     if #configurations > 0 then
-      continue(configurations)
+      select_config(configurations)
     else
-      self:discover(bufnr, { verbose = true, force = true, on_ready = continue })
+      self:discover(bufnr, { verbose = true, force = true, on_ready = select_config })
     end
   end
 
