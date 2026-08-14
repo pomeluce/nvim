@@ -1,3 +1,4 @@
+---@diagnostic disable: duplicate-doc-alias, duplicate-doc-field
 ---@meta
 
 ---@alias JavaLaunchOptions string|string[]

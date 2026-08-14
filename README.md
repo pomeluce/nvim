@@ -567,7 +567,7 @@ end)
 | `q` / `<C-t>`  | 隐藏整个浮动终端组  |
 | `<Esc>`        | 取消本次操作        |
 
-Codex Agent 使用独立于 `<C-t>` tab 组的单实例浮动终端，尺寸与普通浮动终端一致，默认执行 `codex resume`。再次按 `<C-o>` 只会隐藏或恢复现有窗口，不会重启正在运行的 Agent；Codex 进程退出后，窗口和 terminal buffer 会自动销毁。也可以使用 `:CodexResume` 打开或隐藏该窗口。
+Codex Agent 使用独立于 `<C-t>` tab 组的单实例浮动终端，尺寸与普通浮动终端一致，默认执行 `codex resume`。再次按 `<C-o>` 只会隐藏或恢复现有窗口，不会重启正在运行的 Agent；Codex 进程退出后，窗口和 terminal buffer 会自动销毁。Codex 窗口内的 `<C-t>` 会直接发送给 Codex CLI，不会触发普通浮动终端。也可以使用 `:CodexResume` 打开或隐藏该窗口。
 
 使用前需确保 `codex` 可执行文件位于 `$PATH`。如果 `<C-o>` 已被其他显式映射占用，配置会依次尝试 `<leader>ao` 和 `<leader>co`，并通过通知显示最终使用的快捷键。默认使用 `<C-o>` 时会覆盖 Neovim 原生的 jump list 后退操作。
 
