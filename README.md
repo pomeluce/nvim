@@ -336,7 +336,7 @@ default = true   # 标记为默认运行时
 | `go`         | `//` 行注释，含 `package`                   |
 | `csharp`     | `///` XML 注释，含 `namespace` / `class`    |
 | `c`          | `/* */` 块注释 (C++ 也适用)                 |
-| `rust`       | `//` 行注释                                 |
+| `rust`       | 版权行 + `//!` 模块摘要 (clap 风格)        |
 | `ruby`       | `#` 行注释                                  |
 | `bash`       | `#` 行注释 (sh/zsh 也适用)                  |
 | `swift`      | `//` 行注释                                 |

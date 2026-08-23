@@ -203,11 +203,9 @@ public class {CLASS} {
 ]],
 
   rust = [[
-// author      : {USER}
-// version     : 1.0
-// date        : {DATE} {TIME}
-// file        : {FILE_NAME}
-// description : (TODO: 描述该文件的功能)
+// Copyright (c) {DATE:%Y} {USER}
+
+//! (TODO: 一句话描述该模块的功能)
 ]],
 
   ruby = [[
