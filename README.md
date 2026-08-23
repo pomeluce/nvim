@@ -150,7 +150,7 @@ nvim
       nufmt                 # Nushell
       prettierd             # JS/TS/HTML/CSS/JSON/YAML
       ruff                  # Python
-      rustfmt
+      rustfmt               # Rust（nightly，来自 Fenix）
       shfmt                 # shell
       sqlfluff              # SQL
       stylua                # Lua

@@ -1,5 +1,6 @@
 unstable_features = true       # 不稳定功能
 brace_style = "AlwaysNextLine"
+control_brace_style = "AlwaysNextLine"
 binop_separator = 'Front'
 blank_lines_lower_bound = 0
 blank_lines_upper_bound = 1

@@ -12,6 +12,10 @@
       url = "github:pomeluce/nixpkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -20,6 +24,7 @@
       flake-parts,
       home-manager,
       akpkgs,
+      fenix,
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
@@ -98,7 +103,7 @@
             nufmt
             prettierd
             ruff
-            rustfmt
+            fenix.packages.${pkgs.stdenv.hostPlatform.system}.latest.rustfmt
             shfmt
             sqlfluff
             stylua
@@ -472,7 +477,7 @@
                 nufmt
                 prettierd
                 ruff
-                rustfmt
+                fenix.packages.${system}.latest.rustfmt
                 shfmt
                 sqlfluff
                 stylua

@@ -33,6 +33,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
       end
 
       local conform = require('conform')
+      local default_rustfmt = require('conform.formatters.rustfmt')
       local cfg = vim.fn.stdpath('config') .. '/lua/configs/fmt'
 
       conform.setup({
@@ -86,12 +87,12 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
           nixfmt = { command = 'nixfmt', args = {}, stdin = true },
           prettierd = vim.tbl_deep_extend('force', require('conform.formatters.prettierd'), { env = { PRETTIERD_DEFAULT_CONFIG = vim.fn.expand(cfg .. '/prettierrc.json') } }),
           rustfmt = {
-            command = 'rustfmt',
-            args = function()
-              local has_root = root_file({ '.rustfmt.toml', 'rustfmt.toml' })
-              return has_root and {} or { '--config-path', vim.fn.expand(cfg .. '/rustfmt.toml') }
+            args = function(self, ctx)
+              local args = default_rustfmt.args(self, ctx)
+              local project_config = vim.fs.find({ 'rustfmt.toml', '.rustfmt.toml' }, { path = ctx.dirname, upward = true })[1]
+              vim.list_extend(args, { '--config-path', project_config or vim.fn.expand(cfg .. '/rustfmt.toml') })
+              return args
             end,
-            stdin = true,
           },
           shfmt = {
             command = 'shfmt',
