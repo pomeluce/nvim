@@ -14,6 +14,14 @@ vim.api.nvim_create_autocmd('FileType', {
           split_direction = 'horizontal',
           win_opts = { width = 80, height = 18 },
           default_winbar_panes = { 'body', 'headers', 'verbose', 'script_output', 'report', 'stats' },
+          pickers = {
+            snacks = {
+              layout = function()
+                local has_snacks, snacks_picker = pcall(require, 'snacks.picker')
+                return not has_snacks and {} or snacks_picker.config.layout('dropdown')
+              end,
+            },
+          },
         },
         lsp = {
           enable = true,
@@ -49,6 +57,7 @@ vim.api.nvim_create_autocmd('FileType', {
       map({ 'n', 'v' }, '<leader>Rs', kulala.run, { desc = 'Send request' })
       map({ 'n', 'v' }, '<leader>Ra', kulala.run_all, { desc = 'Send all requests' })
       map({ 'n', 'v' }, '<leader>Rb', kulala.scratchpad, { desc = 'Open scratchpad' })
+      map('n', '<leader>Re', kulala.set_selected_env, { desc = 'Select Kulala environment' })
     end)
   end,
 })
