@@ -212,12 +212,12 @@ return {
           local name = vim.uv.cwd()
           return name and ' ' .. (name:match('([^/\\]+)[/\\]*$') or name) .. ' '
         end,
-        hl = { fg = palette.base06, bg = palette.base03 },
+        hl = { fg = palette.base06, bg = palette.base02 },
       },
     },
     -- cursor
     {
-      { provider = icons.cur, hl = { fg = palette.base09, bg = palette.base03 } },
+      { provider = icons.cur, hl = { fg = palette.base09, bg = palette.base02 } },
       { provider = '󱉯 ', hl = { fg = palette.base00, bg = palette.base09 } },
       {
         provider = function()
@@ -225,7 +225,7 @@ return {
           local col = vim.fn.charcol('.')
           return string.format('%' .. digits(line) + 1 .. 'd:%-' .. digits(col) + 1 .. 'd', line, col)
         end,
-        hl = { fg = palette.base06, bg = palette.base03 },
+        hl = { fg = palette.base06, bg = palette.base02 },
       },
     }
   ),

@@ -1,6 +1,20 @@
-# Neovim Formatting Context
+# Neovim Configuration Context
 
-This glossary defines the project terms used when selecting and running formatters from Neovim.
+This glossary defines the project-specific language used for Neovim behavior and visual design.
+
+## Visual theme
+
+**Transparent canvas**:
+The main editing surface, whose background is inherited from the host terminal.
+_Avoid_: transparent theme, empty background.
+
+**Elevated surface**:
+A transient or interactive interface region distinguished from the transparent canvas by its border, title, and focused item while retaining the inherited background.
+_Avoid_: popup background, opaque window.
+
+**Functional accent**:
+A color with a stable interface meaning, such as focus, information, warning, or error, rather than a decorative color chosen per component.
+_Avoid_: component color, highlight color.
 
 ## Maven formatting
 
