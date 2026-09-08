@@ -6,6 +6,42 @@ local DIALECT_ALIASES = {
   sqlserver = 'tsql',
 }
 
+local SUPPORTED_DIALECTS = {
+  'ansi',
+  'athena',
+  'bigquery',
+  'clickhouse',
+  'databricks',
+  'db2',
+  'doris',
+  'duckdb',
+  'exasol',
+  'flink',
+  'greenplum',
+  'hive',
+  'impala',
+  'mariadb',
+  'materialize',
+  'mysql',
+  'oracle',
+  'postgres',
+  'redshift',
+  'snowflake',
+  'soql',
+  'sparksql',
+  'sqlite',
+  'starrocks',
+  'teradata',
+  'trino',
+  'tsql',
+  'vertica',
+}
+
+local SUPPORTED_DIALECT_SET = {}
+for _, dialect in ipairs(SUPPORTED_DIALECTS) do
+  SUPPORTED_DIALECT_SET[dialect] = true
+end
+
 local function find_upward_file(ctx, names)
   local dir = ctx.dirname
   while dir do
@@ -29,7 +65,8 @@ end
 local function normalize_dialect(value)
   if type(value) ~= 'string' then return nil end
   local dialect = value:lower():match('^%s*([%a][%w_-]*)%s*$')
-  return dialect and (DIALECT_ALIASES[dialect] or dialect) or nil
+  dialect = dialect and (DIALECT_ALIASES[dialect] or dialect) or nil
+  return dialect and SUPPORTED_DIALECT_SET[dialect] and dialect or nil
 end
 
 local function header_dialect(lines)
@@ -168,17 +205,71 @@ function Sql.resolve(opts)
   return 'ansi', 'fallback'
 end
 
+function Sql.resolve_buffer(bufnr, dirname)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  dirname = dirname or (filename ~= '' and vim.fs.dirname(filename) or nil)
+  local project_config = dirname and find_upward_file({ dirname = dirname }, { '.sqlfluff', 'sqlfluff.cfg' }) or nil
+  local dialect, source = Sql.resolve({
+    buffer_dialect = vim.b[bufnr].sql_dialect,
+    lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false),
+    project_config = project_config and read_file(project_config) or nil,
+  })
+  return dialect, source, project_config
+end
+
+function Sql.setup()
+  vim.api.nvim_create_user_command('SqlDialect', function(opts)
+    local bufnr = vim.api.nvim_get_current_buf()
+    if vim.bo[bufnr].filetype ~= 'sql' then
+      vim.notify('SqlDialect is only available in SQL buffers', vim.log.levels.ERROR)
+      return
+    end
+
+    if opts.bang then
+      if opts.args ~= '' then
+        vim.notify('SqlDialect! does not accept a dialect', vim.log.levels.ERROR)
+        return
+      end
+      vim.b[bufnr].sql_dialect = nil
+      local dialect, source = Sql.resolve_buffer(bufnr)
+      vim.notify(('SQL dialect override cleared; effective dialect: %s (%s)'):format(dialect, source))
+      return
+    end
+
+    if opts.args == '' then
+      local dialect, source = Sql.resolve_buffer(bufnr)
+      vim.notify(('SQL dialect: %s (%s)'):format(dialect, source))
+      return
+    end
+
+    local dialect = normalize_dialect(opts.args)
+    if not dialect then
+      vim.notify(('Unsupported SQL dialect: %s'):format(opts.args), vim.log.levels.ERROR)
+      return
+    end
+    vim.b[bufnr].sql_dialect = dialect
+    vim.notify(('SQL dialect set to %s'):format(dialect))
+  end, {
+    bang = true,
+    desc = 'Set the SQLFluff dialect for the current buffer',
+    nargs = '?',
+    complete = function(arg_lead)
+      local prefix = arg_lead:lower()
+      local matches = {}
+      for _, dialect in ipairs(SUPPORTED_DIALECTS) do
+        if dialect:sub(1, #prefix) == prefix then matches[#matches + 1] = dialect end
+      end
+      return matches
+    end,
+  })
+end
+
 function Sql.formatter(cfg)
   return {
     command = 'sqlfluff',
     args = function(_, ctx)
-      local project_config = find_upward_file(ctx, { '.sqlfluff', 'sqlfluff.cfg' })
-      local lines = vim.api.nvim_buf_get_lines(ctx.buf, 0, -1, false)
-      local dialect = Sql.resolve({
-        buffer_dialect = vim.b[ctx.buf].sql_dialect,
-        lines = lines,
-        project_config = project_config and read_file(project_config) or nil,
-      })
+      local dialect, _, project_config = Sql.resolve_buffer(ctx.buf, ctx.dirname)
       local args = { 'format', '--stdin-filename', '$FILENAME' }
       if not project_config then vim.list_extend(args, { '--config', vim.fn.expand(cfg .. '/sqlfluff.cfg') }) end
       vim.list_extend(args, { '--dialect', dialect, '-' })

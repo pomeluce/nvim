@@ -44,6 +44,10 @@ _Avoid_: backup formatter, default formatter.
 The selection of the SQL grammar that matches the current buffer, using explicit declarations before syntax evidence and a conservative ANSI fallback.
 _Avoid_: dialect guessing, SQL detection.
 
+**Buffer SQL dialect override**:
+An explicit, temporary dialect selection attached to one open SQL buffer. It takes precedence over file and project declarations until the buffer is deleted or the override is cleared.
+_Avoid_: SQL filetype, global dialect.
+
 **Project SQLFluff configuration**:
 A repository-owned definition of its SQL dialect and formatting conventions, which takes precedence over personal fallback conventions.
 _Avoid_: local SQL config, formatter override.

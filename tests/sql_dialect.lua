@@ -41,5 +41,17 @@ end
 assert_resolution('ansi', 'fallback', { lines = { 'select * from users;' } })
 assert_resolution('ansi', 'fallback', { lines = { 'select value::int from t;', 'pragma foreign_keys = on;' } })
 assert_resolution('ansi', 'fallback', { lines = { '-- pragma foreign_keys = on;', "select 'language plpgsql';" } })
+assert_resolution('mysql', 'header', {
+  buffer_dialect = 'unsupported',
+  lines = { '-- dialect: mysql', 'select 1;' },
+})
+assert_resolution('sqlite', 'project', {
+  lines = { '-- dialect: unsupported', 'select 1;' },
+  project_config = '[sqlfluff]\ndialect = sqlite',
+})
+assert_resolution('postgres', 'syntax', {
+  lines = { 'select 1::int;' },
+  project_config = '[sqlfluff]\ndialect = unsupported',
+})
 
 print('sql dialect tests passed')

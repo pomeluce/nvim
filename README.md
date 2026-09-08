@@ -416,13 +416,17 @@ SQL 文件统一由 SQLFluff 格式化。方言按以下顺序解析：
 4. PostgreSQL、MySQL、SQLite、T-SQL、Oracle、BigQuery 或 Snowflake 的高置信度语法特征
 5. ANSI fallback
 
-临时覆盖当前 buffer 的方言：
+使用 `:SqlDialect` 管理当前 SQL buffer 的临时方言覆盖：
 
 ```vim
-:lua vim.b.sql_dialect = 'postgres'
+:SqlDialect postgres
+:SqlDialect
+:SqlDialect!
 ```
 
-项目 SQLFluff 配置存在时，其 templater 和格式规则会完整保留；buffer 或文件头声明只覆盖 dialect。若不同方言的特征同时出现，配置会回退 ANSI，避免静默选择错误的方言。
+三种调用分别用于设置方言、查看当前方言及来源、清除覆盖并恢复自动解析。命令支持 SQLFluff 4.3.0 的全部方言并提供大小写不敏感的前缀补全，同时兼容 `postgresql`、`mssql` 和 `sqlserver` 输入别名。设置只在当前 buffer 存续期间有效，不会修改文件；下一次执行 `:Format` 或保存时生效。
+
+项目 SQLFluff 配置存在时，其 templater 和格式规则会完整保留；buffer 或文件头声明只覆盖 dialect。不受 SQLFluff 支持的显式值会被忽略并继续后续解析；若不同方言的特征同时出现，配置会回退 ANSI，避免静默选择错误的方言。
 
 SQLFluff 可以用 PostgreSQL dialect 解析 `DO $$ ... $$`，但会把 dollar-quoted body 视为字面量，因此只格式化外围 SQL，不格式化其中的 PL/pgSQL。
 

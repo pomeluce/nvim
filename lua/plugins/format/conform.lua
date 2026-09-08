@@ -1,3 +1,6 @@
+local sql = require('plugins.format.sql')
+sql.setup()
+
 vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
   once = true,
   callback = function()
@@ -13,7 +16,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
 
       local conform = require('conform')
       local default_rustfmt = require('conform.formatters.rustfmt')
-      local sql = require('plugins.format.sql')
       local spotless = require('plugins.format.spotless').spec()
       local cfg = vim.fn.stdpath('config') .. '/lua/configs/fmt'
 
