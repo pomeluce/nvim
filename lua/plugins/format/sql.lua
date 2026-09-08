@@ -6,6 +6,26 @@ local DIALECT_ALIASES = {
   sqlserver = 'tsql',
 }
 
+local function find_upward_file(ctx, names)
+  local dir = ctx.dirname
+  while dir do
+    for _, name in ipairs(names) do
+      local path = vim.fs.joinpath(dir, name)
+      if vim.fn.filereadable(path) == 1 then return path end
+    end
+    local parent = vim.fs.dirname(dir)
+    if not parent or parent == dir then break end
+    dir = parent
+  end
+  return nil
+end
+
+local function read_file(path)
+  local ok, lines = pcall(vim.fn.readfile, path)
+  if not ok then return nil end
+  return table.concat(lines, '\n')
+end
+
 local function normalize_dialect(value)
   if type(value) ~= 'string' then return nil end
   local dialect = value:lower():match('^%s*([%a][%w_-]*)%s*$')
@@ -146,6 +166,27 @@ function Sql.resolve(opts)
   if dialect then return dialect, 'syntax' end
 
   return 'ansi', 'fallback'
+end
+
+function Sql.formatter(cfg)
+  return {
+    command = 'sqlfluff',
+    args = function(_, ctx)
+      local project_config = find_upward_file(ctx, { '.sqlfluff', 'sqlfluff.cfg' })
+      local lines = vim.api.nvim_buf_get_lines(ctx.buf, 0, -1, false)
+      local dialect = Sql.resolve({
+        buffer_dialect = vim.b[ctx.buf].sql_dialect,
+        lines = lines,
+        project_config = project_config and read_file(project_config) or nil,
+      })
+      local args = { 'format', '--stdin-filename', '$FILENAME' }
+      if not project_config then vim.list_extend(args, { '--config', vim.fn.expand(cfg .. '/sqlfluff.cfg') }) end
+      vim.list_extend(args, { '--dialect', dialect, '-' })
+      return args
+    end,
+    stdin = true,
+    require_cwd = false,
+  }
 end
 
 return Sql
