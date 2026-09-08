@@ -406,6 +406,26 @@ USER = "tom"
 
 **不再需要手写 tmpl 文件。** 旧版 `tmpls/` 目录可清理。
 
+## SQL 格式化
+
+SQL 文件统一由 SQLFluff 格式化。方言按以下顺序解析：
+
+1. 当前 buffer 的 `vim.b.sql_dialect`
+2. 文件前五行中的 `-- dialect: postgres` 或 `-- sql-dialect: postgres`
+3. 向上查找到的 `.sqlfluff` / `sqlfluff.cfg`
+4. PostgreSQL、MySQL、SQLite、T-SQL、Oracle、BigQuery 或 Snowflake 的高置信度语法特征
+5. ANSI fallback
+
+临时覆盖当前 buffer 的方言：
+
+```vim
+:lua vim.b.sql_dialect = 'postgres'
+```
+
+项目 SQLFluff 配置存在时，其 templater 和格式规则会完整保留；buffer 或文件头声明只覆盖 dialect。若不同方言的特征同时出现，配置会回退 ANSI，避免静默选择错误的方言。
+
+SQLFluff 可以用 PostgreSQL dialect 解析 `DO $$ ... $$`，但会把 dollar-quoted body 视为字面量，因此只格式化外围 SQL，不格式化其中的 PL/pgSQL。
+
 ## 配置热重载
 
 修改 `settings.toml` 后执行 `<leader>U` 重新加载配置，或 `<leader>ju` 仅刷新 jdtls 项目配置。

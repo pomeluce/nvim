@@ -107,14 +107,10 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
           visited[pom] = true
           local content = read_file(pom)
           if content then
-            has_spotless_plugin = has_spotless_plugin
-              or content:find('spotless%-maven%-plugin') ~= nil
-              or content:find('com%.diffplug%.spotless') ~= nil
+            has_spotless_plugin = has_spotless_plugin or content:find('spotless%-maven%-plugin') ~= nil or content:find('com%.diffplug%.spotless') ~= nil
             has_xml_format = has_xml_format or spotless_formats_xml(content)
           end
-          if has_spotless_plugin and has_xml_format then
-            return { module_pom = module_pom, pom = pom }
-          end
+          if has_spotless_plugin and has_xml_format then return { module_pom = module_pom, pom = pom } end
           pom = parent_pom(pom)
         end
         return nil
@@ -143,6 +139,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
 
       local conform = require('conform')
       local default_rustfmt = require('conform.formatters.rustfmt')
+      local sql = require('plugins.format.sql')
       local cfg = vim.fn.stdpath('config') .. '/lua/configs/fmt'
 
       local function format_after_save(bufnr)
@@ -261,9 +258,18 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
           },
           sqlfluff = {
             command = 'sqlfluff',
-            args = function()
-              local has_root = root_file({ '.sqlfluff', 'sqlfluff.cfg' })
-              return has_root and { 'format', '-' } or { 'format', '--config', vim.fn.expand(cfg .. '/sqlfluff.cfg'), '-' }
+            args = function(_, ctx)
+              local project_config = find_upward_file(ctx, { '.sqlfluff', 'sqlfluff.cfg' })
+              local lines = vim.api.nvim_buf_get_lines(ctx.buf, 0, -1, false)
+              local dialect = sql.resolve({
+                buffer_dialect = vim.b[ctx.buf].sql_dialect,
+                lines = lines,
+                project_config = project_config and read_file(project_config) or nil,
+              })
+              local args = { 'format', '--stdin-filename', '$FILENAME' }
+              if not project_config then vim.list_extend(args, { '--config', vim.fn.expand(cfg .. '/sqlfluff.cfg') }) end
+              vim.list_extend(args, { '--dialect', dialect, '-' })
+              return args
             end,
             stdin = true,
             require_cwd = false,

@@ -37,3 +37,13 @@ _Avoid_: formatter POM, root POM.
 **Formatter fallback**:
 The formatter used when no project-specific Spotless configuration is available.
 _Avoid_: backup formatter, default formatter.
+
+## SQL formatting
+
+**SQL dialect resolution**:
+The selection of the SQL grammar that matches the current buffer, using explicit declarations before syntax evidence and a conservative ANSI fallback.
+_Avoid_: dialect guessing, SQL detection.
+
+**Project SQLFluff configuration**:
+A repository-owned definition of its SQL dialect and formatting conventions, which takes precedence over personal fallback conventions.
+_Avoid_: local SQL config, formatter override.
