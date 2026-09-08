@@ -428,6 +428,8 @@ SQL 文件统一由 SQLFluff 格式化。方言按以下顺序解析：
 
 项目 SQLFluff 配置存在时，其 templater 和格式规则会完整保留；buffer 或文件头声明只覆盖 dialect。不受 SQLFluff 支持的显式值会被忽略并继续后续解析；若不同方言的特征同时出现，配置会回退 ANSI，避免静默选择错误的方言。
 
+个人 fallback 配置会在每个 `CREATE TABLE` 内分别对齐数据类型和约束槽位。约束按其在列定义中的出现顺序对齐，例如第一项约束互相对齐，而不是把所有 `NOT NULL` 强制放到同一列。
+
 SQLFluff 可以用 PostgreSQL dialect 解析 `DO $$ ... $$`，但会把 dollar-quoted body 视为字面量，因此只格式化外围 SQL，不格式化其中的 PL/pgSQL。
 
 ## 配置热重载

@@ -48,6 +48,10 @@ _Avoid_: dialect guessing, SQL detection.
 An explicit, temporary dialect selection attached to one open SQL buffer. It takes precedence over file and project declarations until the buffer is deleted or the override is cleared.
 _Avoid_: SQL filetype, global dialect.
 
+**CREATE TABLE segment alignment**:
+A fallback layout convention that aligns data types and ordinal constraint slots independently within each table definition. Constraint slots reflect syntax position rather than constraint meaning.
+_Avoid_: semantic constraint columns, cross-table alignment.
+
 **Project SQLFluff configuration**:
 A repository-owned definition of its SQL dialect and formatting conventions, which takes precedence over personal fallback conventions.
 _Avoid_: local SQL config, formatter override.
