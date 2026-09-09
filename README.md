@@ -69,6 +69,7 @@ nvim
             # settings.toml 配置（均为可选）
             settings = {
               session.projects = [ "~/devspace/code/my-project" ];
+              database.query_location = "~/devspace/code/sql/dadbod-queries";
               lsp.jdtls.runtimes = [
                 { name = "JavaSE-21"; path = "/usr/lib/jvm/java-21-openjdk"; default = true; }
               ];
@@ -283,6 +284,11 @@ projects = ["~/devspace/code/project1", "~/devspace/code/project2"]
 # 自动保存 session 时忽略的目录
 ignore_dir = ["/tmp", "/var"]
 
+# === Database ===
+[database]
+# DBUI 临时查询 buffer 的持久化目录
+query_location = "~/devspace/code/sql/dadbod-queries"
+
 # === Java LSP (jdtls) ===
 [lsp.jdtls.maven]
 # Maven settings.xml 路径（用于内网仓库认证等）
@@ -307,17 +313,18 @@ default = true   # 标记为默认运行时
 
 ### 配置项参考
 
-| 配置项                           | 类型       | 默认值  | 说明                                                        |
-| -------------------------------- | ---------- | ------- | ----------------------------------------------------------- |
-| `mason.enable`                   | `boolean`  | `false` | 启用 Mason 自动管理 LSP/DAP/Formatter                       |
-| `session.projects`               | `string[]` | `[]`    | neovim-project 项目列表                                     |
-| `session.ignore_dir`             | `string[]` | `[]`    | session 自动保存时忽略的目录                                |
-| `lsp.jdtls.runtimes[].name`      | `string`   | —       | JavaSE 运行时名称（如 `JavaSE-1.8`、`JavaSE-21`）           |
-| `lsp.jdtls.runtimes[].path`      | `string`   | —       | JDK 安装路径                                                |
-| `lsp.jdtls.runtimes[].default`   | `boolean`  | `false` | 是否为默认运行时                                            |
-| `lsp.jdtls.maven.userSettings`   | `string`   | —       | Maven user settings.xml 路径                                |
-| `lsp.jdtls.maven.globalSettings` | `string`   | —       | Maven global settings.xml 路径                              |
-| `file.run_cmd`                   | `table`    | `{}`    | 按文件类型映射的运行命令(`{file}` 为路径占位符, 省略则追加) |
+| 配置项                           | 类型       | 默认值                                | 说明                                                        |
+| -------------------------------- | ---------- | ------------------------------------- | ----------------------------------------------------------- |
+| `mason.enable`                   | `boolean`  | `false`                               | 启用 Mason 自动管理 LSP/DAP/Formatter                       |
+| `session.projects`               | `string[]` | `[]`                                  | neovim-project 项目列表                                     |
+| `session.ignore_dir`             | `string[]` | `[]`                                  | session 自动保存时忽略的目录                                |
+| `database.query_location`        | `string`   | `stdpath('data') .. '/db_ui/queries'` | DBUI 临时查询 buffer 的持久化目录                           |
+| `lsp.jdtls.runtimes[].name`      | `string`   | —                                     | JavaSE 运行时名称（如 `JavaSE-1.8`、`JavaSE-21`）           |
+| `lsp.jdtls.runtimes[].path`      | `string`   | —                                     | JDK 安装路径                                                |
+| `lsp.jdtls.runtimes[].default`   | `boolean`  | `false`                               | 是否为默认运行时                                            |
+| `lsp.jdtls.maven.userSettings`   | `string`   | —                                     | Maven user settings.xml 路径                                |
+| `lsp.jdtls.maven.globalSettings` | `string`   | —                                     | Maven global settings.xml 路径                              |
+| `file.run_cmd`                   | `table`    | `{}`                                  | 按文件类型映射的运行命令(`{file}` 为路径占位符, 省略则追加) |
 
 ### Header 文件头模板
 
@@ -336,7 +343,7 @@ default = true   # 标记为默认运行时
 | `go`         | `//` 行注释，含 `package`                   |
 | `csharp`     | `///` XML 注释，含 `namespace` / `class`    |
 | `c`          | `/* */` 块注释 (C++ 也适用)                 |
-| `rust`       | 版权行 + `//!` 模块摘要 (clap 风格)        |
+| `rust`       | 版权行 + `//!` 模块摘要 (clap 风格)         |
 | `ruby`       | `#` 行注释                                  |
 | `bash`       | `#` 行注释 (sh/zsh 也适用)                  |
 | `swift`      | `//` 行注释                                 |

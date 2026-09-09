@@ -95,6 +95,9 @@ local specs = {
   { src = 'https://github.com/uga-rosa/translate.nvim' },
   { src = 'https://github.com/linux-cultist/venv-selector.nvim' },
   { src = 'https://github.com/mistweaverco/kulala.nvim' },
+  { src = 'https://github.com/tpope/vim-dadbod' },
+  { src = 'https://github.com/kristijanhusak/vim-dadbod-ui' },
+  { src = 'https://github.com/kristijanhusak/vim-dadbod-completion' },
 }
 -- 在 spec 中设置 enabled = false 可禁用插件:
 --   不会加载, 不会下载(如果是新添加的), 已在硬盘上不会被删除

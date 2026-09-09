@@ -59,3 +59,9 @@ _Avoid_: single-line SQL, DataGrip layout.
 **Project SQLFluff configuration**:
 A repository-owned definition of its SQL dialect and formatting conventions, which takes precedence over personal fallback conventions.
 _Avoid_: local SQL config, formatter override.
+
+## Database integration
+
+**Database query workspace**:
+The persistent directory that holds interactive database query buffers across editor sessions.
+_Avoid_: database path, connection directory.

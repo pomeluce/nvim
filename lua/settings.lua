@@ -23,6 +23,9 @@ local utils = require('utils')
 ---@class settings.Mason
 ---@field enable boolean
 
+---@class settings.Database
+---@field query_location string
+
 ---@class settings.File
 ---@field run_cmd table<string, string>
 
@@ -51,6 +54,7 @@ local utils = require('utils')
 ---@field session settings.Session
 ---@field lsp settings.Lsp
 ---@field mason settings.Mason
+---@field database settings.Database
 ---@field file settings.File
 
 local tomlua = require('tomlua')
@@ -69,6 +73,7 @@ local defaults = {
     },
   },
   mason = { enable = false },
+  database = { query_location = vim.fn.stdpath('data') .. '/db_ui/queries' },
   file = { run_cmd = {} },
 }
 
