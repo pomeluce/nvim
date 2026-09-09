@@ -430,6 +430,8 @@ SQL 文件统一由 SQLFluff 格式化。方言按以下顺序解析：
 
 个人 fallback 配置会在每个 `CREATE TABLE` 内分别对齐数据类型和约束槽位。约束按其在列定义中的出现顺序对齐，例如第一项约束互相对齐，而不是把所有 `NOT NULL` 强制放到同一列。
 
+个人 fallback 还使用 compact clause layout：`COMMENT ON` 保持单行，`FROM` 与首个表表达式保持同行；CTE、子查询、JOIN 等嵌套结构仍按 clause 分行。该规则不会自动把简单查询压成 `select * from table`。
+
 SQLFluff 可以用 PostgreSQL dialect 解析 `DO $$ ... $$`，但会把 dollar-quoted body 视为字面量，因此只格式化外围 SQL，不格式化其中的 PL/pgSQL。
 
 ## 配置热重载

@@ -52,6 +52,10 @@ _Avoid_: SQL filetype, global dialect.
 A fallback layout convention that aligns data types and ordinal constraint slots independently within each table definition. Constraint slots reflect syntax position rather than constraint meaning.
 _Avoid_: semantic constraint columns, cross-table alignment.
 
+**Compact clause layout**:
+A fallback layout convention that keeps `COMMENT ON` statements atomic and places `FROM` with its first table expression while preserving all other clause and nested-query boundaries.
+_Avoid_: single-line SQL, DataGrip layout.
+
 **Project SQLFluff configuration**:
 A repository-owned definition of its SQL dialect and formatting conventions, which takes precedence over personal fallback conventions.
 _Avoid_: local SQL config, formatter override.
