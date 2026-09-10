@@ -43,9 +43,9 @@ local function project_client(root_dir)
   end
 end
 
-local function status_handler(root_dir, on_ready)
+local function status_handler(root_dir)
   local ready = false
-  return function(err, result, ctx)
+  return function(err, result)
     if err then
       vim.notify('Java LSP status error: ' .. (err.message or vim.inspect(err)), vim.log.levels.ERROR)
       return
@@ -55,7 +55,6 @@ local function status_handler(root_dir, on_ready)
       if not ready then
         ready = true
         vim.notify('Java LSP ready: ' .. vim.fs.basename(root_dir), vim.log.levels.INFO)
-        on_ready(ctx.client_id)
       end
     elseif result.type == 'ERROR' then
       vim.notify(result.message or result.type, vim.log.levels.ERROR)
@@ -92,7 +91,7 @@ function M.setup(root_dir)
     project,
     {
       settings = { java = { configuration = { runtimes = runtimes } } },
-      handlers = { ['language/status'] = status_handler(root_dir, function(client_id) runner:warm_up(client_id) end) },
+      handlers = { ['language/status'] = status_handler(root_dir) },
     }
   )
 

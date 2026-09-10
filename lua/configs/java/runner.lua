@@ -1,22 +1,58 @@
-local Runtime = require('configs.java.runtime')
 local Launch = require('configs.java.launch')
+local Prepare = require('configs.java.prepare')
 
 local M = {}
 local java_icon = ''
 
-local function buffer_client(bufnr) return vim.lsp.get_clients({ name = 'jdtls', bufnr = bufnr })[1] end
+---@class JavaRunState
+---@field buf integer
+---@field main_class string
+---@field project_name string
+---@field channel? integer
+---@field job_id? integer
+
+---@class JavaLaunchTask
+---@field mode 'run'|'debug'
+---@field bufnr integer
+---@field config? JavaLaunchTarget
+
+---@param config JavaLaunchTarget
+---@return string
+local function run_key(config) return (config.projectName or '') .. '\0' .. config.mainClass end
+
+---@param config JavaLaunchTarget
+---@return string
+local function display_name(config)
+  local project = config.projectName or ''
+  return project ~= '' and (project .. '/' .. config.mainClass) or config.mainClass
+end
+
+---@param err any
+---@return string
+local function error_message(err)
+  if type(err) == 'table' then return err.message or vim.inspect(err) end
+  return tostring(err)
+end
 
 function M.new(root_dir, runtimes, has_debug)
   local launch = Launch.new(root_dir)
+  local preparation = Prepare.new(root_dir, runtimes)
+  ---@class JavaRunner
+  ---@field runs table<string, JavaRunState>
+  ---@field run_order string[]
+  ---@field current? JavaRunState
+  ---@field log_win? integer
+  ---@field log_buffer_attach? fun(bufnr: integer)
+  ---@field launch_queue JavaLaunchTask[]
+  ---@field launch_task? JavaLaunchTask
   local runner = {
     runs = {},
     run_order = {},
     current = nil,
     log_win = nil,
-    discovery_running = false,
-    discovery_complete = false,
-    discovery_waiters = {},
     log_buffer_attach = nil,
+    launch_queue = {},
+    launch_task = nil,
   }
 
   function runner:set_log_buffer_attach(callback)
@@ -32,18 +68,21 @@ function M.new(root_dir, runtimes, has_debug)
     local run_order = self:valid_run_order()
     local labels = {}
     local counts = {}
-    for _, main_class in ipairs(run_order) do
-      local label = main_class:match('([^.]+)$') or main_class
-      labels[main_class] = label
-      counts[label] = (counts[label] or 0) + 1
+    for _, key in ipairs(run_order) do
+      local run = self.runs[key]
+      if run then
+        local label = run.main_class:match('([^.]+)$') or run.main_class
+        labels[key] = label
+        counts[label] = (counts[label] or 0) + 1
+      end
     end
 
     local tabs = {}
-    for _, main_class in ipairs(run_order) do
-      local run = self.runs[main_class]
+    for _, key in ipairs(run_order) do
+      local run = self.runs[key]
       if run and vim.api.nvim_buf_is_valid(run.buf) then
-        local label = labels[main_class]
-        if counts[label] > 1 then label = main_class end
+        local label = labels[key]
+        if counts[label] > 1 and run.project_name ~= '' then label = run.project_name .. '/' .. label end
         label = label:gsub('%%', '%%%%')
         local highlight = run == self.current and '%#TabLineSel#' or '%#JavaRunnerTab#'
         tabs[#tabs + 1] = ('%s %s %s '):format(highlight, java_icon, label)
@@ -53,10 +92,10 @@ function M.new(root_dir, runtimes, has_debug)
   end
 
   function runner:valid_run_order()
-    self.run_order = vim.tbl_filter(function(main_class)
-      local run = self.runs[main_class]
+    self.run_order = vim.tbl_filter(function(key)
+      local run = self.runs[key]
       if run and vim.api.nvim_buf_is_valid(run.buf) then return true end
-      self.runs[main_class] = nil
+      self.runs[key] = nil
       return false
     end, self.run_order)
     return self.run_order
@@ -67,8 +106,8 @@ function M.new(root_dir, runtimes, has_debug)
     if #run_order == 0 then return end
 
     local current_index
-    for index, main_class in ipairs(run_order) do
-      if self.runs[main_class] == self.current then
+    for index, key in ipairs(run_order) do
+      if self.runs[key] == self.current then
         current_index = index
         break
       end
@@ -78,56 +117,6 @@ function M.new(root_dir, runtimes, has_debug)
     if not target then return end
     self.current = target
     self:show(target.buf)
-  end
-
-  function runner:configurations()
-    return vim.tbl_filter(function(config) return not config.cwd or vim.fs.normalize(config.cwd) == root_dir end, require('dap').configurations.java or {})
-  end
-
-  function runner:discover(bufnr, opts)
-    if not has_debug then return end
-    opts = opts or {}
-    local callback = opts.on_ready
-    local configurations = self:configurations()
-    if self.discovery_complete and not opts.force then
-      if callback then callback(configurations) end
-      return
-    end
-    if callback then table.insert(self.discovery_waiters, callback) end
-    if self.discovery_running then return end
-
-    self.discovery_running = true
-    vim.api.nvim_buf_call(bufnr, function()
-      require('jdtls.dap').setup_dap_main_class_configs({
-        verbose = opts.verbose,
-        on_ready = function()
-          self.discovery_running = false
-          self.discovery_complete = true
-          local waiters = self.discovery_waiters
-          self.discovery_waiters = {}
-          local discovered = self:configurations()
-          for _, waiter in ipairs(waiters) do
-            waiter(discovered)
-          end
-        end,
-      })
-    end)
-  end
-
-  function runner:warm_up(client_id)
-    if not has_debug then return end
-    vim.schedule(function()
-      local client = vim.lsp.get_client_by_id(client_id)
-      if not client then return end
-      for bufnr in pairs(client.attached_buffers or {}) do
-        local valid = vim.api.nvim_buf_is_valid(bufnr)
-        local name = valid and vim.api.nvim_buf_get_name(bufnr) or ''
-        if valid and vim.bo[bufnr].filetype == 'java' and not vim.startswith(name, 'jdt://') then
-          self:discover(bufnr)
-          return
-        end
-      end
-    end)
   end
 
   function runner:show(buf)
@@ -153,16 +142,17 @@ function M.new(root_dir, runtimes, has_debug)
     end
   end
 
-  function runner:stop()
-    if self.current and self.current.job_id then vim.fn.jobstop(self.current.job_id) end
-  end
-
-  function runner:launch(config, bufnr)
-    local run = self.runs[config.mainClass]
+  function runner:run(config)
+    local key = run_key(config)
+    local run = self.runs[key]
     if not run then
       local buf = vim.api.nvim_create_buf(false, true)
-      vim.api.nvim_buf_set_name(buf, 'Java: ' .. config.mainClass)
-      run = { buf = buf }
+      vim.api.nvim_buf_set_name(buf, 'Java: ' .. display_name(config))
+      run = {
+        buf = buf,
+        main_class = config.mainClass,
+        project_name = config.projectName or '',
+      }
       if self.log_buffer_attach then self.log_buffer_attach(buf) end
       local channel = vim.api.nvim_open_term(buf, {
         on_input = function(_, _, _, data)
@@ -170,159 +160,140 @@ function M.new(root_dir, runtimes, has_debug)
         end,
       })
       run.channel = channel
-      self.runs[config.mainClass] = run
-      self.run_order[#self.run_order + 1] = config.mainClass
+      self.runs[key] = run
+      self.run_order[#self.run_order + 1] = key
     elseif run.job_id then
       vim.fn.jobstop(run.job_id)
     end
 
-    local function start_process(matched_home, resolved_java)
-      local default_home = Runtime.java_home(runtimes)
-      local java = resolved_java or (matched_home and (matched_home .. '/bin/java')) or (default_home and (default_home .. '/bin/java')) or 'java'
-      local vm_args, env = launch:resolve(config)
-      local command = { java }
-      vim.list_extend(command, Launch.split_args(vm_args))
-      if config.classPaths and #config.classPaths > 0 then vim.list_extend(command, { '-cp', table.concat(config.classPaths, package.config:sub(1, 1) == '\\' and ';' or ':') }) end
-      table.insert(command, config.mainClass)
-      vim.list_extend(command, Launch.split_args(config.args))
+    local vm_args, env = launch:resolve(config)
+    local command = { config.javaExec }
+    vim.list_extend(command, Launch.split_args(vm_args))
+    if config.classPaths and #config.classPaths > 0 then vim.list_extend(command, { '-cp', table.concat(config.classPaths, package.config:sub(1, 1) == '\\' and ';' or ':') }) end
+    table.insert(command, config.mainClass)
+    vim.list_extend(command, Launch.split_args(config.args))
 
-      self.current = run
-      self:show(run.buf)
-      local channel = assert(run.channel)
-      vim.fn.chansend(channel, table.concat(command, ' ') .. '\r\n')
-      local job_id
-      job_id = vim.fn.jobstart(command, {
-        cwd = root_dir,
-        env = env,
-        pty = true,
-        on_stdout = function(_, data)
-          if data then vim.fn.chansend(channel, data) end
-        end,
-        on_stderr = function(_, data)
-          if data then vim.fn.chansend(channel, data) end
-        end,
-        on_exit = function(_, code)
-          vim.schedule(function()
-            vim.fn.chansend(channel, ('\r\nProcess finished with exit code %d\r\n'):format(code))
-            if run.job_id == job_id then run.job_id = nil end
-          end)
-        end,
-      })
-      run.job_id = job_id
-    end
-
-    local declared_version = Runtime.buffer_version(bufnr)
-    local declared_home = Runtime.java_home(runtimes, declared_version)
-    if declared_version and declared_home then
-      vim.notify(('Java %s runtime: %s'):format(declared_version, declared_home), vim.log.levels.INFO)
-      start_process(declared_home)
-      return
-    end
-
-    local client = buffer_client(bufnr)
-    if not client then
-      vim.notify('No jdtls client attached; using the configured default JDK', vim.log.levels.WARN)
-      return start_process()
-    end
-    local commands = (client.server_capabilities.executeCommandProvider or {}).commands or {}
-    if config.projectName and vim.tbl_contains(commands, 'vscode.java.resolveJavaExecutable') then
-      client:request('workspace/executeCommand', {
-        command = 'vscode.java.resolveJavaExecutable',
-        arguments = { config.mainClass, config.projectName },
-      }, function(err, java_exec)
-        if not err and type(java_exec) == 'string' and java_exec ~= '' then
-          vim.schedule(function()
-            vim.notify('Java runtime: ' .. java_exec, vim.log.levels.INFO)
-            start_process(nil, java_exec)
-          end)
-          return
-        end
-        vim.schedule(function() vim.notify('jdtls could not resolve the main class JDK; trying project compliance', vim.log.levels.WARN) end)
-        local fallback_config = vim.deepcopy(config)
-        fallback_config.projectName = nil
-        self:launch(fallback_config, bufnr)
-      end, bufnr)
-      return
-    end
-    client:request('workspace/executeCommand', {
-      command = 'java.project.getSettings',
-      arguments = { vim.uri_from_bufnr(bufnr), { 'org.eclipse.jdt.core.compiler.compliance' } },
-    }, function(err, result)
-      local compliance = result and result['org.eclipse.jdt.core.compiler.compliance']
-      if err or not compliance then vim.notify('Could not resolve project Java version; using the configured fallback JDK', vim.log.levels.WARN) end
-      vim.schedule(function()
-        local home = Runtime.java_home(runtimes, compliance)
-        if home then vim.notify(('Java %s runtime: %s'):format(compliance or 'default', home), vim.log.levels.INFO) end
-        start_process(home)
-      end)
-    end, bufnr)
+    self.current = run
+    self:show(run.buf)
+    local channel = assert(run.channel)
+    vim.fn.chansend(channel, table.concat(command, ' ') .. '\r\n')
+    local job_id
+    job_id = vim.fn.jobstart(command, {
+      cwd = root_dir,
+      env = env,
+      pty = true,
+      on_stdout = function(_, data)
+        if data then vim.fn.chansend(channel, data) end
+      end,
+      on_stderr = function(_, data)
+        if data then vim.fn.chansend(channel, data) end
+      end,
+      on_exit = function(_, code)
+        vim.schedule(function()
+          vim.fn.chansend(channel, ('\r\nProcess finished with exit code %d\r\n'):format(code))
+          if run.job_id == job_id then run.job_id = nil end
+        end)
+      end,
+    })
+    run.job_id = job_id
   end
 
+  function runner:debug_config(config)
+    local debug_config = vim.deepcopy(config)
+    debug_config.vmArgs, debug_config.env = launch:resolve(debug_config)
+    require('dap').run(debug_config)
+  end
+
+  function runner:finish_task(task)
+    if self.launch_task ~= task then return end
+    self.launch_task = nil
+    vim.schedule(function() self:process_queue() end)
+  end
+
+  function runner:prepare_task(task, config)
+    if self.launch_task ~= task then return end
+    preparation:prepare(config, task.bufnr, function(err, prepared)
+      if self.launch_task ~= task then return end
+      if err then
+        if err.kind ~= 'cancelled' then vim.notify(error_message(err), vim.log.levels.ERROR, { title = 'Java' }) end
+      elseif task.mode == 'debug' then
+        self:debug_config(prepared)
+      else
+        self:run(prepared)
+      end
+      self:finish_task(task)
+    end)
+  end
+
+  function runner:select_target(task, configurations)
+    if self.launch_task ~= task then return end
+    if #configurations == 0 then
+      vim.notify('No main class found', vim.log.levels.ERROR)
+      self:finish_task(task)
+    elseif #configurations == 1 then
+      self:prepare_task(task, configurations[1])
+    else
+      vim.ui.select(configurations, {
+        prompt = task.mode == 'debug' and 'Select main class to debug:' or 'Select main class:',
+        format_item = function(item) return item.name or item.mainClass end,
+      }, function(item)
+        if self.launch_task ~= task then return end
+        if item then
+          self:prepare_task(task, item)
+        else
+          self:finish_task(task)
+        end
+      end)
+    end
+  end
+
+  function runner:process_queue()
+    if self.launch_task or #self.launch_queue == 0 then return end
+    local task = table.remove(self.launch_queue, 1)
+    self.launch_task = task
+    if task.config then
+      self:prepare_task(task, task.config)
+      return
+    end
+    preparation:discover(task.bufnr, function(err, configurations)
+      if self.launch_task ~= task then return end
+      if err then
+        if err.kind ~= 'cancelled' then vim.notify(error_message(err), vim.log.levels.ERROR, { title = 'Java' }) end
+        self:finish_task(task)
+        return
+      end
+      self:select_target(task, configurations)
+    end)
+  end
+
+  function runner:enqueue(mode, bufnr, config)
+    self.launch_queue[#self.launch_queue + 1] = { mode = mode, bufnr = bufnr, config = config }
+    self:process_queue()
+  end
+
+  function runner:launch(config, bufnr) self:enqueue('run', bufnr, config) end
+
   function runner:start()
-    local bufnr = vim.api.nvim_get_current_buf()
     if not has_debug then
       vim.notify('VSC_JAVA_DEBUG is required to discover main classes', vim.log.levels.ERROR)
       return
     end
-    local configurations = self:configurations()
-    if #configurations == 0 then
-      self:discover(bufnr, {
-        verbose = true,
-        force = true,
-        on_ready = function(discovered)
-          if #discovered > 0 then
-            self:start()
-          else
-            vim.notify('No main class found', vim.log.levels.ERROR)
-          end
-        end,
-      })
-      return
-    end
-    if #configurations == 1 then
-      self:launch(configurations[1], bufnr)
-      return
-    end
-    vim.ui.select(configurations, {
-      prompt = 'Select main class:',
-      format_item = function(item) return item.name or item.mainClass end,
-    }, function(item)
-      if item then self:launch(item, bufnr) end
-    end)
+    self:enqueue('run', vim.api.nvim_get_current_buf())
   end
 
   function runner:debug()
-    local bufnr = vim.api.nvim_get_current_buf()
     if not has_debug then
       vim.notify('VSC_JAVA_DEBUG is not configured or contains no debug bundle', vim.log.levels.ERROR)
       return
     end
+    self:enqueue('debug', vim.api.nvim_get_current_buf())
+  end
 
-    local function start_debug(config)
-      local debug_config = vim.deepcopy(config)
-      debug_config.vmArgs, debug_config.env = launch:resolve(debug_config)
-      require('dap').run(debug_config)
-    end
-    local function select_config(configurations)
-      if #configurations == 0 then
-        vim.notify('No main class found', vim.log.levels.ERROR)
-      elseif #configurations == 1 then
-        start_debug(configurations[1])
-      else
-        vim.ui.select(configurations, {
-          prompt = 'Select main class to debug:',
-          format_item = function(item) return item.name or item.mainClass end,
-        }, function(item)
-          if item then start_debug(item) end
-        end)
-      end
-    end
-    local configurations = self:configurations()
-    if #configurations > 0 then
-      select_config(configurations)
-    else
-      self:discover(bufnr, { verbose = true, force = true, on_ready = select_config })
-    end
+  function runner:stop()
+    self.launch_queue = {}
+    self.launch_task = nil
+    preparation:cancel()
+    if self.current and self.current.job_id then vim.fn.jobstop(self.current.job_id) end
   end
 
   return runner

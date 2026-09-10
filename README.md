@@ -693,6 +693,8 @@ return {
 
 VM Options 可以使用字符串或字符串数组；`envFile` 支持项目相对路径或路径数组，并通过 shell 的 `set -a; source ...; set +a` 语义加载。直接配置的 `env` 优先于 `envFile`，Main 专属配置优先于公共配置。该文件不会参与 jdtls LSP 配置合并，也不会在项目加载或 Main 扫描时读取；每次 Run 或 Debug 真正启动前都会重新加载配置及 `envFile`，修改后重新启动 Main 即可生效，无需重启 Neovim，已运行的进程不受影响。
 
+每次执行 `JavaRunMain` 或 `JavaDebugMain` 都会重新获取 Main 列表，并在选中目标后依次完成增量构建、classpath 和运行时解析。运行时优先使用当前 Java buffer 所属 POM 声明的版本及其已配置 JDK，无法匹配时才交由 JDTLS 和默认 runtime 回退。同一项目的启动准备会串行执行，以避免多个 Main 并发初始化 Eclipse classpath provider；已经启动的 Main 仍可同时运行。`JavaStopMain` 会同时取消正在进行和等待中的启动准备。
+
 ### Claude Code
 
 | 快捷键       | 功能            |

@@ -1,0 +1,3 @@
+# Prepare Java launches on demand
+
+Java Main discovery returns lightweight Main targets and defers build, classpath resolution, and runtime resolution until the user selects a target. Launch preparation is serialized per project and shared by Run and Debug, while nvim-jdtls continues to own the DAP adapter and session behavior. A project-declared launch runtime takes precedence over the executable inferred by JDTLS, which preserves the project's Java compatibility even when the language server itself uses a newer JDK; these choices trade a short wait after selection for a complete Main list and avoid concurrent initialization of Eclipse classpath providers.

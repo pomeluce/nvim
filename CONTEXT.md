@@ -65,3 +65,25 @@ _Avoid_: local SQL config, formatter override.
 **Database query workspace**:
 The persistent directory that holds interactive database query buffers across editor sessions.
 _Avoid_: database path, connection directory.
+
+## Java launching
+
+**Main target**:
+An executable Java Main class together with the project that owns it, before runtime details are resolved.
+_Avoid_: debug configuration, loaded Main.
+
+**Main discovery**:
+The identification of available Main targets without resolving how any one of them will be launched.
+_Avoid_: classpath scan, launch configuration loading.
+
+**Launch preparation**:
+The work performed after selecting a Main target to produce its current executable launch configuration.
+_Avoid_: Main discovery, configuration preload.
+
+**Launch runtime**:
+The JDK used to run or debug a Main target, distinct from the JDK that hosts the language server.
+_Avoid_: LSP runtime, default Java.
+
+**Project-declared launch runtime**:
+The launch runtime matching the Java version required by the active project context. It takes precedence over inferred or default runtimes.
+_Avoid_: detected JDK, JDT runtime.
