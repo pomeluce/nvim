@@ -469,6 +469,7 @@ SQLFluff 可以用 PostgreSQL dialect 解析 `DO $$ ... $$`，但会把 dollar-q
 │   │   ├── navigation/     # 导航
 │   │   └── workspace/      # 工作区
 │   ├── settings.lua        # settings.toml 解析器
+│   ├── specs.lua           # 插件清单（仓库、版本、启用条件）
 │   └── utils.lua           # 工具函数
 ├── snippets/               # 代码片段
 ├── types/                  # 项目配置可复用的 LuaLS 类型声明
@@ -478,12 +479,14 @@ SQLFluff 可以用 PostgreSQL dialect 解析 `DO $$ ... $$`，但会把 dollar-q
 
 ## PackUtils 插件管理
 
-基于 Neovim 0.12 原生 `vim.pack` API，全部逻辑在 `lua/core/setup.lua`。
+基于 Neovim 0.12 原生 `vim.pack` API。`lua/specs.lua` 维护插件清单，`lua/core/setup.lua` 加载清单并负责包管理和启动编排；`lua/plugins/` 维护插件依赖、构建、加载时机和配置。
 
 ### Spec 声明
 
+在 `lua/specs.lua` 返回插件清单：
+
 ```lua
-local specs = {
+return {
   { src = 'https://github.com/nvim-lua/plenary.nvim' },
   { src = 'https://github.com/saghen/blink.cmp', version = 'v1.*' },
   { src = 'https://github.com/mason-org/mason.nvim', enabled = require('settings').mason.enable },
@@ -492,6 +495,8 @@ local specs = {
 ```
 
 `version` 支持 semver range（`v1.*`）或 git 分支名（`main`）。`enabled` 支持 `boolean` 或 `function → boolean`。
+
+`setup.lua` 通过 `require('specs')` 在启动时读取清单；清单加载失败会直接报错。新增需要配置的插件时，同时在 `lua/plugins/` 添加加载与配置。
 
 ### 加载和配置
 

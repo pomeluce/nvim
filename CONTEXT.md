@@ -2,6 +2,16 @@
 
 This glossary defines the project-specific language used for Neovim behavior and visual design.
 
+## Plugin management
+
+**Plugin inventory**:
+The set of plugins selected for this configuration, including their repositories, version constraints, and enablement conditions.
+_Avoid_: plugin configuration, load specification.
+
+**Plugin configuration**:
+The instructions for integrating an inventory plugin into the editor, including its dependencies, build steps, loading conditions, and editor behavior.
+_Avoid_: plugin inventory, repository declaration.
+
 ## Visual theme
 
 **Transparent canvas**:
