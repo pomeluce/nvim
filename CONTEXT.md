@@ -60,7 +60,17 @@ _Avoid_: single-line SQL, DataGrip layout.
 A repository-owned definition of its SQL dialect and formatting conventions, which takes precedence over personal fallback conventions.
 _Avoid_: local SQL config, formatter override.
 
+## Startup behavior
+
+**Tool launch**:
+An editor process explicitly started as a dedicated tool, without automatic project discovery or project-session restoration.
+_Avoid_: standalone mode, dashboard mode.
+
 ## Database integration
+
+**Database tool launch**:
+A tool launch dedicated to database interaction.
+_Avoid_: database session, CALLDB mode.
 
 **Database query workspace**:
 The persistent directory that holds interactive database query buffers across editor sessions.

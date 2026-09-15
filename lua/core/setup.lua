@@ -443,3 +443,4 @@ end
 
 local config_path = vim.fn.stdpath('config') .. '/lua/plugins'
 if vim.fn.isdirectory(config_path) == 1 then load_plugin_dir(config_path, 'plugins') end
+require('core.startup').resolve()

@@ -311,6 +311,8 @@ default = true   # 标记为默认运行时
 "lua"    = "lua {file}"
 ```
 
+使用 `nvim +CALLDB`（也支持 `nvim -c CALLDB`）进入数据库工具启动模式。该模式不会自动发现当前项目或恢复项目 session，但仍保留手动加载项目 session 的命令。
+
 ### 配置项参考
 
 | 配置项                           | 类型       | 默认值                                | 说明                                                        |

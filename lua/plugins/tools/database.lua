@@ -125,7 +125,7 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-vim.api.nvim_create_user_command('CALLDB', function()
+require('core.startup').register_tool_command('CALLDB', function()
   if not load_dadbod() then return end
   vim.cmd('set nonu signcolumn=no nofoldenable')
   vim.cmd('DBUI')

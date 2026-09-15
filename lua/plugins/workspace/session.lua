@@ -1,23 +1,27 @@
 vim.o.sessionoptions = 'blank,buffers,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 
-PackUtils.load(
-  { name = 'neovim-project', deps = { 'neovim-session-manager', 'plenary.nvim' } },
-  function()
-    require('neovim-project').setup({
-      projects = require('settings').session.projects,
-      datapath = vim.fn.stdpath('data'),
-      last_session_on_startup = false,
-      dashboard_mode = false,
-      filetype_autocmd_timeout = 200,
-      session_manager_opts = {
-        autosave_ignore_filetypes = { 'gitcommit', 'gitrebase' },
-        autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, require('settings').session.ignore_dir),
-      },
-      picker = {
-        type = 'snacks',
-        preview = { enabled = true, git_status = true, git_fetch = false, show_hidden = true },
-        opts = { layout = 'dropdown' },
-      },
-    })
-  end
-)
+local startup = require('core.startup')
+
+startup.on_resolved(function()
+  PackUtils.load(
+    { name = 'neovim-project', deps = { 'neovim-session-manager', 'plenary.nvim' } },
+    function()
+      require('neovim-project').setup({
+        projects = require('settings').session.projects,
+        datapath = vim.fn.stdpath('data'),
+        last_session_on_startup = false,
+        dashboard_mode = startup.is_tool_launch(),
+        filetype_autocmd_timeout = 200,
+        session_manager_opts = {
+          autosave_ignore_filetypes = { 'gitcommit', 'gitrebase' },
+          autosave_ignore_dirs = vim.list_extend({ vim.fn.expand('~'), '/' }, require('settings').session.ignore_dir),
+        },
+        picker = {
+          type = 'snacks',
+          preview = { enabled = true, git_status = true, git_fetch = false, show_hidden = true },
+          opts = { layout = 'dropdown' },
+        },
+      })
+    end
+  )
+end)

@@ -28,13 +28,16 @@ _G.PackUtils = {
   end,
 }
 
+local startup = require('core.startup')
 require('plugins.tools.database')
+startup.resolve({ 'nvim', '+CALLDB' })
 
 assert(vim.g.db_ui_tmp_query_location == query_location)
 assert(vim.g.db_ui_winwidth == 30)
 assert(vim.g.db_ui_disable_mappings_sql == 1)
 assert(vim.g.db_ui_table_helpers.mysql.List:find('limit 500', 1, true))
 assert(vim.g.db_ui_table_helpers.postgresql['Primary Keys']:find("constraint_type = 'PRIMARY KEY'", 1, true))
+assert(startup.is_tool_launch())
 
 vim.api.nvim_exec_autocmds('VimEnter', {})
 assert(load_count == 1)
