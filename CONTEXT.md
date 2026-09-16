@@ -107,3 +107,17 @@ _Avoid_: LSP runtime, default Java.
 **Project-declared launch runtime**:
 The launch runtime matching the Java version required by the active project context. It takes precedence over inferred or default runtimes.
 _Avoid_: detected JDK, JDT runtime.
+
+## Terminal interaction
+
+**Terminal output redraw**:
+The screen update caused by a running terminal job writing new data, including progress interfaces that repeatedly rewrite existing lines. It does not represent a user focus change.
+_Avoid_: terminal focus event, tab switch.
+
+**Terminal normal mode**:
+The terminal buffer's `nt` mode entered by the user to move through or select terminal content while the job continues running.
+_Avoid_: editor normal mode, terminal closed state.
+
+**Focus restoration**:
+The one-time action that selects a terminal window and enters terminal insert mode after an explicit open or tab switch. It must not run in response to terminal output redraws or after the user enters Terminal normal mode.
+_Avoid_: output refresh, background polling.

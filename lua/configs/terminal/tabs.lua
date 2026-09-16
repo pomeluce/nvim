@@ -59,6 +59,7 @@ local function ensure_terminal(target)
   if not timer then
     vim.schedule(function()
       if state.tabs[state.active_idx] == expected and term_is_open(expected) then
+        if vim.fn.mode():match('^nt') then return end
         api.nvim_set_current_win(expected.window)
         vim.cmd('startinsert!')
       end
@@ -78,6 +79,9 @@ local function ensure_terminal(target)
         if term_timer == timer then term_timer = nil end
       end
       if attempts > MAX_ENSURE_ATTEMPTS or state.tabs[state.active_idx] ~= expected or not term_is_open(expected) then return finish() end
+      -- TNormal is an intentional user state. Terminal output can redraw the
+      -- float while this timer is pending; never turn that state back into insert.
+      if vim.fn.mode():match('^nt') then return finish() end
       if api.nvim_get_current_win() ~= expected.window then api.nvim_set_current_win(expected.window) end
       if vim.fn.mode() ~= 't' then
         vim.cmd('startinsert!')
