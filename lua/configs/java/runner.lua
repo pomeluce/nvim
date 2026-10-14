@@ -4,6 +4,32 @@ local Prepare = require('configs.java.prepare')
 local M = {}
 local java_icon = ''
 
+local function truncate(text, width)
+  if width <= 0 then return '' end
+  if vim.fn.strdisplaywidth(text) <= width then return text end
+  local ellipsis = vim.fn.strdisplaywidth('…') <= width and '…' or '.'
+  local budget = width - vim.fn.strdisplaywidth(ellipsis)
+  local shortened = ''
+  for length = 1, vim.fn.strchars(text) do
+    local candidate = vim.fn.strcharpart(text, 0, length)
+    if vim.fn.strdisplaywidth(candidate) > budget then break end
+    shortened = candidate
+  end
+  return shortened .. ellipsis
+end
+
+local function tab_text(tab, width)
+  local prefix = ' ' .. java_icon .. ' '
+  local label_width = width - vim.fn.strdisplaywidth(prefix) - 1
+  if label_width < 1 then return truncate(tab.name, width) end
+  local label = tab.label
+  if tab.project and vim.fn.strdisplaywidth(label) > label_width then
+    local project_width = label_width - vim.fn.strdisplaywidth(tab.name) - 1
+    label = project_width >= 2 and (truncate(tab.project, project_width) .. '/' .. tab.name) or tab.name
+  end
+  return prefix .. truncate(label, label_width) .. ' '
+end
+
 ---@class JavaRunState
 ---@field buf integer
 ---@field main_class string
@@ -78,17 +104,61 @@ function M.new(root_dir, runtimes, has_debug)
     end
 
     local tabs = {}
+    local active = 1
     for _, key in ipairs(run_order) do
       local run = self.runs[key]
       if run and vim.api.nvim_buf_is_valid(run.buf) then
         local label = labels[key]
-        if counts[label] > 1 and run.project_name ~= '' then label = run.project_name .. '/' .. label end
-        label = label:gsub('%%', '%%%%')
-        local highlight = run == self.current and '%#TabLineSel#' or '%#JavaRunnerTab#'
-        tabs[#tabs + 1] = ('%s %s %s '):format(highlight, java_icon, label)
+        local project = counts[label] > 1 and run.project_name ~= '' and run.project_name or nil
+        local display_label = project and (project .. '/' .. label) or label
+        local text = (' %s %s '):format(java_icon, display_label)
+        tabs[#tabs + 1] = { name = label, project = project, label = display_label, text = text, width = vim.fn.strdisplaywidth(text) }
+        if run == self.current then active = #tabs end
       end
     end
-    vim.wo[self.log_win].winbar = table.concat(tabs, '%#WinBar# ') .. '%#WinBar#'
+    if #tabs == 0 then
+      vim.wo[self.log_win].winbar = ''
+      return
+    end
+
+    local width = vim.api.nvim_win_get_width(self.log_win)
+    local left_marker, right_marker = '‹ ', ' ›'
+    local left_width, right_width = vim.fn.strdisplaywidth(left_marker), vim.fn.strdisplaywidth(right_marker)
+    -- In very narrow windows, give the current Main priority over overflow markers.
+    local indicators = width >= left_width + right_width + vim.fn.strdisplaywidth(' ' .. java_icon .. ' … ')
+    local function indicator_width(left, right) return indicators and ((left > 1 and left_width or 0) + (right < #tabs and right_width or 0)) or 0 end
+
+    local left, right = active, active
+    local budget = width - indicator_width(left, right)
+    if tabs[active].width > budget then
+      tabs[active].text = tab_text(tabs[active], budget)
+      tabs[active].width = vim.fn.strdisplaywidth(tabs[active].text)
+    end
+    local total = tabs[active].width
+    while true do
+      local added = false
+      if right < #tabs and total + 1 + tabs[right + 1].width + indicator_width(left, right + 1) <= width then
+        right = right + 1
+        total = total + 1 + tabs[right].width
+        added = true
+      end
+      if left > 1 and total + 1 + tabs[left - 1].width + indicator_width(left - 1, right) <= width then
+        left = left - 1
+        total = total + 1 + tabs[left].width
+        added = true
+      end
+      if not added then break end
+    end
+
+    local parts = {}
+    if indicators and left > 1 then parts[#parts + 1] = '%#WinBar#' .. left_marker end
+    for index = left, right do
+      if index > left then parts[#parts + 1] = '%#WinBar# ' end
+      local highlight = index == active and '%#TabLineSel#' or '%#JavaRunnerTab#'
+      parts[#parts + 1] = highlight .. tabs[index].text:gsub('%%', '%%%%')
+    end
+    if indicators and right < #tabs then parts[#parts + 1] = '%#WinBar#' .. right_marker end
+    vim.wo[self.log_win].winbar = table.concat(parts) .. '%#WinBar#'
   end
 
   function runner:valid_run_order()
@@ -129,6 +199,14 @@ function M.new(root_dir, runtimes, has_debug)
       vim.wo[self.log_win].number = false
       vim.wo[self.log_win].relativenumber = false
       vim.wo[self.log_win].signcolumn = 'no'
+      local resize_autocmd = vim.api.nvim_create_autocmd({ 'WinResized', 'VimResized' }, {
+        callback = function() self:update_winbar() end,
+      })
+      vim.api.nvim_create_autocmd('WinClosed', {
+        pattern = tostring(self.log_win),
+        once = true,
+        callback = function() vim.api.nvim_del_autocmd(resize_autocmd) end,
+      })
     end
     self:update_winbar()
   end

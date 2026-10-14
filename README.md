@@ -681,6 +681,8 @@ Codex Agent 使用独立于 `<C-t>` tab 组的单实例浮动终端，尺寸与�
 | `<leader>jv`                     | —                                 | 提取变量                     |
 | `<leader>jm`                     | —                                 | 提取选区为方法               |
 
+运行日志标签栏会随当前 Main 和窗口宽度调整可见范围，用 `‹ / ›` 提示两侧隐藏的标签；过长名称会以省略号缩短。极窄窗口优先显示当前标签。
+
 项目可以通过独立的 `.nvim/java-launch.lua` 为 `JavaRunMain` 和 `JavaDebugMain` 配置类似 IDEA 的 VM Options 与环境变量。`vmOptions`、`envFile` 和 `env` 对所有 Main 生效，`mainClass` 可以按完整类名追加或覆盖配置：
 
 ```lua

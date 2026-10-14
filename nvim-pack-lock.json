@@ -6,7 +6,7 @@
       "version": "2.0.0 - 3.0.0"
     },
     "base16-nvim": {
-      "rev": "44fc7a0d7ad878f90b04ffe8fa58c99c19007509",
+      "rev": "7183774e90841f4bd27a47cb6e75cf532fd1192d",
       "src": "https://github.com/RRethy/base16-nvim"
     },
     "blink-cmp-avante": {
@@ -43,7 +43,7 @@
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "dropbar.nvim": {
-      "rev": "808ba31cde89aec8833e9789f5e04557cd31c9e1",
+      "rev": "f7c6fa21e2a7c32576e7a1791774a3736987f467",
       "src": "https://github.com/Bekaboo/dropbar.nvim"
     },
     "flash.nvim": {
@@ -55,7 +55,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "8d79f2410c76e62b92e51c28c82e28c1c5a3daeb",
+      "rev": "fd780920613e541cbdfac41bf711583ed49f9249",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "heirline.nvim": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "kulala.nvim": {
-      "rev": "dcad056448773ae5b54cadbfdbd188a599cfebd3",
+      "rev": "eebe4464c8937ad7313008a8b690e63d140d6638",
       "src": "https://github.com/mistweaverco/kulala.nvim"
     },
     "live-preview.nvim": {
@@ -79,11 +79,11 @@
       "src": "https://github.com/brianhuster/live-preview.nvim"
     },
     "mini.files": {
-      "rev": "f1cfece89892274f4f4a59d71f24eb90dcfe1b5a",
+      "rev": "3fe8e33d37a8c455762800c39bab9af317dd53b4",
       "src": "https://github.com/nvim-mini/mini.files"
     },
     "mini.icons": {
-      "rev": "98faae31e9be1cc054ae63485e58ceb185efcad0",
+      "rev": "f916635dc5ae2f479fbb9ab8184bb9444b62e86c",
       "src": "https://github.com/nvim-mini/mini.icons"
     },
     "neogen": {
@@ -107,7 +107,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-autopairs": {
-      "rev": "430522f95fe4fb7c511ec64f8c1a90cc6a66c05c",
+      "rev": "3172f40c16563db871a58f20d205c710ad782311",
       "src": "https://github.com/windwp/nvim-autopairs"
     },
     "nvim-dap": {
@@ -131,7 +131,7 @@
       "src": "https://github.com/mfussenegger/nvim-jdtls"
     },
     "nvim-lspconfig": {
-      "rev": "ac9d2f7c4757db6320cab6697fe73e5e8adb2457",
+      "rev": "ac062d0d01c019c0dbdb798968f3e5d8b35c3853",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -143,15 +143,15 @@
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-tree.lua": {
-      "rev": "8d814495983e8db87d02d2f1da293f25b2fd1bdc",
+      "rev": "355bcc85a48f45b3e728219f10b880d569928965",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "9a168f6357ed21c3a636e1727bc7d382abc451b8",
+      "rev": "1a4f47b03dfe92d28de7d5654c67327ef008c9e6",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
-      "rev": "f3061339b8eaf9fda873600bc425b8d2d8502533",
+      "rev": "8decd73460d26ef0a0befb745d022dd1fc2c38b8",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-context"
     },
     "nvim-treesitter-textobjects": {
@@ -160,7 +160,7 @@
       "version": "'main'"
     },
     "nvim-ts-autotag": {
-      "rev": "88c1453db4ba7dd24131086fe51fdf74e587d275",
+      "rev": "d7220b55e16ed3c04e88086256def5d282429493",
       "src": "https://github.com/windwp/nvim-ts-autotag"
     },
     "nvim-ufo": {
@@ -176,7 +176,7 @@
       "src": "https://github.com/kevinhwang91/promise-async"
     },
     "render-markdown.nvim": {
-      "rev": "640a3ec6d538bad17c328be373c7cad0293d9589",
+      "rev": "8e8795368391036643b622875a6da6a51bcd33f4",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks.nvim": {
@@ -184,7 +184,7 @@
       "src": "https://github.com/folke/snacks.nvim"
     },
     "switch.vim": {
-      "rev": "297346b630943ebd4ea58598dfd30bae5debc739",
+      "rev": "a824d660dc97db9798be1b7103b1114b6c3da13d",
       "src": "https://github.com/AndrewRadev/switch.vim"
     },
     "todo-comments.nvim": {
@@ -220,7 +220,7 @@
       "src": "https://github.com/kristijanhusak/vim-dadbod-ui"
     },
     "vimcdoc": {
-      "rev": "05e2c964a52e0af798d007ec28b649117c1a91b3",
+      "rev": "53a7a8637808da6952b0ff02fd745de738ae0a1c",
       "src": "https://github.com/yianwillis/vimcdoc"
     }
   }
