@@ -1,63 +1,17 @@
-local map = vim.keymap.set
+vim.g.rest_nvim = {
+  ui = { keybinds = { prev = '<S-Tab>', next = '<Tab>' } },
+}
+
+vim.filetype.add({ extension = { rest = 'http' } })
 
 vim.api.nvim_create_autocmd('FileType', {
-  once = true,
-  pattern = { 'http', 'rest', 'javascript', 'lua' },
-  callback = function()
-    PackUtils.load({ name = 'kulala.nvim' }, function()
-      local kulala = require('kulala')
-      local ui = require('kulala.ui')
-      local ws = require('kulala.cmd.websocket')
-      kulala.setup({
-        kulala_core = { path = vim.fn.exepath('kulala-core') },
-        ui = {
-          split_direction = 'horizontal',
-          win_opts = { width = 80, height = 18 },
-          default_winbar_panes = { 'body', 'headers', 'verbose', 'script_output', 'report', 'stats' },
-          pickers = {
-            snacks = {
-              layout = function()
-                local has_snacks, snacks_picker = pcall(require, 'snacks.picker')
-                return not has_snacks and {} or snacks_picker.config.layout('dropdown')
-              end,
-            },
-          },
-        },
-        lsp = {
-          enable = true,
-          filetypes = { 'http', 'rest', 'json', 'yaml', 'bruno' },
-          keymaps = false,
-        },
-        global_keymaps = false,
-        kulala_keymaps = {
-          ['Previous tab'] = { '<s-tab>', ui.show_previous_tab, mode = { 'n' } },
-          ['Next tab'] = { '<tab>', ui.show_next_tab, mode = { 'n' } },
-          ['Show headers'] = false,
-          ['Show body'] = false,
-          ['Show headers and body'] = false,
-          ['Show verbose'] = false,
-          ['Show script output'] = false,
-          ['Show stats'] = false,
-          ['Show report'] = false,
-          ['Show filter'] = { 'F', ui.toggle_filter },
-          ['Next response'] = { ']', ui.show_next, prefix = false },
-          ['Previous response'] = { '[', ui.show_previous, prefix = false },
-          ['Jump to response'] = { '<CR>', ui.keymap_enter, mode = { 'n', 'v' }, desc = 'also: Update filter and Send WS message for WS connections', prefix = false },
-          ['Clear responses history'] = { 'X', ui.clear_responses_history },
-          ['Send WS message'] = { '<S-CR>', ws.send, mode = { 'n', 'v' }, prefix = false },
-          ['Interrupt requests'] = { '<C-c>', ui.interrupt_requests, desc = 'also: CLose WS connection', prefix = false },
-          ['Show help'] = { '?', ui.show_help, prefix = false },
-          ['Show news'] = { 'g?', ui.show_news, prefix = false },
-          ['Toggle split/float'] = { '|', ui.toggle_display_mode, prefix = false },
-          ['Close'] = { 'q', ui.close_kulala_buffer, prefix = false },
-        },
-      })
+  pattern = 'http',
+  callback = function(event)
+    if not PackUtils.load({ name = 'rest.nvim', deps = { 'nvim-nio', 'fidget.nvim', 'nvim-treesitter' } }) then return end
 
-      map({ 'n', 'v' }, '<C-CR>', kulala.run, { desc = 'Send request' })
-      map({ 'n', 'v' }, '<leader>Rs', kulala.run, { desc = 'Send request' })
-      map({ 'n', 'v' }, '<leader>Ra', kulala.run_all, { desc = 'Send all requests' })
-      map({ 'n', 'v' }, '<leader>Rb', kulala.scratchpad, { desc = 'Open scratchpad' })
-      map('n', '<leader>Re', kulala.set_selected_env, { desc = 'Select Kulala environment' })
-    end)
+    local opts = { buffer = event.buf, desc = 'Send current request' }
+    vim.keymap.set('n', '<C-CR>', '<Cmd>horizontal Rest run<CR>', opts)
+    vim.keymap.set('n', '<leader>Rs', '<Cmd>horizontal Rest run<CR>', opts)
+    vim.keymap.set('n', '<leader>Re', '<Cmd>Rest env select<CR>', { buffer = event.buf, desc = 'Select HTTP environment file' })
   end,
 })

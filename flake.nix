@@ -47,6 +47,7 @@
           defaultPackages = with pkgs; [
             # Core tools
             bat
+            curl
             fd
             fzf
             ripgrep
@@ -59,7 +60,6 @@
             python314Packages.pynvim
             translate-shell
             imagemagick
-            kulala-core
             lombok
 
             # LSP
@@ -366,7 +366,11 @@
             home.packages = [
               (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
                 wrapRc = false;
-                extraLuaPackages = ps: [ ps.tomlua ];
+                extraLuaPackages = ps: [
+                  ps.tomlua
+                  ps.mimetypes
+                  ps.xml2lua
+                ];
                 wrapperArgs =
                   lib.optionals (cfg.extraPackages ++ filteredDefaults != [ ]) [
                     "--suffix"
@@ -411,6 +415,10 @@
         { pkgs, system, ... }:
         let
           pkgs' = pkgs.extend akpkgs.overlays.default;
+          restLuaEnv = pkgs'.luajit.withPackages (ps: [
+            ps.mimetypes
+            ps.xml2lua
+          ]);
           akvimPackage = pkgs.stdenvNoCC.mkDerivation {
             pname = "akiron-vim";
             version = "2026.06.28";
@@ -441,6 +449,7 @@
             packages =
               (with pkgs'; [
                 bat
+                curl
                 fd
                 fzf
                 ripgrep
@@ -452,7 +461,6 @@
                 python314Packages.pynvim
                 translate-shell
                 imagemagick
-                kulala-core
                 lombok
                 bash-language-server
                 clang-tools
@@ -502,6 +510,7 @@
 
             shellHook = ''
               unset NVIM_APPNAME
+              export LUA_PATH="${restLuaEnv}/share/lua/5.1/?.lua;${restLuaEnv}/share/lua/5.1/?/init.lua;$LUA_PATH;;"
               export LUA_CPATH="${pkgs'.luajitPackages.tomlua}/lib/lua/5.1/?.so;$LUA_CPATH"
               if [ -z "$AKVIM_DEV_LINKED" ]; then
                 export AKVIM_DEV_LINKED=1

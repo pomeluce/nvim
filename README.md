@@ -84,7 +84,7 @@ nvim
 }
 ```
 
-应用后使用 `akvim` 命令启动（等价于 `NVIM_APPNAME=akvim nvim`），配置目录 `~/.config/akvim/`。依赖（包括 `tomlua` Lua 库）由 `wrapNeovimUnstable` 自动注入，无需手动安装。
+应用后使用 `akvim` 命令启动（等价于 `NVIM_APPNAME=akvim nvim`），配置目录 `~/.config/akvim/`。依赖（包括 `tomlua`、`mimetypes`、`xml2lua` Lua 库）由 `wrapNeovimUnstable` 自动注入，无需手动安装。
 
 > **开发调试：** 在仓库目录下运行 `nix develop` 进入开发环境，仓库会自动链接到 `~/.config/nvim`，直接用 `nvim` 修改配置、 `:PkUpdate` 更新插件。退出 shell 后链接自动清理。
 
@@ -99,16 +99,16 @@ nvim
 {
   programs.neovim = {
     enable = true;
+    extraLuaPackages = ps: [ ps.tomlua ps.mimetypes ps.xml2lua ];
     extraPackages = with pkgs; [
       # === 基础工具 ===
-      bat fd fzf ripgrep tree-sitter unzip wl-clipboard
+      bat curl fd fzf ripgrep tree-sitter unzip wl-clipboard
       luajitPackages.jsregexp
       python314Packages.pynvim
 
       # === 插件外部依赖 ===
       translate-shell      # translate.nvim
       imagemagick          # img-clip.nvim
-      kulala-core          # kulala.nvim
 
       # === LSP ===
       bash-language-server
@@ -201,6 +201,16 @@ pip install pynvim basedpyright
 ```shell
 luarocks install tomlua
 ```
+
+**HTTP 客户端 Lua 库**（非 Nix 环境，LuaRocks 需支持 Lua 5.1 / LuaJIT）：
+
+```shell
+REST_NVIM_ROCKS="${XDG_DATA_HOME:-$HOME/.local/share}/${NVIM_APPNAME:-nvim}/rest-rocks"
+luarocks --lua-version=5.1 --tree="$REST_NVIM_ROCKS" install mimetypes 1.1.0-2
+luarocks --lua-version=5.1 --tree="$REST_NVIM_ROCKS" install xml2lua 1.6-2
+```
+
+安装到与启动 Neovim 相同的 `NVIM_APPNAME` 对应的数据目录；可用 `:lua print(vim.fn.stdpath('data') .. '/rest-rocks')` 核对路径。配置会在 vim.pack 加载插件前加入该目录的 Lua 搜索路径。系统还需安装 `curl`；HTTP parser 由已有的 nvim-treesitter 配置安装。rest.nvim、nvim-nio 和 fidget.nvim 统一由 vim.pack 管理，无需再通过 LuaRocks 安装插件本体。
 
 ### Mason 自动安装列表
 
@@ -719,14 +729,22 @@ VM Options 可以使用字符串或字符串数组；`envFile` 支持项目相�
 | `<leader>aa` | 接受 diff       |
 | `<leader>ad` | 拒绝 diff       |
 
-### HTTP (Kulala)
+### HTTP (rest.nvim)
 
-| 快捷键       | 功能            |
-| ------------ | --------------- |
-| `<c-cr>`     | 发送请求        |
-| `<leader>Rs` | 发送请求        |
-| `<leader>Ra` | 发送所有请求    |
-| `<leader>Rb` | 打开 Scratchpad |
+以下请求与环境快捷键仅在 `.http` / `.rest` buffer 生效，响应默认使用水平分屏。
+
+| 快捷键       | 功能                         |
+| ------------ | ---------------------------- |
+| `<c-cr>`     | 发送光标所在的单个请求       |
+| `<leader>Rs` | 发送光标所在的单个请求       |
+| `<leader>Re` | 选择当前 buffer 的环境文件   |
+| `<tab>`     | 响应窗口：切换到下一个面板   |
+| `<s-tab>`   | 响应窗口：切换到上一个面板   |
+| `q`         | 响应窗口：关闭面板           |
+
+也可用 `:Rest run 请求名` 执行命名请求，或 `:Rest last` 重跑上次请求。`:checkhealth rest-nvim` 可检查依赖；首次使用需等待 HTTP parser 安装完成。
+
+迁移限制：rest.nvim 没有内置整文件批量执行、WebSocket、scratchpad 或 Kulala LSP 的对应能力，因此移除了 `<leader>Ra`、`<leader>Rb`。环境推荐使用 `.env` 文件；手动 `:Rest env set 路径.json` 仅能读取顶层标量，不能直接复用包含嵌套环境对象的 `http-client.env.json`。内置脚本执行器仅支持 Lua，需在脚本前标记 `# @lang=lua`；JavaScript 脚本需转换。HTTP 格式化仍由独立的 `kulala-fmt` 提供。
 
 ### 翻译
 
