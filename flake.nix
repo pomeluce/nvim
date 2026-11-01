@@ -44,6 +44,10 @@
         }:
         let
           cfg = config.programs.akvim;
+          restLuaEnv = pkgs.luajit.withPackages (ps: [
+            ps.mimetypes
+            ps.xml2lua
+          ]);
           defaultPackages = with pkgs; [
             # Core tools
             bat
@@ -378,6 +382,11 @@
                     (lib.makeBinPath (cfg.extraPackages ++ filteredDefaults))
                   ]
                   ++ [
+                    # wrapRc = false skips the generated Lua dependency paths.
+                    "--prefix"
+                    "LUA_PATH"
+                    ";"
+                    "${restLuaEnv}/share/lua/5.1/?.lua;${restLuaEnv}/share/lua/5.1/?/init.lua;;"
                     "--suffix"
                     "LUA_CPATH"
                     ";"
