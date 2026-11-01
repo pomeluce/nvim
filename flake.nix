@@ -97,7 +97,6 @@
             cbfmt
             dockerfmt
             google-java-format
-            kulala-fmt
             libxml2
             nixfmt
             nufmt
@@ -492,7 +491,6 @@
                 cbfmt
                 dockerfmt
                 google-java-format
-                kulala-fmt
                 libxml2
                 nixfmt
                 nufmt

@@ -27,7 +27,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "claudecode.nvim": {
-      "rev": "c0deb41a0c6ac74c620be0a683aa9834e535c84a",
+      "rev": "182ee3886539c32fd28146478ae404065107fe5d",
       "src": "https://github.com/coder/claudecode.nvim"
     },
     "codediff.nvim": {
@@ -131,7 +131,7 @@
       "src": "https://github.com/mfussenegger/nvim-jdtls"
     },
     "nvim-lspconfig": {
-      "rev": "460bb34e7be114f1fda7815781696bc701e60f83",
+      "rev": "d8d2fda7aae57030452ce8cd6e770b1eb704514e",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -147,7 +147,7 @@
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "a2f694478be07f89c2d03cc17858a8745a400c4b",
+      "rev": "a9c4e1457e2e59f1b82c8f78dcdb3b2517555200",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
