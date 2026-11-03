@@ -6,7 +6,7 @@
       "version": "2.0.0 - 3.0.0"
     },
     "base16-nvim": {
-      "rev": "7183774e90841f4bd27a47cb6e75cf532fd1192d",
+      "rev": "bd9ad214eaeefec5f937cb49effc3c0ffb2f57ac",
       "src": "https://github.com/RRethy/base16-nvim"
     },
     "blink-cmp-avante": {
@@ -27,7 +27,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "claudecode.nvim": {
-      "rev": "182ee3886539c32fd28146478ae404065107fe5d",
+      "rev": "af04fbf9c27c5c06b4d1ff022b551aa94e1df4aa",
       "src": "https://github.com/coder/claudecode.nvim"
     },
     "codediff.nvim": {
@@ -59,7 +59,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "1e9d0fbfe7ff848bc402d2c2e2854fb4eff2dce7",
+      "rev": "4bcd99167c265f135886b282baad77afe06206b2",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "heirline.nvim": {
@@ -131,7 +131,7 @@
       "src": "https://github.com/mfussenegger/nvim-jdtls"
     },
     "nvim-lspconfig": {
-      "rev": "d8d2fda7aae57030452ce8cd6e770b1eb704514e",
+      "rev": "adfbb74472f6c231b651b650a89f414c2680fb31",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -143,11 +143,11 @@
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-tree.lua": {
-      "rev": "45f82f7b2c68c3e2bedbf6ad1d8d687a78e6faf4",
+      "rev": "69eb0c34ed3d836d5a0d92d913b77dd73b054f2f",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "a9c4e1457e2e59f1b82c8f78dcdb3b2517555200",
+      "rev": "0195cd62fa89950f34c0e0d648ea7897ab85d4d3",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {

@@ -1,7 +1,9 @@
 local Runtime = require('configs.java.runtime')
+local Workspace = require('configs.java.workspace')
 
 local M = {}
 local BUILD_FAILED = 0
+local BUILD_SUCCEEDED = 1
 local BUILD_WITH_ERRORS = 2
 local BUILD_CANCELLED = 3
 local DISCOVERY_TIMEOUT = 15000
@@ -54,6 +56,7 @@ end
 ---@param root_dir string
 ---@param runtimes table[]
 function M.new(root_dir, runtimes)
+  local workspace = Workspace.new(root_dir)
   ---@type JavaPrepareOperation?
   local active
   local notification_id = 'java-launch-' .. vim.fn.sha256(root_dir):sub(1, 12)
@@ -172,36 +175,49 @@ function M.new(root_dir, runtimes)
   ---@class JavaPreparation
   local preparation = {}
 
+  local function synchronize(op, bufnr, next_step)
+    workspace:sync(client_for(bufnr), bufnr, function(err)
+      if op.done then return end
+      if err then
+        complete(op, err)
+      else
+        next_step()
+      end
+    end)
+  end
+
   ---@param bufnr integer
   ---@param callback fun(err?: JavaPrepareError|any, targets?: JavaLaunchTarget[])
   function preparation:discover(bufnr, callback)
     local op = begin(callback, true)
     if not op then return end
-    request(op, bufnr, 'vscode.java.resolveMainClass', nil, DISCOVERY_TIMEOUT, function(err, mains)
-      if err then
-        complete(op, err)
-        return
-      end
-      ---@type JavaLaunchTarget[]
-      local targets = {}
-      for _, main in pairs(type(mains) == 'table' and mains or {}) do
-        if type(main.mainClass) == 'string' and main.mainClass ~= '' then
-          local project_name = type(main.projectName) == 'string' and main.projectName or ''
-          targets[#targets + 1] = {
-            cwd = root_dir,
-            type = 'java',
-            request = 'launch',
-            name = ('Launch %s: %s'):format(project_name, main.mainClass),
-            projectName = project_name,
-            mainClass = main.mainClass,
-          }
+    synchronize(op, bufnr, function()
+      request(op, bufnr, 'vscode.java.resolveMainClass', nil, DISCOVERY_TIMEOUT, function(err, mains)
+        if err then
+          complete(op, err)
+          return
         end
-      end
-      table.sort(targets, function(left, right)
-        if left.projectName == right.projectName then return left.mainClass < right.mainClass end
-        return left.projectName < right.projectName
+        ---@type JavaLaunchTarget[]
+        local targets = {}
+        for _, main in pairs(type(mains) == 'table' and mains or {}) do
+          if type(main.mainClass) == 'string' and main.mainClass ~= '' then
+            local project_name = type(main.projectName) == 'string' and main.projectName or ''
+            targets[#targets + 1] = {
+              cwd = root_dir,
+              type = 'java',
+              request = 'launch',
+              name = ('Launch %s: %s'):format(project_name, main.mainClass),
+              projectName = project_name,
+              mainClass = main.mainClass,
+            }
+          end
+        end
+        table.sort(targets, function(left, right)
+          if left.projectName == right.projectName then return left.mainClass < right.mainClass end
+          return left.projectName < right.projectName
+        end)
+        complete(op, nil, targets)
       end)
-      complete(op, nil, targets)
     end)
   end
 
@@ -292,29 +308,34 @@ function M.new(root_dir, runtimes)
       end)
     end
 
-    request(
-      op,
-      bufnr,
-      'vscode.java.buildWorkspace',
-      vim.json.encode({
-        mainClass = prepared.mainClass,
-        projectName = prepared.projectName,
-        isFullBuild = false,
-      }),
-      BUILD_TIMEOUT,
-      function(err, status)
-        if err then
-          complete(op, { kind = 'build', message = 'Failed to build Java workspace: ' .. error_message(err) })
-        elseif status == BUILD_FAILED then
-          complete(op, { kind = 'build', message = 'Java workspace build failed' })
-        elseif status == BUILD_CANCELLED then
-          complete(op, { kind = 'cancelled', message = 'Java workspace build was cancelled' })
-        else
-          if status == BUILD_WITH_ERRORS then update_progress(op, 'Java build completed with errors; resolving launch: ' .. label, vim.log.levels.WARN) end
-          resolve_classpath()
+    synchronize(op, bufnr, function()
+      request(
+        op,
+        bufnr,
+        'vscode.java.buildWorkspace',
+        vim.json.encode({
+          mainClass = prepared.mainClass,
+          projectName = prepared.projectName,
+          isFullBuild = true,
+        }),
+        BUILD_TIMEOUT,
+        function(err, status)
+          if err then
+            complete(op, { kind = 'build', message = 'Failed to build Java workspace: ' .. error_message(err) })
+          elseif status == BUILD_FAILED then
+            complete(op, { kind = 'build', message = 'Java workspace build failed' })
+          elseif status == BUILD_CANCELLED then
+            complete(op, { kind = 'cancelled', message = 'Java workspace build was cancelled' })
+          elseif status == BUILD_WITH_ERRORS then
+            complete(op, { kind = 'build', message = 'Java workspace build completed with errors; fix the diagnostics before launching' })
+          elseif status ~= BUILD_SUCCEEDED then
+            complete(op, { kind = 'build', message = 'JDTLS returned an unknown Java workspace build status' })
+          else
+            resolve_classpath()
+          end
         end
-      end
-    )
+      )
+    end)
   end
 
   function preparation:cancel()

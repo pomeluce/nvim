@@ -23,12 +23,17 @@ function client:request(method, params, callback)
   elseif params.command == 'vscode.java.buildWorkspace' then
     assert(type(params.arguments) == 'string', 'build arguments must be a JSON string')
     local build = vim.json.decode(params.arguments)
+    assert(build.isFullBuild == true, 'launch must rebuild outputs removed by external Maven clean')
     if build.mainClass == 'example.SlowApplication' then
       held_callback = callback
     elseif build.mainClass == 'example.FailedApplication' then
       callback(nil, 0)
-    else
+    elseif build.mainClass == 'example.BrokenApplication' then
       callback(nil, 2)
+    elseif build.mainClass == 'example.UnknownBuildApplication' then
+      callback(nil, nil)
+    else
+      callback(nil, 1)
     end
   elseif params.command == 'vscode.java.resolveClasspath' then
     classpath_attempts = classpath_attempts + 1
@@ -114,6 +119,14 @@ vim.fn.delete(project_root, 'rf')
 
 local failed = await(function(done) prepare:prepare({ mainClass = 'example.FailedApplication', projectName = 'failed', cwd = '/workspace' }, 0, done) end)
 assert(failed.err and failed.err.kind == 'build', 'failed builds must abort launch preparation')
+
+local classpaths_before = classpath_attempts
+for _, main_class in ipairs({ 'example.BrokenApplication', 'example.UnknownBuildApplication' }) do
+  local broken = await(function(done) prepare:prepare({ mainClass = main_class, projectName = 'broken', cwd = '/workspace' }, 0, done) end)
+  assert(broken.err and broken.err.kind == 'build', 'builds with errors or unknown status must abort launch preparation')
+  assert(not broken.value, 'unsuccessful builds must not produce a launch configuration')
+end
+assert(classpath_attempts == classpaths_before, 'unsuccessful builds must not resolve launch classpaths')
 
 local cancelled
 prepare:prepare({ mainClass = 'example.SlowApplication', projectName = 'slow', cwd = '/workspace' }, 0, function(err) cancelled = err end)
