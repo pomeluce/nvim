@@ -82,3 +82,13 @@ vim.lsp.buf_attach_client = original_attach
 vim.notify = original_notify
 vim.fn.delete(root, 'rf')
 print('java workspace tests passed')
+
+local outputs = vim.fn.tempname()
+vim.fn.mkdir(outputs .. '/module/src/main/java', 'p')
+vim.fn.writefile({ '<project/>' }, outputs .. '/module/pom.xml')
+assert(require('configs.java.workspace').needs_full_build(outputs), 'missing Maven outputs require a full build')
+vim.fn.mkdir(outputs .. '/module/target/classes', 'p')
+assert(not require('configs.java.workspace').needs_full_build(outputs), 'existing outputs allow incremental builds')
+vim.fn.delete(outputs .. '/module/target', 'rf')
+assert(require('configs.java.workspace').needs_full_build(outputs), 'external Maven clean must restore full builds')
+vim.fn.delete(outputs, 'rf')

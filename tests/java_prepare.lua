@@ -23,7 +23,7 @@ function client:request(method, params, callback)
   elseif params.command == 'vscode.java.buildWorkspace' then
     assert(type(params.arguments) == 'string', 'build arguments must be a JSON string')
     local build = vim.json.decode(params.arguments)
-    assert(build.isFullBuild == true, 'launch must rebuild outputs removed by external Maven clean')
+    assert(build.isFullBuild == false, 'ordinary launches must use incremental builds')
     if build.mainClass == 'example.SlowApplication' then
       held_callback = callback
     elseif build.mainClass == 'example.FailedApplication' then

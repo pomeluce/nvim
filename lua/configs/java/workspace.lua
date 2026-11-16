@@ -1,5 +1,23 @@
 local M = {}
 
+function M.needs_full_build(root)
+  if vim.fn.isdirectory(root) ~= 1 then return false end
+  local function missing_output(dir) return vim.fn.isdirectory(dir .. '/src/main/java') == 1 and vim.fn.isdirectory(dir .. '/target/classes') ~= 1 end
+  if missing_output(root) then return true end
+  for path, kind in
+    vim.fs.dir(root, {
+      depth = math.huge,
+      skip = function(path)
+        local name = vim.fs.basename(path)
+        return name ~= '.git' and name ~= 'target' and name ~= '.direnv'
+      end,
+    })
+  do
+    if kind == 'file' and vim.fs.basename(path) == 'pom.xml' and missing_output(vim.fs.dirname(vim.fs.joinpath(root, path))) then return true end
+  end
+  return false
+end
+
 ---@param root string
 local function fingerprint(root)
   local entries = {}

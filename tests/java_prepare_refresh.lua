@@ -2,6 +2,7 @@ package.path = './lua/?.lua;./lua/?/init.lua;' .. package.path
 
 local pending
 package.loaded['configs.java.workspace'] = {
+  needs_full_build = function() return false end,
   new = function()
     return { sync = function(_, _, _, callback) pending = callback end }
   end,

@@ -316,7 +316,7 @@ function M.new(root_dir, runtimes)
         vim.json.encode({
           mainClass = prepared.mainClass,
           projectName = prepared.projectName,
-          isFullBuild = true,
+          isFullBuild = Workspace.needs_full_build(root_dir),
         }),
         BUILD_TIMEOUT,
         function(err, status)

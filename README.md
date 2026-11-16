@@ -714,7 +714,7 @@ VM Options 可以使用字符串或字符串数组；`envFile` 支持项目相�
 
 每次执行 `JavaRunMain` 或 `JavaDebugMain` 都会检查项目内已保存的 POM 内容和 Java 源文件列表。新增、删除模块或源文件以及修改依赖配置后，会自动重启当前项目的 JDTLS，等待项目重新导入，再获取 Main 列表；Neovim 和已运行的普通 Java 进程保持打开。普通源码内容编辑不会触发重启，`target` 下的生成文件不参与结构检测。重启期间 Java 补全、诊断会暂时不可用；导入失败或超时会停止本次启动。
 
-选中 Main 后依次完成完整构建、classpath 和运行时解析，以补齐外部 `mvn clean` 删除的编译输出。构建有错误时停止启动，请先修正诊断。运行时优先使用当前 Java buffer 所属 POM 声明的版本及其已配置 JDK，无法匹配时才交由 JDTLS 和默认 runtime 回退。同一项目的启动准备会串行执行，以避免多个 Main 并发初始化 Eclipse classpath provider；已经启动的 Main 仍可同时运行。`JavaStopMain` 会同时取消正在进行和等待中的启动准备；已经开始的 JDTLS 重启会继续完成，以恢复编辑功能。
+选中 Main 后依次完成增量构建、classpath 和运行时解析，复用已有编译输出；检测到 Maven 模块的 `target/classes` 缺失时改用完整构建，以补齐外部 `mvn clean` 删除的输出。构建有错误时停止启动，请先修正诊断。运行时优先使用当前 Java buffer 所属 POM 声明的版本及其已配置 JDK，无法匹配时才交由 JDTLS 和默认 runtime 回退。同一项目的启动准备会串行执行，以避免多个 Main 并发初始化 Eclipse classpath provider；已经启动的 Main 仍可同时运行。`JavaStopMain` 会同时取消正在进行和等待中的启动准备；已经开始的 JDTLS 重启会继续完成，以恢复编辑功能。
 
 ### Claude Code
 
