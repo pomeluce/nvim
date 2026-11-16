@@ -24,6 +24,9 @@ end
 
 function M.project_runtimes(root_dir, runtimes)
   local result = vim.deepcopy(runtimes)
+  for _, runtime in ipairs(result) do
+    runtime.path = vim.uv.fs_realpath(runtime.path) or runtime.path
+  end
   local version = read_version(root_dir .. '/pom.xml')
   if not version then return result end
 

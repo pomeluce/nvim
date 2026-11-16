@@ -95,6 +95,9 @@ function M.setup(root_dir)
     }
   )
 
+  -- JDTLS reads these settings before importing projects and configuring their JREs.
+  config.init_options.settings = vim.deepcopy(config.settings)
+
   if has_debug and not dap_initialized then
     require('jdtls').setup_dap({ hotcodereplace = 'auto' })
     dap_initialized = true
