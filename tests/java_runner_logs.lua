@@ -30,6 +30,8 @@ end
 for i = 1, 5 do
   runner.current = add_run(('example.Application%d'):format(i))
 end
+runner.runs['1'].args = { 'start', '--message', 'hidden-log-argument' }
+runner.runs['2'].args = { 'stop', '--message', 'hidden-log-argument' }
 
 local function resize(width)
   if vim.api.nvim_win_get_width(runner.log_win) == vim.o.columns then vim.api.nvim_win_call(runner.log_win, function() vim.cmd('vsplit') end) end
@@ -47,6 +49,7 @@ local function rendered()
   })
   assert(result.width <= width, 'winbar exceeds the log window width')
   assert(not result.str:find('<', 1, true), 'Neovim truncated the winbar')
+  assert(not result.str:find('hidden-log-argument', 1, true), 'program arguments must not appear in log tabs')
   local active
   for i, highlight in ipairs(result.highlights) do
     if vim.tbl_contains(highlight.groups, 'TabLineSel') then
@@ -126,13 +129,16 @@ local duplicate = add_run('other.Progress%Application', 'other%project')
 runner.current = duplicate
 runner:show(duplicate.buf)
 local _, duplicate_active = rendered()
-assert(duplicate_active:find('other%project/Progress%Application', 1, true), 'duplicate class names must retain the project label')
+assert(duplicate_active:find('Progress%Application', 1, true), 'duplicate Main names must remain visible')
+assert(not duplicate_active:find('other%project', 1, true), 'log tabs must only display the Main name')
 
 vim.api.nvim_buf_delete(percent.buf, { force = true })
 vim.api.nvim_exec_autocmds('WinResized', {})
 local _, remaining_active = rendered()
 assert(remaining_active:find('Progress%Application', 1, true), 'invalid log buffers must not hide the current tab')
-assert(not remaining_active:find('other%project', 1, true), 'deleted duplicates must stop affecting labels')
+for _, run in pairs(runner.runs) do
+  assert(run ~= percent, 'deleted log buffers must be removed from the tab order')
+end
 
 vim.cmd('JavaToggleLogs')
 assert(resize_handlers() == initial_resize_handlers, 'closing the log window must remove its resize handlers')

@@ -6,6 +6,7 @@
 ---@alias JavaLaunchEnv table<string, string|number|boolean>
 
 ---@class JavaLaunchMainConfig
+---@field args? JavaLaunchOptions Program arguments passed to main(String[] args)
 ---@field vmOptions? JavaLaunchOptions JVM options appended for this Main class
 ---@field envFile? JavaLaunchEnvFile Environment files loaded before launch
 ---@field env? JavaLaunchEnv Environment variables overriding values from envFile

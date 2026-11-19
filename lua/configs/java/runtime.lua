@@ -22,6 +22,18 @@ function M.buffer_version(bufnr)
   return pom and read_version(pom) or nil
 end
 
+function M.launch_version(config, bufnr)
+  local class_file = config.mainClass:gsub('%.', '/') .. '.class'
+  local outputs = vim.list_extend(vim.deepcopy(config.classPaths or {}), config.modulePaths or {})
+  for _, output in ipairs(outputs) do
+    if vim.fn.filereadable(vim.fs.joinpath(output, class_file)) == 1 then
+      local pom = vim.fs.find('pom.xml', { path = output, upward = true, type = 'file' })[1]
+      return pom and read_version(pom) or nil
+    end
+  end
+  return M.buffer_version(bufnr)
+end
+
 function M.project_runtimes(root_dir, runtimes)
   local result = vim.deepcopy(runtimes)
   for _, runtime in ipairs(result) do

@@ -115,6 +115,14 @@ local project_runtime = await(
 )
 assert(not project_runtime.err, project_runtime.err and project_runtime.err.message)
 assert(project_runtime.value.javaExec == '/jdk8/bin/java', 'project-declared Java 8 must override the JDTLS Java 21 executable')
+local other_module = vim.fs.joinpath(project_root, 'other-module')
+vim.fn.mkdir(other_module .. '/target/classes/example', 'p')
+vim.fn.writefile({ '<project><properties><java.version>21</java.version></properties></project>' }, other_module .. '/pom.xml')
+vim.fn.writefile({}, other_module .. '/target/classes/example/OtherApplication.class')
+assert(
+  runtime.launch_version({ mainClass = 'example.OtherApplication', classPaths = { other_module .. '/target/classes' } }, java_buf) == '21',
+  'batch launches must use the selected Main module runtime rather than the initiating buffer module'
+)
 vim.fn.delete(project_root, 'rf')
 
 local failed = await(function(done) prepare:prepare({ mainClass = 'example.FailedApplication', projectName = 'failed', cwd = '/workspace' }, 0, done) end)

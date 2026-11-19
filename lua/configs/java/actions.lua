@@ -44,8 +44,11 @@ local function command(bufnr, name, callback, description)
 end
 
 local function attach_runner_commands(bufnr, java)
-  command(bufnr, 'JavaStopMain', function() java.runner:stop() end, 'Stop the running Java main class')
+  command(bufnr, 'JavaStopMain', function() java.runner:stop() end, 'Select Java services to stop')
+  command(bufnr, 'JavaStopAll', function() java.runner:stop_all() end, 'Stop all Java services in this project')
   command(bufnr, 'JavaToggleLogs', function() java.runner:toggle() end, 'Toggle Java run output')
+  command(bufnr, 'JavaOpenLog', function() java.runner:open_log() end, 'Open or restore a Java log')
+  command(bufnr, 'JavaCloseLog', function() java.runner:close_log() end, 'Close the current Java log tab')
   command(bufnr, 'JavaNextLog', function() java.runner:switch_log(1) end, 'Show the next Java run output')
   command(bufnr, 'JavaPreviousLog', function() java.runner:switch_log(-1) end, 'Show the previous Java run output')
 end
@@ -111,7 +114,8 @@ local function goto_definition(bufnr)
     if #locations == 1 then
       vim.lsp.util.show_document(locations[1], client.offset_encoding, { reuse_win = true, focus = true })
     else
-      Snacks.picker.lsp_definitions()
+      ---@diagnostic disable-next-line: undefined-field
+      Snacks.picker.pick('lsp_definitions')
     end
   end, bufnr)
 end
@@ -142,8 +146,10 @@ function M.attach(bufnr, java)
   command(bufnr, 'JavaUpdateConfig', jdtls.update_project_config, 'Update Maven/Gradle project config')
   command(bufnr, 'JavaOrganizeImports', jdtls.organize_imports, 'Organize Java imports')
   command(bufnr, 'JavaRunMain', function() java.runner:start() end, 'Run a Java main class')
+  command(bufnr, 'JavaRunMainArgs', function() java.runner:start(true) end, 'Run a Java main class with temporary arguments')
   attach_runner_commands(bufnr, java)
   command(bufnr, 'JavaDebugMain', function() java.runner:debug() end, 'Debug a Java main class')
+  command(bufnr, 'JavaDebugMainArgs', function() java.runner:debug(true) end, 'Debug a Java main class with temporary arguments')
   command(bufnr, 'JavaTestClass', function()
     if java.has_test then
       jdtls.test_class()

@@ -20,17 +20,26 @@ end
 ---@param value? JavaLaunchOptions
 ---@return string[]
 function M.split_args(value)
-  if type(value) == 'table' then return value end
-  if type(value) ~= 'string' or value == '' then return {} end
+  if value == nil then return {} end
+  if type(value) == 'table' then
+    assert(vim.islist(value), 'Java arguments must be a string or a list of strings')
+    for _, argument in ipairs(value) do
+      assert(type(argument) == 'string', 'Each Java argument must be a string')
+    end
+    return vim.deepcopy(value)
+  end
+  assert(type(value) == 'string', 'Java arguments must be a string or a list of strings')
 
   local result = {}
   local current = {}
   local quote
   local escaped = false
+  local started = false
   local function append()
-    if #current > 0 then
+    if started then
       result[#result + 1] = table.concat(current)
       current = {}
+      started = false
     end
   end
   for index = 1, #value do
@@ -38,8 +47,15 @@ function M.split_args(value)
     if escaped then
       current[#current + 1] = character
       escaped = false
+    elseif quote == "'" then
+      if character == quote then
+        quote = nil
+      else
+        current[#current + 1] = character
+      end
     elseif character == '\\' then
       escaped = true
+      started = true
     elseif quote then
       if character == quote then
         quote = nil
@@ -48,15 +64,24 @@ function M.split_args(value)
       end
     elseif character == '"' or character == "'" then
       quote = character
+      started = true
     elseif character:match('%s') then
       append()
     else
       current[#current + 1] = character
+      started = true
     end
   end
-  if escaped then current[#current + 1] = '\\' end
+  assert(not quote, 'Unclosed quote in Java arguments')
+  assert(not escaped, 'Incomplete escape in Java arguments')
   append()
   return result
+end
+
+---@param args string[]
+---@return string
+function M.format_args(args)
+  return table.concat(vim.tbl_map(function(argument) return argument ~= '' and not argument:find('[^%w_./:=+,%@%-]') and argument or vim.fn.shellescape(argument) end, args), ' ')
 end
 
 local function vm_options(value)
@@ -124,6 +149,14 @@ function M.new(root_dir)
   end
 
   local launch = {}
+
+  ---@param config JavaLaunchTarget
+  ---@return string[]
+  function launch:arguments(config)
+    if config.args ~= nil then return M.split_args(config.args) end
+    local settings = load_config(config_path)
+    return M.split_args(main_settings(settings, config.mainClass).args)
+  end
 
   ---@param config table
   ---@return string? vm_args

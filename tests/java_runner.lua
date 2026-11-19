@@ -22,18 +22,21 @@ local client = {
 }
 
 local original_get_clients = vim.lsp.get_clients
-local original_select = vim.ui.select
 vim.lsp.get_clients = function() return { client } end
 
 local selected_items
-vim.ui.select = function(items) selected_items = items end
+package.loaded['configs.java.picker'] = {
+  select = function(items, options)
+    assert(options.multiple, 'JavaRunMain must allow selecting multiple targets')
+    selected_items = items
+  end,
+}
 
 local runner = require('configs.java.runner').new('/workspace', {}, true)
 runner:start()
 assert(vim.wait(1000, function() return selected_items ~= nil end), 'Main selector was not opened')
 
 vim.lsp.get_clients = original_get_clients
-vim.ui.select = original_select
 
 assert(#selected_items == #mains, ('expected all %d Main targets, got %d'):format(#mains, #selected_items))
 

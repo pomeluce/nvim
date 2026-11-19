@@ -681,17 +681,30 @@ Codex Agent 使用独立于 `<C-t>` tab 组的单实例浮动终端，尺寸与�
 | `<leader>jc`                     | `JavaCompile`                     | jdtls 编译工作区             |
 | `<leader>ju`                     | `JavaUpdateConfig`                | 刷新项目配置                 |
 | `<leader>jo`                     | `JavaOrganizeImports`             | 整理 imports                 |
-| `<leader>jr`                     | `JavaRunMain`                     | 运行 main class              |
+| `<leader>jr`                     | `JavaRunMain`                     | 单选或多选运行 Main          |
+| —                               | `JavaRunMainArgs`                 | 输入本次参数后运行 Main      |
 | `<leader>jd`                     | `JavaDebugMain`                   | DAP 调试 main class          |
-| `<leader>js`                     | `JavaStopMain`                    | 停止运行                     |
+| —                               | `JavaDebugMainArgs`               | 输入本次参数后调试 Main      |
+| `<leader>js`                     | `JavaStopMain`                    | 多选停止运行中或待启动的服务 |
+| —                               | `JavaStopAll`                     | 停止当前项目全部 Run 服务    |
 | `<leader>jl`                     | `JavaToggleLogs`                  | 切换运行日志                 |
+| —                               | `JavaOpenLog`                     | 选择并恢复日志标签           |
+| —                               | `JavaCloseLog`                    | 关闭当前日志标签             |
 | `gt` / `gT`、`Tab` / `Shift-Tab` | `JavaNextLog` / `JavaPreviousLog` | 在运行日志面板切换 Main 标签 |
 | `<leader>jtc`                    | `JavaTestClass`                   | 运行测试类                   |
 | `<leader>jtm`                    | `JavaTestMethod`                  | 运行测试方法                 |
 | `<leader>jv`                     | —                                 | 提取变量                     |
 | `<leader>jm`                     | —                                 | 提取选区为方法               |
 
-运行日志标签栏会随当前 Main 和窗口宽度调整可见范围，用 `‹ / ›` 提示两侧隐藏的标签；过长名称会以省略号缩短。极窄窗口优先显示当前标签。
+`JavaRunMain` 使用 Snacks 选择器：搜索 Main，`Tab` 勾选，`Ctrl-A` 全选或取消全选，`Enter` 启动选中项；没有勾选时只启动光标所在项。选择列表采用圆角浮窗，按 `Main 名称: 包名` 展示，突出 Main 名称、弱化包名，常显多选标记。服务状态使用不同颜色，参数作为次要信息帮助区分实例；单选调试和日志恢复使用相同样式。各 Main 依次完成启动准备，启动后同时运行；不会等待服务业务就绪或推断依赖顺序。单项失败继续处理其他服务，结束后汇总启动、跳过、失败与取消数量。`JavaDebugMain` 仍然单选，不提供批量调试。
+
+Main 名称列按列表中最长名称对齐，最多占 32 个显示列；过长名称以 `...` 结尾，中文按实际显示宽度计算，窄窗口下名称列会进一步收缩。截断仅影响显示，完整名称仍可搜索，启动目标保持完整。选择器根据格式化后最长条目的显示宽度自动调整，同时为标题、多选标记和左右内边距预留空间；内容宽度默认最多 120 列，并随编辑器缩放受可用宽度约束。
+
+运行实例由模块、完整 Main 类名和实际程序参数列表区分。同一个 Main 带 `start`、`stop` 等不同参数可以分别运行，程序自己解释参数含义；执行 `stop` 参数不会先强制结束另一个实例。完全相同的实例仍在运行时跳过，需要先停止才能重启。日志标签和 buffer 显示名只显示 Main 名称，参数仍保留在服务选择列表中用于区分实例。
+
+运行日志标签栏会随当前 Main 和窗口宽度调整可见范围，用 `‹ / ›` 提示两侧隐藏的标签；过长名称会以省略号缩短。极窄窗口优先显示当前标签。点击标签切换日志，点击各标签的 `` 或执行 `JavaCloseLog` 关闭该标签：服务运行中只隐藏日志并继续记录输出；服务已退出则释放日志 buffer。隐藏的服务退出后仍保留日志，可通过 `JavaOpenLog` 恢复查看，再关闭释放。关闭当前标签会切到相邻标签，最后一个标签关闭后收起面板；`q` 仍然只收起整个面板。`JavaToggleLogs` 没有可见标签时会打开日志选择列表。
+
+`JavaStopMain` 在当前项目的运行中与待启动实例中多选停止，支持与启动列表相同的选择按键。选中项的启动任务会取消，其他任务继续；列表打开期间已完成启动的选中项也会被停止。`JavaStopAll` 一次停止当前项目全部 Run 服务，包含日志被隐藏的服务，并取消 Run 启动任务；其他项目及 DAP 调试任务、会话不受影响。
 
 项目可以通过独立的 `.nvim/java-launch.lua` 为 `JavaRunMain` 和 `JavaDebugMain` 配置类似 IDEA 的 VM Options 与环境变量。`vmOptions`、`envFile` 和 `env` 对所有 Main 生效，`mainClass` 可以按完整类名追加或覆盖配置：
 
@@ -704,6 +717,7 @@ return {
   mainClass = {
     ['com.example.Application'] = {
       vmOptions = { '-Dserver.port=8081', '-Dfile.encoding=UTF-8' },
+      args = { 'start', '--name', 'demo service' },
       env = { FEATURE_FLAG = 'true' },
     },
   },
@@ -712,9 +726,13 @@ return {
 
 VM Options 可以使用字符串或字符串数组；`envFile` 支持项目相对路径或路径数组，并通过 shell 的 `set -a; source ...; set +a` 语义加载。直接配置的 `env` 优先于 `envFile`，Main 专属配置优先于公共配置。该文件不会参与 jdtls LSP 配置合并，也不会在项目加载或 Main 扫描时读取；每次 Run 或 Debug 真正启动前都会重新加载配置及 `envFile`，修改后重新启动 Main 即可生效，无需重启 Neovim，已运行的进程不受影响。
 
+Main 的 `args` 配置程序参数，Run 与 Debug 共用，推荐使用字符串数组保留空参数及参数内的空格；也支持 `args = 'start --name "demo service"'`。参数直接传给 Java，不执行 shell 展开或命令替换；字符串中的引号或转义未完成时会报错并取消该项启动。`JavaRunMainArgs` / `JavaDebugMainArgs` 单选 Main 后以默认参数预填输入框，本次输入覆盖全部程序参数；清空表示不传参数，取消则不构建、不启动。临时输入不会写入配置或跨 Neovim 保存。程序参数在确认启动时固定，排队期间修改配置不会改变待启动实例；VM Options 和环境变量仍在实际启动时加载。
+
 每次执行 `JavaRunMain` 或 `JavaDebugMain` 都会检查项目内已保存的 POM 内容和 Java 源文件列表。新增、删除模块或源文件以及修改依赖配置后，会自动重启当前项目的 JDTLS，等待项目重新导入，再获取 Main 列表；Neovim 和已运行的普通 Java 进程保持打开。普通源码内容编辑不会触发重启，`target` 下的生成文件不参与结构检测。重启期间 Java 补全、诊断会暂时不可用；导入失败或超时会停止本次启动。
 
-选中 Main 后依次完成增量构建、classpath 和运行时解析，复用已有编译输出；检测到 Maven 模块的 `target/classes` 缺失时改用完整构建，以补齐外部 `mvn clean` 删除的输出。构建有错误时停止启动，请先修正诊断。运行时优先使用当前 Java buffer 所属 POM 声明的版本及其已配置 JDK，无法匹配时才交由 JDTLS 和默认 runtime 回退。同一项目的启动准备会串行执行，以避免多个 Main 并发初始化 Eclipse classpath provider；已经启动的 Main 仍可同时运行。`JavaStopMain` 会同时取消正在进行和等待中的启动准备；已经开始的 JDTLS 重启会继续完成，以恢复编辑功能。
+选中 Main 后依次完成增量构建、classpath 和运行时解析，复用已有编译输出；检测到 Maven 模块的 `target/classes` 缺失时改用完整构建，以补齐外部 `mvn clean` 删除的输出。构建有错误时停止该项启动，请先修正诊断。运行时优先使用所选 Main 编译输出所属模块 POM 声明的版本及其已配置 JDK，无法定位模块时使用当前 Java buffer 的 POM，无法匹配时再交由 JDTLS 和默认 runtime 回退。同一项目的启动准备会串行执行，以避免多个 Main 并发初始化 Eclipse classpath provider；已经启动的 Main 仍可同时运行。取消启动时，已经开始的 JDTLS 重启会继续完成，以恢复编辑功能。
+
+Java 配置的开发验证命令：`nvim --headless -u NONE -l tests/run_java.lua`。测试会优先加载当前仓库代码，其中真实进程测试需要 `java` 和 `javac`。
 
 ### Claude Code
 

@@ -22,7 +22,7 @@ local RETRY_DELAYS = { 200, 500 }
 ---@field classPaths? string[]
 ---@field javaExec? string
 ---@field vmArgs? string
----@field args? string
+---@field args? string|string[]
 ---@field env? table<string, string>
 
 ---@class JavaPrepareError
@@ -251,7 +251,7 @@ function M.new(root_dir, runtimes)
     end
 
     local function resolve_runtime()
-      local declared_version = Runtime.buffer_version(bufnr)
+      local declared_version = Runtime.launch_version(prepared, bufnr)
       local declared_home = Runtime.java_home(runtimes, declared_version)
       if declared_version and declared_home then
         prepared.javaExec = vim.fs.joinpath(declared_home, 'bin', 'java')
