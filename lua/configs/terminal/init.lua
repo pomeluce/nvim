@@ -13,7 +13,6 @@ return {
   goto_tab = tabs.goto_tab,
   select_tab = tabs.select_tab,
   rename_tab = tabs.rename_tab,
-  toggle_codex = floats.toggle_codex,
   floaterm = floats.floaterm,
   runFile = runner.run_file,
 }
